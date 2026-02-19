@@ -96,7 +96,6 @@ const WRITE_METHODS = new Set([
   "node.invoke",
   "chat.send",
   "chat.abort",
-  "browser.request",
   "memory.update",
   "memory.delete",
   "memory.extract",

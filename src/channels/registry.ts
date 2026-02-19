@@ -7,11 +7,7 @@ import { requireActivePluginRegistry } from "../plugins/runtime.js";
 export const CHAT_CHANNEL_ORDER = [
   "telegram",
   "whatsapp",
-  "discord",
   "googlechat",
-  "slack",
-  "signal",
-  "imessage",
 ] as const;
 
 export type ChatChannelId = (typeof CHAT_CHANNEL_ORDER)[number];
@@ -48,16 +44,6 @@ const CHAT_CHANNEL_META: Record<ChatChannelId, ChannelMeta> = {
     blurb: "works with your own number; recommend a separate phone + eSIM.",
     systemImage: "message",
   },
-  discord: {
-    id: "discord",
-    label: "Discord",
-    selectionLabel: "Discord (Bot API)",
-    detailLabel: "Discord Bot",
-    docsPath: "/channels/discord",
-    docsLabel: "discord",
-    blurb: "very well supported right now.",
-    systemImage: "bubble.left.and.bubble.right",
-  },
   googlechat: {
     id: "googlechat",
     label: "Google Chat",
@@ -68,40 +54,9 @@ const CHAT_CHANNEL_META: Record<ChatChannelId, ChannelMeta> = {
     blurb: "Google Workspace Chat app with HTTP webhook.",
     systemImage: "message.badge",
   },
-  slack: {
-    id: "slack",
-    label: "Slack",
-    selectionLabel: "Slack (Socket Mode)",
-    detailLabel: "Slack Bot",
-    docsPath: "/channels/slack",
-    docsLabel: "slack",
-    blurb: "supported (Socket Mode).",
-    systemImage: "number",
-  },
-  signal: {
-    id: "signal",
-    label: "Signal",
-    selectionLabel: "Signal (signal-cli)",
-    detailLabel: "Signal REST",
-    docsPath: "/channels/signal",
-    docsLabel: "signal",
-    blurb: 'signal-cli linked device; more setup (David Reagans: "Hop on Discord.").',
-    systemImage: "antenna.radiowaves.left.and.right",
-  },
-  imessage: {
-    id: "imessage",
-    label: "iMessage",
-    selectionLabel: "iMessage (imsg)",
-    detailLabel: "iMessage",
-    docsPath: "/channels/imessage",
-    docsLabel: "imessage",
-    blurb: "this is still a work in progress.",
-    systemImage: "message.fill",
-  },
 };
 
 export const CHAT_CHANNEL_ALIASES: Record<string, ChatChannelId> = {
-  imsg: "imessage",
   "google-chat": "googlechat",
   gchat: "googlechat",
 };
