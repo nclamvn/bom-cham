@@ -7,6 +7,7 @@ import {
   type ServerResponse,
 } from "node:http";
 import { createServer as createHttpsServer } from "node:https";
+import { handleFamilyPwaRequest } from "./family-pwa.js";
 type CanvasHostHandler = { handleHttpRequest: (req: unknown, res: unknown) => boolean; handleUpgrade: (req: unknown, socket: unknown, head: unknown) => boolean };
 import type { createSubsystemLogger } from "../logging/subsystem.js";
 import type { GatewayWsClient } from "./server/ws-types.js";
@@ -393,6 +394,11 @@ export function createGatewayHttpServer(opts: {
         ) {
           return;
         }
+      }
+
+      // Family PWA — /family/ static files
+      if (handleFamilyPwaRequest(req, res)) {
+        return;
       }
 
       res.statusCode = 404;

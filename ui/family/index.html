@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4A7C59">
+  <meta name="description" content="Bờm Chăm — Chăm sóc người thân cao tuổi">
+  <title>Bờm Chăm — Chăm sóc người thân</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header id="header">
+      <h1>Bờm Chăm</h1>
+      <p class="subtitle">Để gia đình yên tâm</p>
+      <div id="connection-status" class="connection-dot disconnected" title="Đang kết nối..."></div>
+    </header>
+
+    <!-- Elder selector (nếu nhiều người) -->
+    <nav id="elder-selector" class="hidden">
+      <!-- Tabs dynamically populated by JS -->
+    </nav>
+
+    <!-- Status card -->
+    <section id="status-card">
+      <div class="status-indicator" id="status-dot"></div>
+      <h2 id="elder-name">Bà Nội</h2>
+      <p id="status-text">Đang tải...</p>
+      <p id="last-update" class="muted">Cập nhật: --:--</p>
+    </section>
+
+    <!-- Quick stats -->
+    <section id="quick-stats">
+      <div class="stat-card">
+        <span class="stat-icon">🌡️</span>
+        <span class="stat-value" id="temp">--°C</span>
+        <span class="stat-label">Nhiệt độ phòng</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">💧</span>
+        <span class="stat-value" id="humidity">--%</span>
+        <span class="stat-label">Độ ẩm</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">😴</span>
+        <span class="stat-value" id="sleep">--h</span>
+        <span class="stat-label">Giấc ngủ</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">💊</span>
+        <span class="stat-value" id="meds">--</span>
+        <span class="stat-label">Thuốc</span>
+      </div>
+    </section>
+
+    <!-- Today timeline -->
+    <section id="timeline">
+      <h3>Hôm nay</h3>
+      <div id="timeline-list">
+        <p class="muted">Đang tải sự kiện...</p>
+      </div>
+    </section>
+
+    <!-- Quick actions -->
+    <section id="actions">
+      <h3>Thao tác nhanh</h3>
+      <div class="action-grid">
+        <button class="action-btn" id="btn-call">📞 Gọi</button>
+        <button class="action-btn" id="btn-music">🎵 Mở nhạc</button>
+        <button class="action-btn" id="btn-message">💬 Nhắn</button>
+        <button class="action-btn" id="btn-camera">📷 Camera</button>
+      </div>
+    </section>
+
+    <!-- Health log -->
+    <section id="health-section">
+      <h3>Sức khoẻ</h3>
+      <div id="health-latest">
+        <p class="muted">Chưa có dữ liệu</p>
+      </div>
+      <button class="action-btn secondary" id="btn-health-input">
+        + Nhập chỉ số
+      </button>
+    </section>
+
+    <!-- Alerts -->
+    <section id="alerts-section" class="hidden">
+      <h3>Cảnh báo</h3>
+      <div id="alerts-list"></div>
+    </section>
+
+    <!-- Health input modal -->
+    <div id="health-modal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Nhập chỉ số sức khoẻ</h3>
+        <select id="health-type">
+          <option value="">-- Chọn loại --</option>
+          <option value="blood_pressure">Huyết áp</option>
+          <option value="glucose">Đường huyết</option>
+          <option value="heart_rate">Nhịp tim</option>
+          <option value="temperature">Nhiệt độ</option>
+          <option value="spo2">SpO2</option>
+          <option value="weight">Cân nặng</option>
+          <option value="note">Ghi chú</option>
+        </select>
+        <input id="health-value" type="text" placeholder="Nhập giá trị (VD: 130/80)" />
+        <div class="modal-actions">
+          <button class="action-btn secondary" id="btn-health-cancel">Huỷ</button>
+          <button class="action-btn" id="btn-health-save">Lưu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message modal -->
+    <div id="message-modal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Nhắn tin qua loa</h3>
+        <p class="muted">Tin nhắn sẽ phát qua loa phòng</p>
+        <input id="message-text" type="text" placeholder="VD: Bà ơi, con sắp về nhà" />
+        <div class="modal-actions">
+          <button class="action-btn secondary" id="btn-msg-cancel">Huỷ</button>
+          <button class="action-btn" id="btn-msg-send">Gửi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
