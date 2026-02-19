@@ -1,0 +1,51 @@
+{
+  "national_emergency": [
+    { "name": "Cấp cứu", "number": "115", "description": "Toàn quốc" },
+    { "name": "Công an", "number": "113", "description": "Toàn quốc" },
+    { "name": "Cứu hoả", "number": "114", "description": "Toàn quốc" },
+    { "name": "Tổng đài y tế", "number": "1900 9095", "description": "Tư vấn 24/7" }
+  ],
+  "location": {
+    "city": "Biên Hoà",
+    "province": "Đồng Nai",
+    "address": ""
+  },
+  "nearest_hospital": {
+    "name": "Bệnh viện Đa khoa Đồng Nai",
+    "phone": "02513822234",
+    "address": "128 Đường 30/4, P. Thanh Bình, Biên Hoà",
+    "emergency_phone": "02513822234",
+    "distance_km": 5
+  },
+  "medical_profile": {
+    "name": "",
+    "age": 90,
+    "date_of_birth": "",
+    "blood_type": "",
+    "allergies": [],
+    "chronic_conditions": [],
+    "current_medications": [],
+    "mobility": "Nằm giường, không tự đi lại",
+    "hearing": "Nặng tai",
+    "vision": "",
+    "weight_kg": null,
+    "special_notes": "",
+    "insurance": {
+      "type": "BHYT",
+      "number": "",
+      "hospital": ""
+    }
+  },
+  "query_keywords": {
+    "emergency": ["cấp cứu", "cap cuu", "emergency", "khẩn cấp", "khan cap"],
+    "hospital": ["bệnh viện", "benh vien", "hospital", "BV"],
+    "medical_profile": ["thông tin y tế", "thong tin y te", "medical profile", "hồ sơ y tế"],
+    "call_115": ["gọi 115", "goi 115", "gọi cấp cứu", "goi cap cuu", "call 115"]
+  },
+  "update_keywords": {
+    "blood_type": ["nhóm máu", "nhom mau", "blood type"],
+    "allergy": ["dị ứng", "di ung", "allergy"],
+    "condition": ["bị", "bệnh nền", "benh nen", "condition"],
+    "insurance": ["BHYT", "bảo hiểm", "bao hiem", "insurance"]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "enabled": false,
+  "medications": [],
+  "reminder_window_minutes": 30,
+  "missed_alert": true,
+  "tts_volume": "max",
+  "tts_rate": 0.8,
+  "confirm_keywords": [
+    "đã uống", "uống rồi", "da uong", "uong roi",
+    "đã uống thuốc", "bà đã uống", "bà uống rồi",
+    "took medicine", "taken"
+  ],
+  "add_keywords": ["thêm thuốc", "them thuoc", "add medication"],
+  "remove_keywords": ["bỏ thuốc", "xóa thuốc", "bo thuoc", "xoa thuoc", "remove medication"],
+  "list_keywords": ["danh sách thuốc", "thuốc bà", "danh sach thuoc", "list medications"],
+  "toggle_keywords": {
+    "on": ["bật nhắc thuốc", "bat nhac thuoc", "enable medication"],
+    "off": ["tắt nhắc thuốc", "tat nhac thuoc", "disable medication"]
+  }
+}
