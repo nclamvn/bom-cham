@@ -1,0 +1,30 @@
+{
+  "location": {
+    "name": "Biên Hoà, Đồng Nai",
+    "latitude": 10.95,
+    "longitude": 106.83
+  },
+  "thresholds": {
+    "cold": 18,
+    "very_cold": 15,
+    "hot": 35,
+    "very_hot": 38,
+    "humidity_low": 40,
+    "humidity_high": 85
+  },
+  "outdoor_sensors": {
+    "temperature": "sensor.outdoor_temperature",
+    "humidity": "sensor.outdoor_humidity"
+  },
+  "indoor_sensors": {
+    "temperature": "sensor.grandma_room_temperature",
+    "humidity": "sensor.grandma_room_humidity"
+  },
+  "api": {
+    "provider": "open-meteo",
+    "url": "https://api.open-meteo.com/v1/forecast",
+    "params": "current=temperature_2m,relative_humidity_2m,weather_code&timezone=Asia/Ho_Chi_Minh"
+  },
+  "storm_weather_codes": [95, 96, 97, 98, 99],
+  "rain_weather_codes": [80, 81, 82]
+}
