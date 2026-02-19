@@ -3,23 +3,30 @@ import { getChannelPlugin } from "../../channels/plugins/index.js";
 import type { ChannelId } from "../../channels/plugins/types.js";
 import type { OpenClawConfig } from "../../config/config.js";
 import { recordSessionMetaFromInbound, resolveStorePath } from "../../config/sessions.js";
-import { parseDiscordTarget } from "../../discord/targets.js";
-import { parseIMessageTarget, normalizeIMessageHandle } from "../../imessage/targets.js";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const parseDiscordTarget = (_t: string, _opts?: any): any => null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const parseIMessageTarget = (_t: string): any => null;
+const normalizeIMessageHandle = (handle: string): string => handle;
 import {
   buildAgentSessionKey,
   type RoutePeer,
   type RoutePeerKind,
 } from "../../routing/resolve-route.js";
 import { resolveThreadSessionKeys } from "../../routing/session-key.js";
-import { resolveSlackAccount } from "../../slack/accounts.js";
-import { createSlackWebClient } from "../../slack/client.js";
-import { normalizeAllowListLower } from "../../slack/monitor/allow-list.js";
-import {
-  resolveSignalPeerId,
-  resolveSignalRecipient,
-  resolveSignalSender,
-} from "../../signal/identity.js";
-import { parseSlackTarget } from "../../slack/targets.js";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveSlackAccount = (_p: any): any => ({});
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createSlackWebClient = (_p: any): any => null;
+const normalizeAllowListLower = (list: unknown[]): string[] => list.map(String);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveSignalPeerId = (..._args: any[]): string => "";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveSignalRecipient = (..._args: any[]): string => "";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveSignalSender = (..._args: any[]): string => "";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const parseSlackTarget = (_t: string, _opts?: any): any => null;
 import { buildTelegramGroupPeerId } from "../../telegram/bot/helpers.js";
 import { resolveTelegramTargetChatType } from "../../telegram/inline-buttons.js";
 import { parseTelegramTarget } from "../../telegram/targets.js";

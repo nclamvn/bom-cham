@@ -52,7 +52,9 @@ import {
   truncateMiddle,
 } from "./bash-tools.shared.js";
 import { callGatewayTool } from "./tools/gateway.js";
-import { listNodes, resolveNodeIdFromList } from "./tools/nodes-utils.js";
+// nodes-utils removed (multi-node not needed for Bờm Chăm)
+const listNodes = async (_opts: Record<string, unknown>): Promise<Array<{ nodeId: string; commands?: string[]; platform?: string }>> => [];
+const resolveNodeIdFromList = (_nodes: unknown[], _query?: string, _auto?: boolean): string => { throw new Error("multi-node not available"); };
 import { getShellConfig, sanitizeBinaryOutput } from "./shell-utils.js";
 import { buildCursorPositionResponse, stripDsrRequests } from "./pty-dsr.js";
 import { parseAgentSessionKey, resolveAgentIdFromSessionKey } from "../routing/session-key.js";

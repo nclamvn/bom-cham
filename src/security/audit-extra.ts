@@ -13,7 +13,8 @@ import {
 } from "../agents/sandbox.js";
 import { loadWorkspaceSkillEntries } from "../agents/skills.js";
 import { resolveToolProfilePolicy } from "../agents/tool-policy.js";
-import { resolveBrowserConfig } from "../browser/config.js";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveBrowserConfig = (..._args: any[]): any => ({ enabled: false });
 import { formatCliCommand } from "../cli/command-format.js";
 import { MANIFEST_KEY } from "../compat/legacy-names.js";
 import { resolveNativeSkillsEnabled } from "../config/commands.js";

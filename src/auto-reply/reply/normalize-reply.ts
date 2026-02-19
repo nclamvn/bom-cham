@@ -6,7 +6,8 @@ import {
   resolveResponsePrefixTemplate,
   type ResponsePrefixContext,
 } from "./response-prefix-template.js";
-import { hasLineDirectives, parseLineDirectives } from "./line-directives.js";
+const hasLineDirectives = (_text: string): boolean => false;
+const parseLineDirectives = <T>(payload: T): T => payload;
 
 export type NormalizeReplySkipReason = "empty" | "silent" | "heartbeat";
 

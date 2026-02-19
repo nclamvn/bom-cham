@@ -1,1 +1,1 @@
-export { registerNodeCli } from "./node-cli/register.js";
+export const registerNodeCli = (..._args: unknown[]): void => {};

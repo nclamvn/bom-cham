@@ -9,14 +9,18 @@ import { normalizeChannelId } from "../../channels/registry.js";
 import { listPairingChannels } from "../../channels/plugins/pairing.js";
 import { logVerbose } from "../../globals.js";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../routing/session-key.js";
-import { resolveDiscordAccount } from "../../discord/accounts.js";
-import { resolveIMessageAccount } from "../../imessage/accounts.js";
-import { resolveSignalAccount } from "../../signal/accounts.js";
-import { resolveSlackAccount } from "../../slack/accounts.js";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveDiscordAccount = (_p: any): any => ({ config: {} });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveIMessageAccount = (_p: any): any => ({ config: {} });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveSignalAccount = (_p: any): any => ({ config: {} });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveSlackAccount = (_p: any): any => ({});
 import { resolveTelegramAccount } from "../../telegram/accounts.js";
 import { resolveWhatsAppAccount } from "../../web/accounts.js";
-import { resolveSlackUserAllowlist } from "../../slack/resolve-users.js";
-import { resolveDiscordUserAllowlist } from "../../discord/resolve-users.js";
+const resolveSlackUserAllowlist = async (..._args: unknown[]): Promise<Array<{ resolved: string; name: string; input: string }>> => [];
+const resolveDiscordUserAllowlist = async (..._args: unknown[]): Promise<Array<{ resolved: string; name: string; input: string }>> => [];
 import {
   addChannelAllowFromStoreEntry,
   readChannelAllowFromStore,
@@ -406,7 +410,8 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
       const account = resolveSlackAccount({ cfg: params.cfg, accountId });
       dmAllowFrom = (account.dm?.allowFrom ?? []).map(String);
       groupPolicy = account.groupPolicy;
-      const channels = account.channels ?? {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const channels: Record<string, any> = account.channels ?? {};
       groupOverrides = Object.entries(channels)
         .map(([key, value]) => {
           const entries = (value?.users ?? []).map(String).filter(Boolean);
@@ -417,13 +422,15 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
       const account = resolveDiscordAccount({ cfg: params.cfg, accountId });
       dmAllowFrom = (account.config.dm?.allowFrom ?? []).map(String);
       groupPolicy = account.config.groupPolicy;
-      const guilds = account.config.guilds ?? {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const guilds: Record<string, any> = account.config.guilds ?? {};
       for (const [guildKey, guildCfg] of Object.entries(guilds)) {
         const entries = (guildCfg?.users ?? []).map(String).filter(Boolean);
         if (entries.length > 0) {
           groupOverrides.push({ label: `guild ${guildKey}`, entries });
         }
-        const channels = guildCfg?.channels ?? {};
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const channels: Record<string, any> = guildCfg?.channels ?? {};
         for (const [channelKey, channelCfg] of Object.entries(channels)) {
           const channelEntries = (channelCfg?.users ?? []).map(String).filter(Boolean);
           if (channelEntries.length > 0) {

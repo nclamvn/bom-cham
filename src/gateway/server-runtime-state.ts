@@ -11,8 +11,9 @@ import type { HooksConfigResolved } from "./hooks.js";
 import type { DedupeEntry } from "./server-shared.js";
 import type { GatewayTlsRuntime } from "./server/tls.js";
 import type { GatewayWsClient } from "./server/ws-types.js";
-import { CANVAS_HOST_PATH } from "../canvas-host/a2ui.js";
-import { type CanvasHostHandler, createCanvasHostHandler } from "../canvas-host/server.js";
+const CANVAS_HOST_PATH = "/_canvas";
+type CanvasHostHandler = { rootDir?: string; handleHttpRequest: (req: unknown, res: unknown) => boolean; handleUpgrade: (req: unknown, socket: unknown, head: unknown) => boolean; close: () => Promise<void> };
+const createCanvasHostHandler = async (_opts?: unknown): Promise<CanvasHostHandler> => ({ handleHttpRequest: () => false, handleUpgrade: () => false, close: async () => {} });
 import { resolveGatewayListenHosts } from "./net.js";
 import { createGatewayBroadcaster } from "./server-broadcast.js";
 import {

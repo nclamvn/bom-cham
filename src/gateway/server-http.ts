@@ -7,18 +7,17 @@ import {
   type ServerResponse,
 } from "node:http";
 import { createServer as createHttpsServer } from "node:https";
-import type { CanvasHostHandler } from "../canvas-host/server.js";
+type CanvasHostHandler = { handleHttpRequest: (req: unknown, res: unknown) => boolean; handleUpgrade: (req: unknown, socket: unknown, head: unknown) => boolean };
 import type { createSubsystemLogger } from "../logging/subsystem.js";
 import type { GatewayWsClient } from "./server/ws-types.js";
 import { resolveAgentAvatar } from "../agents/identity-avatar.js";
-import {
-  A2UI_PATH,
-  CANVAS_HOST_PATH,
-  CANVAS_WS_PATH,
-  handleA2uiHttpRequest,
-} from "../canvas-host/a2ui.js";
+const A2UI_PATH = "/_a2ui";
+const CANVAS_HOST_PATH = "/_canvas";
+const CANVAS_WS_PATH = "/_canvas/ws";
+const handleA2uiHttpRequest = async (_req: unknown, _res: unknown): Promise<boolean> => false;
 import { loadConfig } from "../config/config.js";
-import { handleSlackHttpRequest } from "../slack/http/index.js";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleSlackHttpRequest = async (..._args: any[]): Promise<any> => false;
 import { authorizeGatewayConnect, isLocalDirectRequest, type ResolvedGatewayAuth } from "./auth.js";
 import {
   handleControlUiAvatarRequest,

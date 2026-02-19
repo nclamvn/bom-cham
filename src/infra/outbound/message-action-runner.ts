@@ -42,7 +42,8 @@ import { actionHasTarget, actionRequiresTarget } from "./message-action-spec.js"
 import { resolveChannelTarget, type ResolvedMessagingTarget } from "./target-resolver.js";
 import { loadWebMedia } from "../../web/media.js";
 import { extensionForMime } from "../../media/mime.js";
-import { parseSlackTarget } from "../../slack/targets.js";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const parseSlackTarget = (_t: string, _opts?: any): any => null;
 
 export type MessageActionRunnerGateway = {
   url?: string;

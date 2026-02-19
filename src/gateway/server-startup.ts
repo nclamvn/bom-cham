@@ -17,7 +17,7 @@ import {
 import { loadInternalHooks } from "../hooks/loader.js";
 import type { loadOpenClawPlugins } from "../plugins/loader.js";
 import { type PluginServicesHandle, startPluginServices } from "../plugins/services.js";
-import { startBrowserControlServerIfEnabled } from "./server-browser.js";
+const startBrowserControlServerIfEnabled = async (): Promise<null> => null;
 import {
   scheduleRestartSentinelWake,
   shouldWakeFromRestartSentinel,

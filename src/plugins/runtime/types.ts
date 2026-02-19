@@ -85,34 +85,6 @@ type CreateMemoryGetTool = typeof import("../../agents/tools/memory-tool.js").cr
 type CreateMemorySearchTool =
   typeof import("../../agents/tools/memory-tool.js").createMemorySearchTool;
 type RegisterMemoryCli = typeof import("../../cli/memory-cli.js").registerMemoryCli;
-type DiscordMessageActions =
-  typeof import("../../channels/plugins/actions/discord.js").discordMessageActions;
-type AuditDiscordChannelPermissions =
-  typeof import("../../discord/audit.js").auditDiscordChannelPermissions;
-type ListDiscordDirectoryGroupsLive =
-  typeof import("../../discord/directory-live.js").listDiscordDirectoryGroupsLive;
-type ListDiscordDirectoryPeersLive =
-  typeof import("../../discord/directory-live.js").listDiscordDirectoryPeersLive;
-type ProbeDiscord = typeof import("../../discord/probe.js").probeDiscord;
-type ResolveDiscordChannelAllowlist =
-  typeof import("../../discord/resolve-channels.js").resolveDiscordChannelAllowlist;
-type ResolveDiscordUserAllowlist =
-  typeof import("../../discord/resolve-users.js").resolveDiscordUserAllowlist;
-type SendMessageDiscord = typeof import("../../discord/send.js").sendMessageDiscord;
-type SendPollDiscord = typeof import("../../discord/send.js").sendPollDiscord;
-type MonitorDiscordProvider = typeof import("../../discord/monitor.js").monitorDiscordProvider;
-type ListSlackDirectoryGroupsLive =
-  typeof import("../../slack/directory-live.js").listSlackDirectoryGroupsLive;
-type ListSlackDirectoryPeersLive =
-  typeof import("../../slack/directory-live.js").listSlackDirectoryPeersLive;
-type ProbeSlack = typeof import("../../slack/probe.js").probeSlack;
-type ResolveSlackChannelAllowlist =
-  typeof import("../../slack/resolve-channels.js").resolveSlackChannelAllowlist;
-type ResolveSlackUserAllowlist =
-  typeof import("../../slack/resolve-users.js").resolveSlackUserAllowlist;
-type SendMessageSlack = typeof import("../../slack/send.js").sendMessageSlack;
-type MonitorSlackProvider = typeof import("../../slack/index.js").monitorSlackProvider;
-type HandleSlackAction = typeof import("../../agents/tools/slack-actions.js").handleSlackAction;
 type AuditTelegramGroupMembership =
   typeof import("../../telegram/audit.js").auditTelegramGroupMembership;
 type CollectTelegramUnmentionedGroupIds =
@@ -123,14 +95,6 @@ type SendMessageTelegram = typeof import("../../telegram/send.js").sendMessageTe
 type MonitorTelegramProvider = typeof import("../../telegram/monitor.js").monitorTelegramProvider;
 type TelegramMessageActions =
   typeof import("../../channels/plugins/actions/telegram.js").telegramMessageActions;
-type ProbeSignal = typeof import("../../signal/probe.js").probeSignal;
-type SendMessageSignal = typeof import("../../signal/send.js").sendMessageSignal;
-type MonitorSignalProvider = typeof import("../../signal/index.js").monitorSignalProvider;
-type SignalMessageActions =
-  typeof import("../../channels/plugins/actions/signal.js").signalMessageActions;
-type MonitorIMessageProvider = typeof import("../../imessage/monitor.js").monitorIMessageProvider;
-type ProbeIMessage = typeof import("../../imessage/probe.js").probeIMessage;
-type SendMessageIMessage = typeof import("../../imessage/send.js").sendMessageIMessage;
 type GetActiveWebListener = typeof import("../../web/active-listener.js").getActiveWebListener;
 type GetWebAuthAgeMs = typeof import("../../web/auth-store.js").getWebAuthAgeMs;
 type LogoutWeb = typeof import("../../web/auth-store.js").logoutWeb;
@@ -148,25 +112,6 @@ type HandleWhatsAppAction =
 type CreateWhatsAppLoginTool =
   typeof import("../../channels/plugins/agent-tools/whatsapp-login.js").createWhatsAppLoginTool;
 
-// LINE channel types
-type ListLineAccountIds = typeof import("../../line/accounts.js").listLineAccountIds;
-type ResolveDefaultLineAccountId =
-  typeof import("../../line/accounts.js").resolveDefaultLineAccountId;
-type ResolveLineAccount = typeof import("../../line/accounts.js").resolveLineAccount;
-type NormalizeLineAccountId = typeof import("../../line/accounts.js").normalizeAccountId;
-type ProbeLineBot = typeof import("../../line/probe.js").probeLineBot;
-type SendMessageLine = typeof import("../../line/send.js").sendMessageLine;
-type PushMessageLine = typeof import("../../line/send.js").pushMessageLine;
-type PushMessagesLine = typeof import("../../line/send.js").pushMessagesLine;
-type PushFlexMessage = typeof import("../../line/send.js").pushFlexMessage;
-type PushTemplateMessage = typeof import("../../line/send.js").pushTemplateMessage;
-type PushLocationMessage = typeof import("../../line/send.js").pushLocationMessage;
-type PushTextMessageWithQuickReplies =
-  typeof import("../../line/send.js").pushTextMessageWithQuickReplies;
-type CreateQuickReplyItems = typeof import("../../line/send.js").createQuickReplyItems;
-type BuildTemplateMessageFromPayload =
-  typeof import("../../line/template-messages.js").buildTemplateMessageFromPayload;
-type MonitorLineProvider = typeof import("../../line/monitor.js").monitorLineProvider;
 
 export type RuntimeLogger = {
   debug?: (message: string) => void;
@@ -272,28 +217,6 @@ export type PluginRuntime = {
       shouldComputeCommandAuthorized: ShouldComputeCommandAuthorized;
       shouldHandleTextCommands: ShouldHandleTextCommands;
     };
-    discord: {
-      messageActions: DiscordMessageActions;
-      auditChannelPermissions: AuditDiscordChannelPermissions;
-      listDirectoryGroupsLive: ListDiscordDirectoryGroupsLive;
-      listDirectoryPeersLive: ListDiscordDirectoryPeersLive;
-      probeDiscord: ProbeDiscord;
-      resolveChannelAllowlist: ResolveDiscordChannelAllowlist;
-      resolveUserAllowlist: ResolveDiscordUserAllowlist;
-      sendMessageDiscord: SendMessageDiscord;
-      sendPollDiscord: SendPollDiscord;
-      monitorDiscordProvider: MonitorDiscordProvider;
-    };
-    slack: {
-      listDirectoryGroupsLive: ListSlackDirectoryGroupsLive;
-      listDirectoryPeersLive: ListSlackDirectoryPeersLive;
-      probeSlack: ProbeSlack;
-      resolveChannelAllowlist: ResolveSlackChannelAllowlist;
-      resolveUserAllowlist: ResolveSlackUserAllowlist;
-      sendMessageSlack: SendMessageSlack;
-      monitorSlackProvider: MonitorSlackProvider;
-      handleSlackAction: HandleSlackAction;
-    };
     telegram: {
       auditGroupMembership: AuditTelegramGroupMembership;
       collectUnmentionedGroupIds: CollectTelegramUnmentionedGroupIds;
@@ -302,17 +225,6 @@ export type PluginRuntime = {
       sendMessageTelegram: SendMessageTelegram;
       monitorTelegramProvider: MonitorTelegramProvider;
       messageActions: TelegramMessageActions;
-    };
-    signal: {
-      probeSignal: ProbeSignal;
-      sendMessageSignal: SendMessageSignal;
-      monitorSignalProvider: MonitorSignalProvider;
-      messageActions: SignalMessageActions;
-    };
-    imessage: {
-      monitorIMessageProvider: MonitorIMessageProvider;
-      probeIMessage: ProbeIMessage;
-      sendMessageIMessage: SendMessageIMessage;
     };
     whatsapp: {
       getActiveWebListener: GetActiveWebListener;
@@ -329,23 +241,6 @@ export type PluginRuntime = {
       monitorWebChannel: MonitorWebChannel;
       handleWhatsAppAction: HandleWhatsAppAction;
       createLoginTool: CreateWhatsAppLoginTool;
-    };
-    line: {
-      listLineAccountIds: ListLineAccountIds;
-      resolveDefaultLineAccountId: ResolveDefaultLineAccountId;
-      resolveLineAccount: ResolveLineAccount;
-      normalizeAccountId: NormalizeLineAccountId;
-      probeLineBot: ProbeLineBot;
-      sendMessageLine: SendMessageLine;
-      pushMessageLine: PushMessageLine;
-      pushMessagesLine: PushMessagesLine;
-      pushFlexMessage: PushFlexMessage;
-      pushTemplateMessage: PushTemplateMessage;
-      pushLocationMessage: PushLocationMessage;
-      pushTextMessageWithQuickReplies: PushTextMessageWithQuickReplies;
-      createQuickReplyItems: CreateQuickReplyItems;
-      buildTemplateMessageFromPayload: BuildTemplateMessageFromPayload;
-      monitorLineProvider: MonitorLineProvider;
     };
   };
   logging: {

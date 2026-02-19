@@ -1,9 +1,9 @@
 import path from "node:path";
-import type { CanvasHostServer } from "../canvas-host/server.js";
 import type { PluginServicesHandle } from "../plugins/services.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type { ControlUiRootState } from "./control-ui.js";
-import type { startBrowserControlServerIfEnabled } from "./server-browser.js";
+const startBrowserControlServerIfEnabled = async (): Promise<null> => null;
+type CanvasHostServer = null;
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { registerSkillsChangeListener } from "../agents/skills/refresh.js";
 import { initSubagentRegistry } from "../agents/subagent-registry.js";
@@ -467,7 +467,7 @@ export async function startGatewayServer(
     forwarder: execApprovalForwarder,
   });
 
-  const canvasHostServerPort = (canvasHostServer as CanvasHostServer | null)?.port;
+  const canvasHostServerPort: number | undefined = undefined;
 
   attachGatewayWsHandlers({
     wss,
@@ -545,7 +545,7 @@ export async function startGatewayServer(
     logTailscale,
   });
 
-  let browserControl: Awaited<ReturnType<typeof startBrowserControlServerIfEnabled>> = null;
+  let browserControl: { stop: () => Promise<void> } | null = null;
   ({ browserControl, pluginServices } = await startGatewaySidecars({
     cfg: cfgAtStart,
     pluginRegistry,

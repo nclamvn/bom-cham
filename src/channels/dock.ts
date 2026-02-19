@@ -1,9 +1,10 @@
 import type { OpenClawConfig } from "../config/config.js";
-import { resolveDiscordAccount } from "../discord/accounts.js";
-import { resolveIMessageAccount } from "../imessage/accounts.js";
-import { resolveSignalAccount } from "../signal/accounts.js";
-import { resolveSlackAccount, resolveSlackReplyToMode } from "../slack/accounts.js";
-import { buildSlackThreadingToolContext } from "../slack/threading-tool-context.js";
+const resolveDiscordAccount = (_p: { cfg: OpenClawConfig; accountId?: string | null }): { config: { dm?: { allowFrom?: Array<string | number> } } } => ({ config: {} });
+const resolveIMessageAccount = (_p: { cfg: OpenClawConfig; accountId?: string | null }): { config: { allowFrom?: Array<string | number> } } => ({ config: {} });
+const resolveSignalAccount = (_p: { cfg: OpenClawConfig; accountId?: string | null }): { config: { allowFrom?: Array<string | number> } } => ({ config: {} });
+const resolveSlackAccount = (_p: { cfg: OpenClawConfig; accountId?: string | null }): { dm?: { allowFrom?: Array<string | number> } } => ({});
+const resolveSlackReplyToMode = (_account: unknown, _chatType?: string | null): "off" | "all" | "first" => "off";
+const buildSlackThreadingToolContext = (_p: unknown): { currentChannelId?: string; currentThreadTs?: string; hasRepliedRef?: { value: boolean } } | undefined => undefined;
 import { resolveTelegramAccount } from "../telegram/accounts.js";
 import { normalizeAccountId } from "../routing/session-key.js";
 import { normalizeE164 } from "../utils.js";

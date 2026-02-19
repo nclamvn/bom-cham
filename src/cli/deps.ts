@@ -1,10 +1,11 @@
 import { logWebSelfId, sendMessageWhatsApp } from "../channels/web/index.js";
-import { sendMessageDiscord } from "../discord/send.js";
-import { sendMessageIMessage } from "../imessage/send.js";
 import type { OutboundSendDeps } from "../infra/outbound/deliver.js";
-import { sendMessageSignal } from "../signal/send.js";
-import { sendMessageSlack } from "../slack/send.js";
 import { sendMessageTelegram } from "../telegram/send.js";
+
+const sendMessageDiscord: (...args: unknown[]) => Promise<{ messageId: string }> = async () => ({ messageId: "" });
+const sendMessageIMessage: (...args: unknown[]) => Promise<{ messageId: string }> = async () => ({ messageId: "" });
+const sendMessageSignal: (...args: unknown[]) => Promise<{ messageId: string }> = async () => ({ messageId: "" });
+const sendMessageSlack: (...args: unknown[]) => Promise<{ messageId: string }> = async () => ({ messageId: "" });
 
 export type CliDeps = {
   sendMessageWhatsApp: typeof sendMessageWhatsApp;

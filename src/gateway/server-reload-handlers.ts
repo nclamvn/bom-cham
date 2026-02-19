@@ -13,7 +13,7 @@ import { CommandLane } from "../process/lanes.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import type { ChannelKind, GatewayReloadPlan } from "./config-reload.js";
 import { resolveHooksConfig } from "./hooks.js";
-import { startBrowserControlServerIfEnabled } from "./server-browser.js";
+const startBrowserControlServerIfEnabled = async (): Promise<{ stop: () => Promise<void> } | null> => null;
 import { buildGatewayCronService, type GatewayCronState } from "./server-cron.js";
 
 type GatewayHotReloadState = {

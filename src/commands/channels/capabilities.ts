@@ -1,12 +1,17 @@
 import { getChannelPlugin, listChannelPlugins } from "../../channels/plugins/index.js";
 import { resolveChannelDefaultAccountId } from "../../channels/plugins/helpers.js";
 import type { ChannelCapabilities, ChannelPlugin } from "../../channels/plugins/types.js";
-import { fetchChannelPermissionsDiscord } from "../../discord/send.js";
-import { parseDiscordTarget } from "../../discord/targets.js";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const fetchChannelPermissionsDiscord = async (..._args: any[]): Promise<any> => null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const parseDiscordTarget = (_t: string, _opts?: any): any => null;
 import { danger } from "../../globals.js";
 import type { OpenClawConfig } from "../../config/config.js";
 import { defaultRuntime, type RuntimeEnv } from "../../runtime.js";
-import { fetchSlackScopes, type SlackScopesResult } from "../../slack/scopes.js";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SlackScopesResult = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const fetchSlackScopes = async (..._args: any[]): Promise<SlackScopesResult> => ({});
 import { theme } from "../../terminal/theme.js";
 import { formatChannelAccountLabel, requireValidConfig } from "./shared.js";
 

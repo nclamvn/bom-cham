@@ -9,7 +9,8 @@ import type {
   GroupToolPolicyBySenderConfig,
   GroupToolPolicyConfig,
 } from "../../config/types.tools.js";
-import { resolveSlackAccount } from "../../slack/accounts.js";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveSlackAccount = (_p: any): any => ({ channels: {} });
 
 type GroupMentionParams = {
   cfg: OpenClawConfig;
