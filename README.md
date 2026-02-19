@@ -2,118 +2,118 @@
 ![Skills](https://img.shields.io/badge/skills-18-blue)
 ![License](https://img.shields.io/badge/license-MIT-yellow)
 
-# Bom Cham -- AI cham soc nguoi than cao tuoi
+# Bờm Chăm — AI chăm sóc người thân cao tuổi
 
-> "De gia dinh yen tam, de ong ba an vui"
+> "Để gia đình yên tâm, để ông bà an vui"
 
-Bom Cham la nen tang AI cham soc nguoi cao tuoi tai nha. Tich hop cam bien,
-camera, loa thong minh -- giam sat 24/7, canh bao qua Zalo/Telegram/WhatsApp/Viber,
-ho tro giai tri va sinh hoat.
+Bờm Chăm là nền tảng AI chăm sóc người cao tuổi tại nhà. Tích hợp cảm biến,
+camera, loa thông minh — giám sát 24/7, cảnh báo qua Zalo/Telegram/WhatsApp/Viber,
+hỗ trợ giải trí và sinh hoạt.
 
-Ho tro **nhieu nguoi than** (ba noi, ong noi, bo me...) voi profile rieng cho tung nguoi.
-Gia dinh xem trang thai tren **Family PWA** -- dung nhu app tren dien thoai.
+Hỗ trợ **nhiều người thân** (bà nội, ông nội, bố mẹ...) với profile riêng cho từng người.
+Gia đình xem trạng thái trên **Family PWA** — dùng như app trên điện thoại.
 
-## Kien truc
+## Kiến trúc
 
 ```
-[Sensors]  ->  [Home Assistant]  ->  [Bom Cham Gateway]  ->  [Zalo/TG/WA/Viber]
-  FP2            Raspberry Pi          Docker                 Gia dinh
-  Camera                               18 AI Skills
-  SOS Button                           Multi-elder
-                                            |
-                                       [Admin UI]     -- Cho nguoi cai dat
-                                       [Family PWA]   -- Cho gia dinh xem tren dien thoai
-                                       [Wizard]       -- Cai dat lan dau
+[Cảm biến]  ->  [Home Assistant]  ->  [Bờm Chăm Gateway]  ->  [Zalo/TG/WA/Viber]
+  FP2             Raspberry Pi          Docker                  Gia đình
+  Camera                                18 AI Skills
+  Nút SOS                               Multi-elder
+                                              |
+                                         [Admin UI]     -- Cho người cài đặt
+                                         [Family PWA]   -- Cho gia đình xem trên điện thoại
+                                         [Wizard]       -- Cài đặt lần đầu
 ```
 
 ## 18 Skills
 
-### Giam sat & An toan
-| # | Skill | Mo ta |
+### Giám sát & An toàn
+| # | Skill | Mô tả |
 |---|-------|-------|
-| 1 | eldercare-monitor | Giam sat 24/7, 4 muc canh bao, check moi 5 phut |
-| 2 | eldercare-sos | SOS 3 cap: nut bam -> Zalo -> goi 115 |
-| 3 | eldercare-fall-detect | Phat hien te nga 2 layer (FP2 + AI pattern) |
-| 4 | eldercare-multi-room | Giam sat nhieu phong, an toan nha ve sinh |
-| 5 | eldercare-visitor-log | Ghi nhan khach tham tu presence sensor |
+| 1 | eldercare-monitor | Giám sát 24/7, 4 mức cảnh báo, kiểm tra mỗi 5 phút |
+| 2 | eldercare-sos | SOS 3 cấp: nút bấm → Zalo → gọi 115 |
+| 3 | eldercare-fall-detect | Phát hiện té ngã 2 lớp (FP2 + AI pattern) |
+| 4 | eldercare-multi-room | Giám sát nhiều phòng, an toàn nhà vệ sinh |
+| 5 | eldercare-visitor-log | Ghi nhận khách thăm từ presence sensor |
 
-### Suc khoe
-| # | Skill | Mo ta |
+### Sức khoẻ
+| # | Skill | Mô tả |
 |---|-------|-------|
-| 6 | eldercare-health-log | Huyet ap, duong huyet, nhip tim qua chat |
-| 7 | eldercare-medication | Nhac uong thuoc qua TTS + Zalo |
-| 8 | eldercare-sleep-tracker | Phan tich giac ngu tu mmWave sensor |
-| 9 | eldercare-exercise | Bai tap tai giuong voi TTS huong dan |
-| 10 | eldercare-emergency-contacts | Danh sach cap cuu, ho so y te |
+| 6 | eldercare-health-log | Huyết áp, đường huyết, nhịp tim qua chat |
+| 7 | eldercare-medication | Nhắc uống thuốc qua TTS + Zalo |
+| 8 | eldercare-sleep-tracker | Phân tích giấc ngủ từ mmWave sensor |
+| 9 | eldercare-exercise | Bài tập tại giường với TTS hướng dẫn |
+| 10 | eldercare-emergency-contacts | Danh sách cấp cứu, hồ sơ y tế |
 
-### Giai tri & Sinh hoat
-| # | Skill | Mo ta |
+### Giải trí & Sinh hoạt
+| # | Skill | Mô tả |
 |---|-------|-------|
-| 11 | eldercare-companion | Nhac bolero, doc truyen, nhac uong nuoc |
-| 12 | eldercare-videocall | Goi video tu chat command |
-| 13 | eldercare-weather-alert | Canh bao thoi tiet cuc doan |
+| 11 | eldercare-companion | Nhạc bolero, đọc truyện, nhắc uống nước |
+| 12 | eldercare-videocall | Gọi video từ chat command |
+| 13 | eldercare-weather-alert | Cảnh báo thời tiết cực đoan |
 
-### He thong
-| # | Skill | Mo ta |
+### Hệ thống
+| # | Skill | Mô tả |
 |---|-------|-------|
-| 14 | eldercare-daily-report | Bao cao tong ket 21h moi toi |
-| 15 | eldercare-offline-queue | Dam bao khong mat alert, retry tu dong |
-| 16 | eldercare-profiles | Quan ly nhieu nguoi than (multi-elder) |
-| 17 | openai-whisper-api | Voice-to-text cho tieng Viet |
+| 14 | eldercare-daily-report | Báo cáo tổng kết 21h mỗi tối |
+| 15 | eldercare-offline-queue | Đảm bảo không mất alert, retry tự động |
+| 16 | eldercare-profiles | Quản lý nhiều người thân (multi-elder) |
+| 17 | openai-whisper-api | Voice-to-text cho tiếng Việt |
 | 18 | sherpa-onnx-tts | Text-to-speech offline |
 
 ## Multi-elder
 
-Bom Cham ho tro cham soc nhieu nguoi cung luc:
+Bờm Chăm hỗ trợ chăm sóc nhiều người cùng lúc:
 
-- **1 nguoi (mac dinh):** Hoat dong y het, khong can cau hinh them
-- **Nhieu nguoi:** Them profile qua chat "them ong noi" hoac qua Wizard
-- **Moi nguoi co:** Sensors rieng, contacts rieng, medication rieng
+- **1 người (mặc định):** Hoạt động y hệt, không cần cấu hình thêm
+- **Nhiều người:** Thêm profile qua chat "thêm ông nội" hoặc qua Wizard
+- **Mỗi người có:** Sensors riêng, contacts riêng, medication riêng
 - **Memory keys:** `eldercare_{elder_id}_*` (namespaced)
-- **Backward compatible:** Khong co profiles -> auto-migrate "ba_noi"
+- **Tương thích ngược:** Không có profiles → auto-migrate "ba_noi"
 
 ## Family PWA
 
-Dashboard cho gia dinh xem tren dien thoai:
+Dashboard cho gia đình xem trên điện thoại:
 
 - **URL:** `http://bom-cham:18789/family/`
-- **Vanilla JS** -- nhe, nhanh, chay tren dien thoai cu
-- **Tieng Viet 100%**, font lon, nut lon
-- **Add to Home Screen** nhu app that
-- Hien thi: trang thai, nhiet do, giac ngu, thuoc, timeline, canh bao
-- Thao tac nhanh: goi, mo nhac, nhan tin qua loa, camera
+- **Vanilla JS** — nhẹ, nhanh, chạy trên điện thoại cũ
+- **Tiếng Việt 100%**, font lớn, nút lớn
+- **Add to Home Screen** như app thật
+- Hiển thị: trạng thái, nhiệt độ, giấc ngủ, thuốc, timeline, cảnh báo
+- Thao tác nhanh: gọi, mở nhạc, nhắn tin qua loa, camera
 
 ## Onboarding Wizard
 
-Setup lan dau 5 buoc:
+Cài đặt lần đầu 5 bước:
 
-1. Chao mung
-2. Thong tin nguoi than (ten, tuoi, van dong, thinh luc)
-3. Gia dinh nhan thong bao (contacts)
-4. Ket noi Home Assistant (URL + token + test)
-5. Hoan tat + huong dan Add to Home Screen
+1. Chào mừng
+2. Thông tin người thân (tên, tuổi, vận động, thính lực)
+3. Gia đình nhận thông báo (contacts)
+4. Kết nối Home Assistant (URL + token + test)
+5. Hoàn tất + hướng dẫn Add to Home Screen
 
 **URL:** `http://bom-cham:18789/family/wizard.html`
 
-## Phan cung can
+## Phần cứng cần thiết
 
-| Thiet bi | Gia uoc tinh |
+| Thiết bị | Giá ước tính |
 |----------|-------------|
-| Raspberry Pi 5 + phu kien | ~2,500,000d |
-| Cam bien Aqara FP2 | ~1,200,000d |
-| Tablet Android 10" | ~5,000,000d |
-| Loa Bluetooth | ~800,000d |
-| Camera IP | ~1,000,000d |
-| Nut SOS Zigbee | ~200,000d |
-| **Tong** | **~12,000,000d** |
+| Raspberry Pi 5 + phụ kiện | ~2.500.000đ |
+| Cảm biến Aqara FP2 | ~1.200.000đ |
+| Tablet Android 10" | ~5.000.000đ |
+| Loa Bluetooth | ~800.000đ |
+| Camera IP | ~1.000.000đ |
+| Nút SOS Zigbee | ~200.000đ |
+| **Tổng** | **~12.000.000đ** |
 
-## Quick Start
+## Bắt đầu nhanh
 
 1. Clone repo: `git clone https://github.com/nclamvn/bom-cham`
-2. Copy env: `cp .env.example .env` -> dien API keys
-3. Chay: `docker-compose up -d`
-4. Mo Wizard: `http://localhost:18789/family/wizard.html`
-5. Cai dat 5 buoc -> bat dau su dung
+2. Copy env: `cp .env.example .env` → điền API keys
+3. Chạy: `docker-compose up -d`
+4. Mở Wizard: `http://localhost:18789/family/wizard.html`
+5. Cài đặt 5 bước → bắt đầu sử dụng
 
 ## Tech Stack
 
@@ -125,15 +125,15 @@ Setup lan dau 5 buoc:
 - **Family PWA:** Vanilla HTML/CSS/JS
 - **Deploy:** Docker
 
-## 4 Channels
+## 4 Kênh nhắn tin
 
-| Channel | Trang thai |
-|---------|-----------|
+| Kênh | Trạng thái |
+|------|-----------|
 | Telegram | Bot API |
 | WhatsApp | QR link |
 | Google Chat | Chat API |
 | Viber | REST API |
 
-## License
+## Giấy phép
 
 MIT
