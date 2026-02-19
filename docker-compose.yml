@@ -1,0 +1,30 @@
+services:
+  bom-cham:
+    build: .
+    container_name: bom-cham
+    restart: unless-stopped
+    ports:
+      - "${GATEWAY_PORT:-18789}:18789"
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      # LLM Providers (cần ít nhất 1)
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GOOGLE_GENERATIVE_AI_API_KEY: ${GOOGLE_GENERATIVE_AI_API_KEY:-}
+      OLLAMA_HOST: ${OLLAMA_HOST:-}
+      # Home Assistant (BẮT BUỘC cho eldercare)
+      HA_URL: ${HA_URL:-}
+      HA_TOKEN: ${HA_TOKEN:-}
+      HA_CACHE_TTL: ${HA_CACHE_TTL:-60000}
+      # Tablet (cho video call)
+      TABLET_IP: ${TABLET_IP:-}
+      TABLET_FULLY_KIOSK_PASSWORD: ${TABLET_FULLY_KIOSK_PASSWORD:-}
+      # Gateway token
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
+    volumes:
+      - bom-cham-data:/home/node/.openclaw
+    init: true
+
+volumes:
+  bom-cham-data:

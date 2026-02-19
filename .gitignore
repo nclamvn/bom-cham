@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+ui/dist/
+*.js.map
+*.bun-build
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Data
+data/
+*.sqlite
+*.sqlite3
+
+# OS
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Lock files (regenerate with pnpm install)
+pnpm-lock.yaml
+bun.lock
+bun.lockb
+
+# Coverage
+coverage/
+
+# UI test artifacts
+ui/src/ui/__screenshots__/
+ui/playwright-report/
+ui/test-results/
+
+# Vendor build artifacts
+vendor/
+src/canvas-host/a2ui/*.bundle.js
+src/canvas-host/a2ui/*.map
+.bundle.hash
+
+# Security - Never commit
+*.pem
+*.key
+*.crt
+credentials/
+secrets/
+*.secret
+config.json
+
+# Local
+.local/
+.serena/
+.worktrees/
+IDENTITY.md
+USER.md
