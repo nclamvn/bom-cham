@@ -1,0 +1,27 @@
+{
+  "analysis_window": {
+    "night_start": "21:00",
+    "morning_end": "07:00"
+  },
+  "entities": {
+    "presence": "binary_sensor.grandma_room_presence",
+    "motion_minutes": "sensor.grandma_room_motion_minutes",
+    "camera_motion": "binary_sensor.grandma_room_camera_motion"
+  },
+  "detection": {
+    "sleep_onset_no_motion_minutes": 15,
+    "wake_sustained_motion_minutes": 5,
+    "mid_wake_min_duration_minutes": 2
+  },
+  "quality": {
+    "good": { "min_hours": 7, "max_wake_events": 1, "max_wake_duration_min": 10 },
+    "normal": { "min_hours": 5, "max_wake_events": 3 },
+    "poor": "everything_else"
+  },
+  "alerts": {
+    "min_sleep_hours_alert": 4,
+    "long_wake_alert_minutes": 30,
+    "declining_trend_days": 3
+  },
+  "history_days": 7
+}
