@@ -275,3 +275,28 @@ Khi gửi alert thất bại (Zalo hoặc Telegram error):
 **QUAN TRỌNG:** Mỗi level escalation (Level 1, 2, 3) nếu gửi thất bại
 đều tạo queue entry riêng. Ví dụ Level 1 fail → queue entry priority EMERGENCY.
 Level 2 fail → thêm 1 queue entry nữa.
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `sensor.sos_button_action` → `elder.ha_entities.sos_button`
+- `light.grandma_room` → `elder.ha_entities.light`
+- `media_player.grandma_room` → `elder.ha_entities.media_player`
+- `camera.grandma_room` → `elder.ha_entities.camera`
+- Memory: `eldercare_sos_active` → `eldercare_{elder.id}_sos_active`
+- Memory: `eldercare_sos_config` → `eldercare_{elder.id}_sos_config`
+- Contacts: `eldercare_contacts` → `elder.contacts`
+- TTS: Dùng `elder.tts.volume`, `elder.tts.rate` cho TTS service

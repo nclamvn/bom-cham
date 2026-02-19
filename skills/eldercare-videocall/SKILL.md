@@ -220,3 +220,27 @@ Ghi nhận cho tương lai:
 - Option A: App phụ đề overlay Android chạy song song Zalo
 - Option B: Micro riêng → Whisper STT → text trên second screen
 Hiện tại: Gia đình nói TO + RÕ, kết hợp nhắn text Zalo chat song song.
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `binary_sensor.grandma_room_presence` → `elder.ha_entities.presence`
+- `sensor.grandma_room_motion_minutes` → `elder.ha_entities.motion`
+- `light.grandma_room` → `elder.ha_entities.light`
+- `media_player.grandma_room` → `elder.ha_entities.media_player`
+- Memory: `eldercare_call_*` → `eldercare_{elder.id}_call_*`
+- Memory: `eldercare_videocall_config` → `eldercare_{elder.id}_videocall_config`
+- TTS: Dùng `elder.tts.*`

@@ -264,3 +264,28 @@ Các field có thể override:
 - Dùng Whisper large model nếu có (nhận diện tốt hơn giọng yếu)
 - STT confidence < 0.5 → hỏi lại thay vì đoán
 - Log mọi voice command: `eldercare_voice_command_{timestamp}: { "raw_text": "...", "matched_intent": "...", "confidence": 0.X }`
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `media_player.grandma_room` → `elder.ha_entities.media_player`
+- Memory: `eldercare_music_played_*` → `eldercare_{elder.id}_music_played_*`
+- Memory: `eldercare_story_bookmark` → `eldercare_{elder.id}_story_bookmark`
+- Memory: `eldercare_reminder_*` → `eldercare_{elder.id}_reminder_*`
+- Memory: `eldercare_voice_command_*` → `eldercare_{elder.id}_voice_command_*`
+- Memory: `eldercare_companion_config` → `eldercare_{elder.id}_companion_config`
+- TTS: Dùng `elder.tts.rate` (0.8), `elder.tts.volume` cho TTS service
+- Messages: Dùng `elder.name` thay vì "bà"

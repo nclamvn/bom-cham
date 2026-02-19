@@ -227,3 +227,29 @@ Trigger (FP2 event / AI pattern từ monitor)
   │
   └── Log + cập nhật cooldown
 ```
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `binary_sensor.grandma_room_fall_detected` → `elder.ha_entities.fall_detection`
+- `sensor.grandma_room_motion_minutes` → `elder.ha_entities.motion`
+- `binary_sensor.grandma_room_presence` → `elder.ha_entities.presence`
+- `binary_sensor.grandma_room_camera_motion` → `elder.ha_entities.camera` + `_motion`
+- `camera.grandma_room` → `elder.ha_entities.camera`
+- `media_player.grandma_room` → `elder.ha_entities.media_player`
+- Memory: `eldercare_fall_*` → `eldercare_{elder.id}_fall_*`
+- Memory: `eldercare_fall_config` → `eldercare_{elder.id}_fall_config`
+- TTS: Dùng `elder.tts.*` cho voice confirm

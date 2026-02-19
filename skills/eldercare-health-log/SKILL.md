@@ -188,3 +188,24 @@ Detect intent: nếu message chứa "bà" + symptom keywords (ho, ăn ít, ngủ
 ```
 
 Reply: "📝 Đã ghi chú: Bà ho nhiều hôm nay"
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- No hardcoded HA entities to change
+- Memory: `eldercare_health_*` → `eldercare_{elder.id}_health_*`
+- Memory: `eldercare_health_{type}_{timestamp}` → `eldercare_{elder.id}_health_{type}_{timestamp}`
+- Messages: Include `elder.name` in health log entries, e.g. "Bà Nội — Huyết áp 130/80"

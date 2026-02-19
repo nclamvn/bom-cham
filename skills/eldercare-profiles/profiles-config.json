@@ -1,0 +1,29 @@
+{
+  "default_profile": {
+    "id": "ba_noi",
+    "name": "Bà Nội",
+    "age": 90,
+    "room": "grandma_room",
+    "mobility": "bedridden",
+    "hearing": "hard_of_hearing",
+    "ha_entities": {
+      "presence": "binary_sensor.grandma_room_presence",
+      "motion": "sensor.grandma_room_motion_minutes",
+      "temperature": "sensor.grandma_room_temperature",
+      "humidity": "sensor.grandma_room_humidity",
+      "media_player": "media_player.grandma_room",
+      "light": "light.grandma_room",
+      "sos_button": "sensor.sos_button_action",
+      "camera": "camera.grandma_room",
+      "fall_detection": "binary_sensor.grandma_room_fall_detected",
+      "target_count": "sensor.grandma_room_target_count"
+    },
+    "tts": {
+      "volume": 0.9,
+      "rate": 0.8
+    },
+    "active": true
+  },
+  "auto_migrate": true,
+  "max_elders": 10
+}

@@ -226,3 +226,25 @@ Hướng dẫn chi tiết + cung cấp script đọc cho tổng đài:
 - **Privacy**: Thông tin y tế chỉ chia sẻ khi SOS Level 3 hoặc gia đình hỏi
 - **Tích hợp health-log**: `current_medications` sync từ `eldercare_medication_list` nếu có
 - **Tích hợp health-log (weight)**: `weight_kg` sync từ health records gần nhất
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- No hardcoded HA entities
+- Memory: `eldercare_emergency_list` → `eldercare_{elder.id}_emergency_list`
+- Memory: `eldercare_medical_profile` → `eldercare_{elder.id}_medical_profile`
+- Contacts: Per-elder emergency contact list, support different contacts per elder
+- Medical profile: Per-elder conditions, allergies, medications

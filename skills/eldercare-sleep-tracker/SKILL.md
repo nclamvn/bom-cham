@@ -166,3 +166,26 @@ Gia đình hỏi:
 - Nếu ông ngủ cùng phòng → presence/motion có thể bị ảnh hưởng bởi ông
 - Skill ghi rõ trong mọi report: "Ước tính dựa trên cảm biến phòng, tham khảo"
 - Không phải chẩn đoán y khoa — nếu nghi ngờ vấn đề giấc ngủ → hỏi bác sĩ
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `binary_sensor.grandma_room_presence` → `elder.ha_entities.presence`
+- `sensor.grandma_room_motion_minutes` → `elder.ha_entities.motion`
+- `binary_sensor.grandma_room_camera_motion` → `elder.ha_entities.camera` + `_motion`
+- Memory: `eldercare_sleep_*` → `eldercare_{elder.id}_sleep_*`
+- Memory: `eldercare_sleep_{date}` → `eldercare_{elder.id}_sleep_{date}`
+- Reports: Include `elder.name` in sleep reports

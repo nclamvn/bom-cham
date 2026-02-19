@@ -237,3 +237,26 @@ Skill gửi alert
                      │
               failed_permanent
 ```
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `light.grandma_room` → `elder.ha_entities.light`
+- `media_player.grandma_room` → `elder.ha_entities.media_player`
+- Memory: `eldercare_queue_*` → `eldercare_{elder.id}_queue_*`
+- Memory: `eldercare_queue_sent_*` → `eldercare_{elder.id}_queue_sent_*`
+- Memory: `eldercare_queue_local_fallback_at` → `eldercare_{elder.id}_queue_local_fallback_at`
+- TTS: Dùng `elder.tts.*` cho fallback alerts

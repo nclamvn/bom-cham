@@ -151,3 +151,25 @@ hoặc
 
 - "thời tiết" / "weather" → hiển thị nhiệt độ + ẩm hiện tại + forecast
 - "phòng bà bao nhiêu độ" → indoor temp + humidity
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `sensor.grandma_room_temperature` → `elder.ha_entities.temperature`
+- `sensor.grandma_room_humidity` → `elder.ha_entities.humidity`
+- `sensor.outdoor_temperature` and `sensor.outdoor_humidity` remain global (shared)
+- Memory: `eldercare_weather_{date}_*` → `eldercare_{elder.id}_weather_{date}_*`
+- Messages: Include `elder.name` in weather alerts, e.g. "Phòng Bà Nội: 36°C — nóng"

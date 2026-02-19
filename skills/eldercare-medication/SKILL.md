@@ -182,3 +182,26 @@ Skill `eldercare-daily-report` query medication status:
 - **Nhắc nhẹ nhàng**: Giọng TTS tiếng Việt, tốc độ 0.8, tone ấm áp
 - **Không spam**: Chỉ nhắc 1 lần mỗi thuốc mỗi giờ. Quên thuốc cảnh báo 1 lần.
 - **Privacy**: Không lưu tên thuốc cụ thể trong logs/analytics, chỉ lưu short_name
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `media_player.grandma_room` → `elder.ha_entities.media_player`
+- Memory: `eldercare_medication_list` → `eldercare_{elder.id}_medication_list`
+- Memory: `eldercare_med_taken_{date}_{name}` → `eldercare_{elder.id}_med_taken_{date}_{name}`
+- Memory: `eldercare_med_missed_{date}_{name}` → `eldercare_{elder.id}_med_missed_{date}_{name}`
+- TTS: Dùng `elder.tts.rate` (0.8), `elder.tts.volume` cho reminders
+- Messages: "Bà ơi, đến giờ uống thuốc" → "{elder.name} ơi, đến giờ uống thuốc"

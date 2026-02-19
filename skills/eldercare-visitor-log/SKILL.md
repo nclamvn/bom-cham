@@ -143,3 +143,26 @@ hoặc
 - Nếu FP2 không có target_count (firmware cũ) → skill inactive, không lỗi
 - Nếu chỉ có binary presence (on/off) → không thể phân biệt 1 vs nhiều người → skill inactive
 - Skill ghi rõ: cần FP2 với firmware hỗ trợ multi-target tracking
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `sensor.grandma_room_target_count` → `elder.ha_entities.target_count`
+- Memory: `eldercare_visitor_active` → `eldercare_{elder.id}_visitor_active`
+- Memory: `eldercare_visitor_{date}_*` → `eldercare_{elder.id}_visitor_{date}_*`
+- Memory: `eldercare_visitor_expected_{date}` → `eldercare_{elder.id}_visitor_expected_{date}`
+- Memory: `eldercare_visitor_security_*` → `eldercare_{elder.id}_visitor_security_*`
+- Messages: Include `elder.name` in visitor notifications

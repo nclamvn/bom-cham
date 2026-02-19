@@ -182,3 +182,29 @@ hoặc
 ```
 🏋️ Thể dục: Chưa tập hôm nay
 ```
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `sensor.grandma_room_motion_minutes` → `elder.ha_entities.motion`
+- `media_player.grandma_room` → `elder.ha_entities.media_player`
+- Memory: `eldercare_exercise_config` → `eldercare_{elder.id}_exercise_config`
+- Memory: `eldercare_exercise_{date}` → `eldercare_{elder.id}_exercise_{date}`
+- Memory: `eldercare_exercise_retry_{date}` → `eldercare_{elder.id}_exercise_retry_{date}`
+- Memory: `eldercare_sos_active` → `eldercare_{elder.id}_sos_active`
+- Memory: `eldercare_call_active` → `eldercare_{elder.id}_call_active`
+- TTS: Dùng `elder.tts.*`, adjust exercise difficulty based on `elder.mobility`
+- Messages: "Bà ơi" → "{elder.name} ơi"

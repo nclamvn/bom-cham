@@ -212,3 +212,28 @@ Lâu nhất ở WC: 12 phút (bình thường)
 - "bà ở đâu" / "bà ở phòng nào" → query eldercare_location_current
 - "bà đi WC mấy lần hôm nay" → query movement logs
 - "thêm phòng WC: binary_sensor.bathroom_presence" → add room to config
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `binary_sensor.grandma_room_presence` → `elder.ha_entities.presence`
+- `sensor.grandma_room_motion_minutes` → `elder.ha_entities.motion`
+- Additional room sensors (bathroom, kitchen, living_room) → read from `eldercare_{elder.id}_multiroom_config`
+- Memory: `eldercare_multiroom_config` → `eldercare_{elder.id}_multiroom_config`
+- Memory: `eldercare_location_current` → `eldercare_{elder.id}_location_current`
+- Memory: `eldercare_movement_*` → `eldercare_{elder.id}_movement_*`
+- TTS: Dùng `elder.tts.*` for bathroom timeout alerts
+- Messages: "Bà ơi" → "{elder.name} ơi"

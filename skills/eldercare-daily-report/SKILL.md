@@ -226,3 +226,27 @@ Rồi mới đến các section bình thường.
 **Không ai gọi bà:**
 → Thêm cuối report:
 "💬 Nhắc: Bà chưa được gọi hôm nay. Gọi chào bà khi có thể nhé!"
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `sensor.grandma_room_temperature` → `elder.ha_entities.temperature`
+- `sensor.grandma_room_humidity` → `elder.ha_entities.humidity`
+- `sensor.grandma_room_motion_minutes` → `elder.ha_entities.motion`
+- Memory: ALL `eldercare_*` keys → `eldercare_{elder.id}_*` prefix
+- Memory: `eldercare_daily_report_*` → `eldercare_{elder.id}_daily_report_*`
+- Contacts: `eldercare_contacts` → `elder.contacts`
+- Report: Generate separate section for each elder, e.g. "📋 Báo cáo Bà Nội:", "📋 Báo cáo Ông Nội:"

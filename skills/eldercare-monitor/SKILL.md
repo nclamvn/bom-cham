@@ -193,3 +193,31 @@ Cron 5 phút
   ├── Gửi cảnh báo (nếu cần)
   └── Log vào memory
 ```
+
+## Multi-Elder Support
+
+Skill này hỗ trợ nhiều người thân:
+
+1. Đọc `eldercare_profiles` từ memory
+2. Nếu không tồn tại → auto-migrate default profile "ba_noi" (xem skill eldercare-profiles)
+3. Loop qua tất cả active elders
+4. Với mỗi elder:
+   - Dùng `elder.ha_entities.*` thay vì hardcoded entity names
+   - Dùng `eldercare_{elder.id}_*` làm memory key prefix
+   - Dùng `elder.name` trong messages/TTS
+   - Dùng `elder.contacts` cho alert recipients (fallback global contacts)
+   - Dùng `elder.tts.*` cho TTS settings
+
+### Thay đổi cụ thể
+
+- `binary_sensor.grandma_room_presence` → `elder.ha_entities.presence`
+- `sensor.grandma_room_motion_minutes` → `elder.ha_entities.motion`
+- `sensor.grandma_room_temperature` → `elder.ha_entities.temperature`
+- `sensor.grandma_room_humidity` → `elder.ha_entities.humidity`
+- `binary_sensor.grandma_room_camera_motion` → `elder.ha_entities.camera` + `_motion` attribute
+- Memory: `eldercare_check_*` → `eldercare_{elder.id}_check_*`
+- Memory: `eldercare_last_alert_time` → `eldercare_{elder.id}_last_alert_time`
+- Memory: `eldercare_monitor_config` → `eldercare_{elder.id}_monitor_config`
+- Memory: `eldercare_queue_*` → `eldercare_{elder.id}_queue_*`
+- Contacts: `eldercare_contacts` → `elder.contacts` (fallback global)
+- Alert messages: Prefix with `elder.name`, e.g. "⚠️ Bà Nội: bất động 35 phút"
