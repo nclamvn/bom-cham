@@ -1,0 +1,21 @@
+{
+  "enabled": false,
+  "level": 1,
+  "cron_time": "09:00",
+  "retry_time": "10:00",
+  "entities": {
+    "media_player": "media_player.grandma_room",
+    "motion_minutes": "sensor.grandma_room_motion_minutes"
+  },
+  "tts": {
+    "language": "vi",
+    "volume": 1.0,
+    "rate": 0.7,
+    "pause_between_sentences_sec": 3,
+    "pause_between_exercises_sec": 10,
+    "count_pace_sec": 3
+  },
+  "skip_conditions": ["sos_active", "video_call_active"],
+  "max_motion_minutes_to_start": 30,
+  "disclaimer_shown": false
+}
