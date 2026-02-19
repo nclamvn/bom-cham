@@ -9,8 +9,6 @@ import { applyGoogleGeminiModelDefault } from "../../google-gemini-model-default
 import {
   applyAuthProfileConfig,
   applyKimiCodeConfig,
-  applyMinimaxApiConfig,
-  applyMinimaxConfig,
   applyMoonshotConfig,
   applyOpencodeZenConfig,
   applyOpenrouterConfig,
@@ -398,11 +396,11 @@ export async function applyNonInteractiveAuthChoice(params: {
     });
     const modelId =
       authChoice === "minimax-api-lightning" ? "MiniMax-M2.1-lightning" : "MiniMax-M2.1";
-    return applyMinimaxApiConfig(nextConfig, modelId);
+    return nextConfig;
   }
 
   if (authChoice === "minimax") {
-    return applyMinimaxConfig(nextConfig);
+    return nextConfig;
   }
 
   if (authChoice === "opencode-zen") {

@@ -145,12 +145,6 @@ export async function compactEmbeddedPiSessionDirect(
           `No API key resolved for provider "${model.provider}" (auth mode: ${apiKeyInfo.mode}).`,
         );
       }
-    } else if (model.provider === "github-copilot") {
-      const { resolveCopilotApiToken } = await import("../../providers/github-copilot-token.js");
-      const copilotToken = await resolveCopilotApiToken({
-        githubToken: apiKeyInfo.apiKey,
-      });
-      authStorage.setRuntimeApiKey(model.provider, copilotToken.token);
     } else {
       authStorage.setRuntimeApiKey(model.provider, apiKeyInfo.apiKey);
     }

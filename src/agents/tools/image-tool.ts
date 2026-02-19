@@ -10,7 +10,6 @@ import { resolveUserPath } from "../../utils.js";
 import { loadWebMedia } from "../../web/media.js";
 import { ensureAuthProfileStore, listProfilesForProvider } from "../auth-profiles.js";
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../defaults.js";
-import { minimaxUnderstandImage } from "../minimax-vlm.js";
 import { getApiKeyForModel, requireApiKey, resolveEnvApiKey } from "../model-auth.js";
 import { runWithImageModelFallback } from "../model-fallback.js";
 import { resolveConfiguredModelRef } from "../model-selection.js";
@@ -111,10 +110,7 @@ export function resolveImageModelConfigForTool(params: {
 
   let preferred: string | null = null;
 
-  // MiniMax users: always try the canonical vision model first when auth exists.
-  if (primary.provider === "minimax" && providerOk) {
-    preferred = "minimax/MiniMax-VL-01";
-  } else if (providerOk && providerVisionFromConfig) {
+  if (providerOk && providerVisionFromConfig) {
     preferred = providerVisionFromConfig;
   } else if (primary.provider === "openai" && openaiOk) {
     preferred = "openai/gpt-5-mini";
@@ -261,16 +257,6 @@ async function runImagePrompt(params: {
       const apiKey = requireApiKey(apiKeyInfo, model.provider);
       authStorage.setRuntimeApiKey(model.provider, apiKey);
       const imageDataUrl = `data:${params.mimeType};base64,${params.base64}`;
-
-      if (model.provider === "minimax") {
-        const text = await minimaxUnderstandImage({
-          apiKey,
-          prompt: params.prompt,
-          imageDataUrl,
-          modelBaseUrl: model.baseUrl,
-        });
-        return { text, provider: model.provider, model: model.id };
-      }
 
       const context = buildImageContext(params.prompt, params.base64, params.mimeType);
       const message = await complete(model, context, {

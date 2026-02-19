@@ -1,7 +1,6 @@
 import type { Command } from "commander";
 
 import {
-  githubCopilotLoginCommand,
   modelsAliasesAddCommand,
   modelsAliasesListCommand,
   modelsAliasesRemoveCommand,
@@ -369,13 +368,7 @@ export function registerModelsCli(program: Command) {
     .option("--yes", "Overwrite existing profile without prompting", false)
     .action(async (opts) => {
       await runModelsCommand(async () => {
-        await githubCopilotLoginCommand(
-          {
-            profileId: opts.profileId as string | undefined,
-            yes: Boolean(opts.yes),
-          },
-          defaultRuntime,
-        );
+        console.log("GitHub Copilot login has been removed from Bờm Chăm.");
       });
     });
 

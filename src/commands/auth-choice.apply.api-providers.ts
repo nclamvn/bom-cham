@@ -34,7 +34,6 @@ import {
   MOONSHOT_DEFAULT_MODEL_REF,
   OPENROUTER_DEFAULT_MODEL_REF,
   SYNTHETIC_DEFAULT_MODEL_REF,
-  VENICE_DEFAULT_MODEL_REF,
   VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF,
   XIAOMI_DEFAULT_MODEL_REF,
   setGeminiApiKey,
@@ -573,10 +572,10 @@ export async function applyAuthChoiceApiProviders(
       const applied = await applyDefaultModelChoice({
         config: nextConfig,
         setDefaultModel: params.setDefaultModel,
-        defaultModel: VENICE_DEFAULT_MODEL_REF,
+        defaultModel: "venice/llama-3.3-70b",
         applyDefaultConfig: applyVeniceConfig,
         applyProviderConfig: applyVeniceProviderConfig,
-        noteDefault: VENICE_DEFAULT_MODEL_REF,
+        noteDefault: "venice/llama-3.3-70b",
         noteAgentModel,
         prompter: params.prompter,
       });
