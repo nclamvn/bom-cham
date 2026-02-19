@@ -20,6 +20,10 @@ services:
       # Tablet (cho video call)
       TABLET_IP: ${TABLET_IP:-}
       TABLET_FULLY_KIOSK_PASSWORD: ${TABLET_FULLY_KIOSK_PASSWORD:-}
+      # Viber
+      VIBER_AUTH_TOKEN: ${VIBER_AUTH_TOKEN:-}
+      VIBER_BOT_NAME: ${VIBER_BOT_NAME:-Bờm Chăm}
+      VIBER_WEBHOOK_URL: ${VIBER_WEBHOOK_URL:-}
       # Gateway token
       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
     volumes:

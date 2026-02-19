@@ -1,0 +1,32 @@
+{
+  "name": "@openclaw/viber",
+  "version": "2026.2.20",
+  "description": "OpenClaw Viber channel plugin (Bot API)",
+  "type": "module",
+  "dependencies": {
+    "openclaw": "workspace:*"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "channel": {
+      "id": "viber",
+      "label": "Viber",
+      "selectionLabel": "Viber (Bot API)",
+      "docsPath": "/channels/viber",
+      "docsLabel": "viber",
+      "blurb": "Viber Bot API for eldercare messaging in Vietnam.",
+      "aliases": [
+        "vb"
+      ],
+      "order": 85,
+      "quickstartAllowFrom": true
+    },
+    "install": {
+      "npmSpec": "@openclaw/viber",
+      "localPath": "extensions/viber",
+      "defaultChoice": "npm"
+    }
+  }
+}
