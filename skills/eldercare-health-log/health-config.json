@@ -1,0 +1,53 @@
+{
+  "metrics": {
+    "blood_pressure": {
+      "name_vi": "Huyết áp",
+      "unit": "mmHg",
+      "keywords": ["huyết áp", "huyet ap", "HA", "ha", "bp", "blood pressure"],
+      "format": "systolic/diastolic",
+      "thresholds": {
+        "systolic": { "low": 90, "high": 140, "dangerous_low": 80, "dangerous_high": 180 },
+        "diastolic": { "low": 60, "high": 90, "dangerous_low": 50, "dangerous_high": 120 }
+      },
+      "valid_range": { "systolic": [40, 250], "diastolic": [30, 200] }
+    },
+    "glucose": {
+      "name_vi": "Đường huyết",
+      "unit": "mg/dL",
+      "keywords": ["đường huyết", "duong huyet", "ĐH", "blood sugar", "glucose"],
+      "thresholds": { "low": 70, "high": 126, "dangerous_low": 54, "dangerous_high": 200 },
+      "valid_range": [20, 600]
+    },
+    "heart_rate": {
+      "name_vi": "Nhịp tim",
+      "unit": "bpm",
+      "keywords": ["nhịp tim", "nhip tim", "NT", "heart rate", "pulse"],
+      "thresholds": { "low": 50, "high": 100, "dangerous_low": 40, "dangerous_high": 120 },
+      "valid_range": [20, 300]
+    },
+    "weight": {
+      "name_vi": "Cân nặng",
+      "unit": "kg",
+      "keywords": ["cân nặng", "can nang", "CN", "weight"],
+      "thresholds": { "low": 30, "high": 80 },
+      "valid_range": [15, 200]
+    },
+    "temperature": {
+      "name_vi": "Nhiệt độ",
+      "unit": "°C",
+      "keywords": ["nhiệt độ", "nhiet do", "sốt", "sot", "temp", "temperature"],
+      "thresholds": { "low": 35.5, "high": 37.5, "dangerous_low": 35, "dangerous_high": 38.5 },
+      "valid_range": [34, 43]
+    },
+    "spo2": {
+      "name_vi": "SpO2",
+      "unit": "%",
+      "keywords": ["spo2", "SpO2", "oxy", "oxygen"],
+      "thresholds": { "low": 95, "dangerous_low": 90 },
+      "valid_range": [50, 100]
+    }
+  },
+  "note_keywords": ["bà ho", "bà ăn", "bà ngủ", "bà đau", "bà mệt", "bà kêu", "bà bị"],
+  "history_keywords": ["lịch sử", "lich su", "history", "tuần này", "tháng này", "sức khoẻ bà", "suc khoe ba"],
+  "history_default_days": 7
+}
