@@ -5,7 +5,9 @@ description: |
   tất cả eldercare skills: hoạt động, cuộc gọi, cảnh báo, môi trường phòng.
   Viết tự nhiên bằng tiếng Việt, gửi Zalo group gia đình.
   Data sources: eldercare-monitor, eldercare-sos, eldercare-videocall,
-  eldercare-companion, Home Assistant sensors.
+  eldercare-companion, eldercare-sleep-tracker, eldercare-exercise,
+  eldercare-weather-alert, eldercare-visitor-log, eldercare-multi-room,
+  eldercare-health-log, eldercare-medication, Home Assistant sensors.
 metadata:
   {
     "openclaw":
@@ -55,6 +57,40 @@ Tìm trong memory tất cả entries có prefix `eldercare_` với timestamp NG�
 - `eldercare_story_bookmark` → bà nghe truyện không, đến đâu
 - `eldercare_reminder_*` → nhắc nhở gì, bao nhiêu lần
 - `eldercare_voice_command_*` → bà dùng voice command gì
+
+**1e. Sleep data** (từ skill eldercare-sleep-tracker):
+- Tìm keys: `eldercare_sleep_{date}`
+- Giờ ngủ, giờ thức, tổng giờ ngủ, số lần thức giấc, chất lượng (good/normal/poor)
+- So sánh vs trung bình 7 ngày
+
+**1f. Exercise data** (từ skill eldercare-exercise):
+- Tìm keys: `eldercare_exercise_{date}`
+- Bà có tập hôm nay không? Tập mấy bài, hoàn thành bao nhiêu %
+- Skipped lý do (nếu có)
+
+**1g. Weather alerts** (từ skill eldercare-weather-alert):
+- Tìm keys: `eldercare_weather_{date}_*`
+- Cảnh báo thời tiết nào hôm nay? Nhiệt độ ngoài trời vs trong phòng
+- Bất thường: quá nóng, quá lạnh, bão
+
+**1h. Visitor log** (từ skill eldercare-visitor-log):
+- Tìm keys: `eldercare_visitor_{date}_*`
+- Bao nhiêu lượt khách, thời gian mỗi lượt
+- Khách ban đêm (security event) nếu có
+
+**1i. Multi-room movement** (từ skill eldercare-multi-room):
+- Tìm keys: `eldercare_movement_{date}_*`, `eldercare_location_current`
+- Thời gian ở mỗi phòng, số lần đi WC, WC ban đêm
+- Bất thường: WC quá lâu, rời phòng ngủ đêm
+
+**1j. Health log** (từ skill eldercare-health-log):
+- Tìm keys: `eldercare_health_{date}_*`
+- Số đo sức khỏe hôm nay: huyết áp, đường huyết, nhịp tim, etc.
+- Status bất thường nào không
+
+**1k. Medication** (từ skill eldercare-medication):
+- Tìm keys: `eldercare_med_taken_{date}_*`, `eldercare_med_missed_{date}_*`
+- Uống thuốc đúng giờ? Bỏ lỡ liều nào?
 
 ### Bước 2: Thu thập sensor history từ Home Assistant
 
@@ -115,9 +151,33 @@ Bà thức khoảng {giờ thức ước tính}h sáng. {Có/Không} ngủ trưa
 {Voice commands bà dùng: liệt kê}
 {Hoặc: "Bà không yêu cầu giải trí hôm nay"}
 
+😴 Giấc ngủ:
+{Bà ngủ từ {giờ ngủ} đến {giờ thức}, tổng {X}h. Chất lượng: {good/normal/poor}.}
+{Thức giấc {X} lần. Đi WC đêm: {X} lần (nếu có multi-room data).}
+{So sánh: hơn/kém trung bình tuần.}
+
+💊 Sức khỏe:
+{Thuốc: uống đủ {X}/{Y} liều ✅ hoặc bỏ lỡ liều {giờ} ⚠️}
+{Số đo: huyết áp {X}/{Y}, đường huyết {X}, nhịp tim {X} — bình thường/bất thường}
+{Hoặc: "Không có số đo sức khỏe hôm nay"}
+
+🏋️ Vận động:
+{Bà tập thể dục lúc {giờ}, hoàn thành {X}% bài tập.}
+{Hoặc: "Bà không tập hôm nay" + lý do nếu có}
+
+🏠 Di chuyển:
+{Phòng ngủ: {X}h | Phòng khách: {X}h | WC: {X} phút ({Y} lần)}
+{Đi WC đêm: {X} lần. Bất thường: {có/không}}
+{Hoặc chỉ 1 phòng: bỏ qua section này}
+
+🚪 Khách thăm:
+{X lượt khách ({liệt kê giờ, thời gian}).}
+{Hoặc: "Không có khách hôm nay"}
+
 🌡️ Phòng bà:
 Nhiệt độ trung bình {avg}°C (thấp nhất {min}°C, cao nhất {max}°C).
 Độ ẩm trung bình {avg}%.
+{Cảnh báo thời tiết: nếu có alert hôm nay}
 {Cảnh báo nếu ngoài ngưỡng thoải mái 20-35°C hoặc 40-80%}
 
 💡 Ghi chú AI:

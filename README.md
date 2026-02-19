@@ -13,6 +13,14 @@ canh bao qua Zalo/Telegram/WhatsApp, ho tro giai tri va sinh hoat.
 - **Phat hien te nga** -- AI pattern + xac nhan truoc khi bao
 - **Video call** -- Nhan "goi ba" -> phong san sang -> Zalo video
 - **Ban dong hanh** -- Nhac bolero, doc truyen, nhac uong nuoc
+- **Theo doi giac ngu** -- Phan tich chat luong giac ngu tu cam bien
+- **Tap the duc** -- Bai tap tai giuong voi TTS huong dan
+- **Canh bao thoi tiet** -- Bao dong khi qua nong/lanh/bao
+- **Ghi nhan khach tham** -- Phat hien khach tu presence sensor
+- **Giam sat nhieu phong** -- An toan WC, theo doi di chuyen
+- **Nhat ky suc khoe** -- Huyet ap, duong huyet, nhip tim qua chat
+- **Nhac uong thuoc** -- TTS nhac gio uong thuoc
+- **Lien lac cap cuu** -- SOS tich hop 115/113, ho so benh
 - **Bao cao moi toi** -- 21h nhan tong ket ngay qua Zalo
 - **Khong mat alert** -- Queue offline, retry tu dong
 - **4 kenh** -- Zalo, Telegram, WhatsApp, Viber
