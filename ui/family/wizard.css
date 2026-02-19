@@ -1,0 +1,219 @@
+/* Bờm Chăm — Onboarding Wizard CSS */
+
+#wizard-app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+  padding-bottom: 32px;
+}
+
+/* Progress bar */
+#progress-bar {
+  height: 4px;
+  background: var(--border, #E5E7EB);
+  border-radius: 2px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+#progress-fill {
+  height: 100%;
+  background: var(--primary, #4A7C59);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+#step-indicator {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted, #6B7280);
+  margin-bottom: 16px;
+}
+
+/* Steps */
+.wizard-step {
+  display: none;
+}
+
+.wizard-step.active {
+  display: block;
+}
+
+.wizard-icon {
+  text-align: center;
+  font-size: 64px;
+  margin: 24px 0 16px;
+}
+
+.wizard-step h1,
+.wizard-step h2 {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text, #1A1A1A);
+}
+
+.wizard-desc {
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  color: var(--text, #1A1A1A);
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text, #1A1A1A);
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--border, #E5E7EB);
+  border-radius: 8px;
+  font-size: 16px;
+  background: var(--card-bg, #FFFFFF);
+  color: var(--text, #1A1A1A);
+}
+
+.form-group input:focus {
+  border-color: var(--primary, #4A7C59);
+  outline: none;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-muted, #6B7280);
+  margin-top: 4px;
+}
+
+/* Radio groups */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 2px solid var(--border, #E5E7EB);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.radio-label:has(input:checked) {
+  border-color: var(--primary, #4A7C59);
+  background: rgba(74, 124, 89, 0.05);
+}
+
+.radio-label input[type="radio"] {
+  accent-color: var(--primary, #4A7C59);
+}
+
+/* Contact entries */
+.contact-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--card-bg, #FFFFFF);
+  border: 2px solid var(--border, #E5E7EB);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.contact-entry input,
+.contact-entry select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border, #E5E7EB);
+  border-radius: 6px;
+  font-size: 15px;
+  background: var(--bg, #F8FAF8);
+  color: var(--text, #1A1A1A);
+}
+
+/* Wizard actions */
+.wizard-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.wizard-actions .action-btn {
+  flex: 1;
+}
+
+/* Feature list (step 5) */
+.feature-list {
+  background: var(--card-bg, #FFFFFF);
+  border-radius: var(--radius, 12px);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.feature-item {
+  padding: 8px 0;
+  font-size: 15px;
+  border-bottom: 1px solid var(--border, #E5E7EB);
+}
+
+.feature-item:last-child {
+  border-bottom: none;
+}
+
+/* Add to homescreen guide */
+.add-homescreen-guide {
+  background: var(--card-bg, #FFFFFF);
+  border-radius: var(--radius, 12px);
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.add-homescreen-guide h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* HA test result */
+#ha-test-result {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+#ha-test-result.success {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+#ha-test-result.error {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+@media (prefers-color-scheme: dark) {
+  #ha-test-result.success {
+    background: #1B3A1D;
+    color: #81C784;
+  }
+  #ha-test-result.error {
+    background: #3E1215;
+    color: #EF9A9A;
+  }
+}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4A7C59">
+  <title>Bờm Chăm — Cài đặt</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="wizard.css">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+  <div id="wizard-app">
+    <!-- Progress bar -->
+    <div id="progress-bar">
+      <div id="progress-fill" style="width: 20%"></div>
+    </div>
+    <div id="step-indicator">Bước 1/5</div>
+
+    <!-- Step 1: Welcome -->
+    <section class="wizard-step active" data-step="1">
+      <div class="wizard-icon">🏠</div>
+      <h1>Chào mừng gia đình!</h1>
+      <p class="wizard-desc">
+        Bờm Chăm sẽ giúp cả nhà chăm sóc người thân cao tuổi 24/7.
+        Hệ thống giám sát, cảnh báo, nhắc thuốc, và báo cáo mỗi ngày.
+      </p>
+      <p class="wizard-desc muted">Cài đặt chỉ mất khoảng 5 phút.</p>
+      <div class="wizard-actions">
+        <button class="action-btn wizard-next">Bắt đầu →</button>
+      </div>
+    </section>
+
+    <!-- Step 2: Elder info -->
+    <section class="wizard-step" data-step="2">
+      <div class="wizard-icon">👴</div>
+      <h2>Người thân cần chăm sóc</h2>
+      <div class="form-group">
+        <label>Tên gọi</label>
+        <input type="text" id="elder-name-input" placeholder="VD: Bà Nội, Ông Ngoại" value="Bà Nội" />
+      </div>
+      <div class="form-group">
+        <label>Tuổi</label>
+        <input type="number" id="elder-age" placeholder="VD: 90" value="90" min="50" max="120" />
+      </div>
+      <div class="form-group">
+        <label>Đi lại được không?</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="mobility" value="bedridden" checked /> Nằm giường
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="mobility" value="wheelchair" /> Ngồi xe lăn
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="mobility" value="walking_with_aid" /> Đi lại có hỗ trợ
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="mobility" value="independent" /> Tự đi được
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Thính lực</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="hearing" value="normal" /> Bình thường
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="hearing" value="hard_of_hearing" checked /> Nặng tai
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="hearing" value="deaf" /> Điếc
+          </label>
+        </div>
+      </div>
+      <div class="wizard-actions">
+        <button class="action-btn secondary wizard-prev">← Quay lại</button>
+        <button class="action-btn wizard-next">Tiếp →</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Family contacts -->
+    <section class="wizard-step" data-step="3">
+      <div class="wizard-icon">👨‍👩‍👧</div>
+      <h2>Ai trong gia đình nhận thông báo?</h2>
+      <p class="wizard-desc muted">Thêm ít nhất 1 người để nhận cảnh báo.</p>
+      <div id="contacts-list">
+        <div class="contact-entry">
+          <input type="text" class="contact-name" placeholder="Tên (VD: Con Lan)" />
+          <input type="text" class="contact-phone" placeholder="Zalo/Phone (VD: 0901234567)" />
+          <select class="contact-priority">
+            <option value="1">Ưu tiên 1</option>
+            <option value="2">Ưu tiên 2</option>
+            <option value="3">Ưu tiên 3</option>
+          </select>
+        </div>
+      </div>
+      <button class="action-btn secondary" id="add-contact-btn" style="margin-top:8px;width:100%">
+        + Thêm người
+      </button>
+      <div class="wizard-actions">
+        <button class="action-btn secondary wizard-prev">← Quay lại</button>
+        <button class="action-btn wizard-next">Tiếp →</button>
+      </div>
+    </section>
+
+    <!-- Step 4: Home Assistant -->
+    <section class="wizard-step" data-step="4">
+      <div class="wizard-icon">🔌</div>
+      <h2>Kết nối hệ thống cảm biến</h2>
+      <p class="wizard-desc muted">Kết nối với Home Assistant để đọc sensor.</p>
+      <div class="form-group">
+        <label>Home Assistant URL</label>
+        <input type="text" id="ha-url" placeholder="http://192.168.1.x:8123" />
+      </div>
+      <div class="form-group">
+        <label>Long-lived Access Token</label>
+        <input type="text" id="ha-token" placeholder="eyJ..." />
+        <p class="hint">Mở HA → Profile → Long-Lived Access Tokens → Create Token</p>
+      </div>
+      <div class="form-group">
+        <label>Tên phòng trong Home Assistant</label>
+        <input type="text" id="ha-room" placeholder="VD: grandma_room" value="grandma_room" />
+        <p class="hint">Prefix entity: sensor.grandma_room_temperature, v.v.</p>
+      </div>
+      <button class="action-btn secondary" id="test-ha-btn" style="width:100%">
+        🔍 Kiểm tra kết nối
+      </button>
+      <div id="ha-test-result" class="hidden" style="margin-top:8px"></div>
+      <div class="wizard-actions">
+        <button class="action-btn secondary wizard-prev">← Quay lại</button>
+        <button class="action-btn wizard-next">Tiếp →</button>
+      </div>
+    </section>
+
+    <!-- Step 5: Complete -->
+    <section class="wizard-step" data-step="5">
+      <div class="wizard-icon">🎉</div>
+      <h2 id="complete-title">Tuyệt vời!</h2>
+      <p class="wizard-desc" id="complete-desc">
+        Bờm Chăm đã sẵn sàng chăm sóc Bà Nội.
+      </p>
+      <div class="feature-list">
+        <div class="feature-item">✅ Giám sát 24/7</div>
+        <div class="feature-item">✅ Gửi cảnh báo qua Zalo</div>
+        <div class="feature-item">✅ Báo cáo mỗi tối 9h</div>
+        <div class="feature-item">✅ Nhắc thuốc đúng giờ</div>
+        <div class="feature-item">✅ Phát hiện té ngã</div>
+      </div>
+      <div class="add-homescreen-guide">
+        <h3>Thêm vào màn hình chính</h3>
+        <p class="muted">
+          <strong>iPhone:</strong> Bấm <span class="icon-inline">⬆️</span> → "Thêm vào MH chính"<br>
+          <strong>Android:</strong> Bấm ⋮ → "Thêm vào MH chính"
+        </p>
+      </div>
+      <div class="wizard-actions">
+        <button class="action-btn" id="btn-start-using" style="width:100%">Bắt đầu sử dụng →</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="wizard.js"></script>
+</body>
+</html>
