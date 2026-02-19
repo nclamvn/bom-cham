@@ -1,0 +1,23 @@
+{
+  "enabled": false,
+  "rooms": [
+    {
+      "id": "bedroom",
+      "name_vi": "Phòng ngủ",
+      "presence_entity": "binary_sensor.grandma_room_presence",
+      "motion_entity": "sensor.grandma_room_motion_minutes",
+      "is_primary": true,
+      "max_absence_minutes": null
+    }
+  ],
+  "alerts": {
+    "bathroom_max_minutes": 20,
+    "bathroom_tts_minutes": 20,
+    "bathroom_zalo_minutes": 25,
+    "bathroom_escalate_minutes": 30,
+    "night_absence_max_minutes": 15,
+    "no_presence_max_minutes": 30,
+    "night_hours": { "start": "22:00", "end": "06:00" }
+  },
+  "note": "Thêm rooms vào mảng 'rooms' khi có sensor mới. Skill tự adapt."
+}
