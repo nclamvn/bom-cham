@@ -1,0 +1,9 @@
+{
+  "target_count_entity": "sensor.grandma_room_target_count",
+  "resident_count": 1,
+  "unusual_hours": { "start": "23:00", "end": "05:00" },
+  "debounce_minutes": 5,
+  "alert_on_arrival": true,
+  "alert_on_departure": true,
+  "alert_unusual_hours": true
+}
