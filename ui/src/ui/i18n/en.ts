@@ -18,16 +18,12 @@ export const en = {
     logs: "Logs",
     memory: "Memory",
     docs: "Docs",
-    projects: "Projects",
-    deploy: "Deploy",
-    preview: "Preview",
     eldercare: "Eldercare",
     eldercareConfig: "Eldercare Config",
 
     // Groups - Minimal 2-group structure
     core: "Core",
     admin: "Admin",
-    deployGroup: "Deploy",
     eldercare: "Eldercare",
 
     // Legacy groups (keep for compatibility)
@@ -55,9 +51,6 @@ export const en = {
       debug: "Gateway snapshots, events and manual RPC calls.",
       logs: "Live tail gateway file logs.",
       memory: "Browse and manage user facts extracted from conversations.",
-      projects: "Manage projects, scan environments and check health.",
-      deploy: "Deploy projects to production or staging targets.",
-      preview: "Create and manage preview deployments with shareable URLs.",
       eldercare: "Monitor grandma's health, alerts, calls and daily activities.",
       eldercareConfig: "Configure monitoring thresholds, SOS contacts, music and video calls.",
     },

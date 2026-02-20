@@ -57,9 +57,6 @@ export type Tab =
   | "config"
   | "debug"
   | "logs"
-  | "projects"
-  | "deploy"
-  | "preview"
   | "eldercare"
   | "eldercare-config";
 
@@ -76,9 +73,6 @@ const TAB_PATHS: Record<Tab, string> = {
   config: "/config",
   debug: "/debug",
   logs: "/logs",
-  projects: "/projects",
-  deploy: "/deploy",
-  preview: "/preview",
   eldercare: "/eldercare",
   "eldercare-config": "/eldercare-config",
 };
@@ -174,12 +168,6 @@ export function iconForTab(tab: Tab): IconName {
       return "bug";
     case "logs":
       return "scrollText";
-    case "projects":
-      return "folder";
-    case "deploy":
-      return "rocket";
-    case "preview":
-      return "globe";
     default:
       return "folder";
   }
@@ -216,12 +204,6 @@ export function titleForTab(tab: Tab) {
       return translations.nav.debug;
     case "logs":
       return translations.nav.logs;
-    case "projects":
-      return translations.nav.projects;
-    case "deploy":
-      return translations.nav.deploy;
-    case "preview":
-      return translations.nav.preview;
     default:
       return translations.nav.control;
   }
@@ -258,12 +240,6 @@ export function subtitleForTab(tab: Tab) {
       return subtitles.debug;
     case "logs":
       return subtitles.logs;
-    case "projects":
-      return subtitles.projects;
-    case "deploy":
-      return subtitles.deploy;
-    case "preview":
-      return subtitles.preview;
     default:
       return "";
   }

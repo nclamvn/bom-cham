@@ -19,16 +19,12 @@ export const vi = {
     logs: "Nhật ký",
     memory: "Trí nhớ",
     docs: "Tài liệu",
-    projects: "Dự án",
-    deploy: "Triển khai",
-    preview: "Xem trước",
     eldercare: "Bà nội care",
     eldercareConfig: "Cài đặt eldercare",
 
     // Groups - Minimal 2-group structure
     core: "Chính",
     admin: "Quản trị",
-    deployGroup: "Triển khai",
     eldercare: "Bà nội care",
 
     // Legacy groups (keep for compatibility)
@@ -56,9 +52,6 @@ export const vi = {
       debug: "Ảnh chụp gateway, sự kiện và gọi RPC thủ công.",
       logs: "Theo dõi trực tiếp nhật ký tệp gateway.",
       memory: "Duyệt và quản lý sự kiện người dùng trích xuất từ hội thoại.",
-      projects: "Quản lý dự án, quét môi trường và kiểm tra sức khỏe.",
-      deploy: "Triển khai dự án lên production hoặc staging.",
-      preview: "Tạo và quản lý bản triển khai xem trước với URL chia sẻ.",
       eldercare: "Giám sát sức khỏe bà, cảnh báo, cuộc gọi và hoạt động hàng ngày.",
       eldercareConfig: "Cấu hình ngưỡng giám sát, danh bạ SOS, nhạc và video call.",
     },
