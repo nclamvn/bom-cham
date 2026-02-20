@@ -45,13 +45,13 @@ describe("setTabFromRoute", () => {
     vi.useRealTimers();
   });
 
-  it("starts and stops log polling based on the tab", () => {
+  it("stops log polling when switching tabs", () => {
     const host = createHost("chat");
-
-    setTabFromRoute(host, "logs");
+    // Simulate an active polling interval
+    host.logsPollInterval = window.setInterval(() => {}, 2000);
     expect(host.logsPollInterval).not.toBeNull();
 
-    setTabFromRoute(host, "chat");
+    setTabFromRoute(host, "overview");
     expect(host.logsPollInterval).toBeNull();
   });
 });

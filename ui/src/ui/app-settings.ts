@@ -2,7 +2,6 @@ import { loadConfig, loadConfigSchema } from "./controllers/config";
 import { loadCronJobs, loadCronStatus } from "./controllers/cron";
 import { loadChannels } from "./controllers/channels";
 import { loadDebug } from "./controllers/debug";
-import { loadLogs } from "./controllers/logs";
 import { loadPresence } from "./controllers/presence";
 import { loadSessions } from "./controllers/sessions";
 import { loadSkills } from "./controllers/skills";
@@ -17,11 +16,8 @@ import {
 import { saveSettings, type UiSettings } from "./storage";
 import { resolveTheme, type ResolvedTheme, type ThemeMode } from "./theme";
 import { startThemeTransition, type ThemeTransitionContext } from "./theme-transition";
-import { scheduleChatScroll, scheduleLogsScroll } from "./app-scroll";
-import {
-  startLogsPolling,
-  stopLogsPolling,
-} from "./app-polling";
+import { scheduleChatScroll } from "./app-scroll";
+import { stopLogsPolling } from "./app-polling";
 import { refreshChat } from "./app-chat";
 import type { OpenClawApp } from "./app";
 import { setLanguage } from "./i18n";
@@ -126,8 +122,7 @@ export function applySettingsFromUrl(host: SettingsHost) {
 export function setTab(host: SettingsHost, next: Tab) {
   if (host.tab !== next) host.tab = next;
   if (next === "chat") host.chatHasAutoScrolled = false;
-  if (next === "logs") startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
-  else stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
+  stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
   void refreshActiveTab(host);
   syncUrlWithTab(host, next, false);
 }
@@ -163,11 +158,6 @@ export async function refreshActiveTab(host: SettingsHost) {
   if (host.tab === "config") {
     await loadConfigSchema(host as unknown as OpenClawApp);
     await loadConfig(host as unknown as OpenClawApp);
-  }
-  if (host.tab === "logs") {
-    host.logsAtBottom = true;
-    await loadLogs(host as unknown as OpenClawApp, { reset: true });
-    scheduleLogsScroll(host as unknown as Parameters<typeof scheduleLogsScroll>[0], true);
   }
 }
 
@@ -253,8 +243,7 @@ export function onPopState(host: SettingsHost) {
 export function setTabFromRoute(host: SettingsHost, next: Tab) {
   if (host.tab !== next) host.tab = next;
   if (next === "chat") host.chatHasAutoScrolled = false;
-  if (next === "logs") startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
-  else stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
+  stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
   if (host.connected) void refreshActiveTab(host);
 }
 

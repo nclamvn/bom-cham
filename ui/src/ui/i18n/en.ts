@@ -842,8 +842,8 @@ export const en = {
     unknown: "unknown",
     ok: "ok",
     failed: "failed",
-    probeOk: "Probe ok",
-    probeFailed: "Probe failed",
+    probeOk: "ok",
+    probeFailed: "failed",
   },
 
   // ============================================
@@ -880,8 +880,8 @@ export const en = {
     relays: "Relays",
     copyNpub: "Copy npub",
     viewOnNostr: "View on nostr.band",
-    probeOk: "Probe ok",
-    probeFailed: "Probe failed",
+    probeOk: "ok",
+    probeFailed: "failed",
     lastStart: "Last start",
     lastProbe: "Last probe",
     probe: "Probe",

@@ -50,41 +50,24 @@ export function renderChannels(props: ChannelsProps) {
       return a.order - b.order;
     });
 
-  return html`
-    <section class="grid grid-cols-2">
-      ${orderedChannels.map((channel) =>
-        renderChannel(channel.key, props, {
-          whatsapp,
-          telegram,
-          discord,
-          googlechat,
-          slack,
-          signal,
-          imessage,
-          nostr,
-          channelAccounts: props.snapshot?.channelAccounts ?? null,
-        }),
-      )}
-    </section>
+  const singleChannel = orderedChannels.length <= 1;
+  const channelData = {
+    whatsapp,
+    telegram,
+    discord,
+    googlechat,
+    slack,
+    signal,
+    imessage,
+    nostr,
+    channelAccounts: props.snapshot?.channelAccounts ?? null,
+  };
 
-    <section class="card" style="margin-top: 18px;">
-      <div class="row" style="justify-content: space-between;">
-        <div>
-          <div class="card-title">${t().channels.health.title}</div>
-          <div class="card-sub">${t().channels.health.description}</div>
-        </div>
-        <div class="muted">${props.lastSuccessAt ? formatAgo(props.lastSuccessAt) : t().status.na}</div>
-      </div>
-      ${
-        props.lastError
-          ? html`<div class="callout danger" style="margin-top: 12px;">
-            ${props.lastError}
-          </div>`
-          : nothing
-      }
-      <pre class="code-block" style="margin-top: 12px;">
-${props.snapshot ? JSON.stringify(props.snapshot, null, 2) : t().channelsView.noSnapshot}
-      </pre>
+  return html`
+    <section class="${singleChannel ? "ch-single" : "grid grid-cols-2"}">
+      ${orderedChannels.map((channel) =>
+        renderChannel(channel.key, props, channelData),
+      )}
     </section>
   `;
 }

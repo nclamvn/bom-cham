@@ -20,7 +20,7 @@ export const TAB_GROUPS = [
   {
     label: "advanced",
     labelKey: "admin",
-    tabs: ["skills", "cron", "memory", "logs"],
+    tabs: ["skills", "cron", "memory"],
     icon: "settings",
     shortcut: "3"
   },
@@ -52,7 +52,6 @@ export type Tab =
   | "chat"
   | "memory"
   | "config"
-  | "logs"
   | "eldercare"
   | "eldercare-config";
 
@@ -64,7 +63,6 @@ const TAB_PATHS: Record<Tab, string> = {
   memory: "/memory",
   chat: "/chat",
   config: "/config",
-  logs: "/logs",
   eldercare: "/eldercare",
   "eldercare-config": "/eldercare-config",
 };
@@ -150,8 +148,6 @@ export function iconForTab(tab: Tab): IconName {
       return "zap";
     case "config":
       return "settings";
-    case "logs":
-      return "scrollText";
     default:
       return "folder";
   }
@@ -178,8 +174,6 @@ export function titleForTab(tab: Tab) {
       return translations.nav.chat;
     case "config":
       return translations.nav.config;
-    case "logs":
-      return translations.nav.logs;
     default:
       return translations.nav.control;
   }
@@ -206,8 +200,6 @@ export function subtitleForTab(tab: Tab) {
       return subtitles.chat;
     case "config":
       return subtitles.config;
-    case "logs":
-      return subtitles.logs;
     default:
       return "";
   }

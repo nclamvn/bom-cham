@@ -36,7 +36,6 @@ describe("iconForTab", () => {
     expect(iconForTab("cron")).toBe("loader");
     expect(iconForTab("skills")).toBe("zap");
     expect(iconForTab("config")).toBe("settings");
-    expect(iconForTab("logs")).toBe("scrollText");
   });
 
   it("returns a fallback icon for unknown tab", () => {

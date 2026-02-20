@@ -843,8 +843,8 @@ export const vi = {
     unknown: "không rõ",
     ok: "ok",
     failed: "thất bại",
-    probeOk: "Kiểm tra ok",
-    probeFailed: "Kiểm tra thất bại",
+    probeOk: "ok",
+    probeFailed: "thất bại",
   },
 
   // ============================================
@@ -881,8 +881,8 @@ export const vi = {
     relays: "Relay",
     copyNpub: "Sao chép npub",
     viewOnNostr: "Xem trên nostr.band",
-    probeOk: "Kiểm tra ok",
-    probeFailed: "Kiểm tra thất bại",
+    probeOk: "ok",
+    probeFailed: "thất bại",
     lastStart: "Bắt đầu cuối",
     lastProbe: "Kiểm tra cuối",
     probe: "Kiểm tra",

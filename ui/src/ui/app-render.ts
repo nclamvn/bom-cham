@@ -92,7 +92,6 @@ import {
   removeCronJob,
   addCronJob,
 } from "./controllers/cron";
-import { loadLogs } from "./controllers/logs";
 import {
   loadEldercare,
   EMPTY_SUMMARY,
@@ -793,29 +792,6 @@ export function renderApp(state: AppViewState) {
                 onSave: () => saveConfig(state),
                 onApply: () => applyConfig(state),
                 onUpdate: () => runUpdate(state),
-              }))
-            : nothing
-        }
-
-        ${
-          state.tab === "logs"
-            ? lazyView("logs", () => import("./views/logs"), (m) => m.renderLogs({
-                loading: state.logsLoading,
-                error: state.logsError,
-                file: state.logsFile,
-                entries: state.logsEntries,
-                filterText: state.logsFilterText,
-                levelFilters: state.logsLevelFilters,
-                autoFollow: state.logsAutoFollow,
-                truncated: state.logsTruncated,
-                onFilterTextChange: (next) => (state.logsFilterText = next),
-                onLevelToggle: (level, enabled) => {
-                  state.logsLevelFilters = { ...state.logsLevelFilters, [level]: enabled };
-                },
-                onToggleAutoFollow: (next) => (state.logsAutoFollow = next),
-                onRefresh: () => loadLogs(state, { reset: true }),
-                onExport: (lines, label) => state.exportLogs(lines, label),
-                onScroll: (event) => state.handleLogsScroll(event),
               }))
             : nothing
         }

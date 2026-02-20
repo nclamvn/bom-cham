@@ -8,11 +8,8 @@ import {
   syncTabWithLocation,
   syncThemeWithSettings,
 } from "./app-settings";
-import { observeTopbar, scheduleChatScroll, scheduleLogsScroll } from "./app-scroll";
-import {
-  startLogsPolling,
-  stopLogsPolling,
-} from "./app-polling";
+import { observeTopbar, scheduleChatScroll } from "./app-scroll";
+import { stopLogsPolling } from "./app-polling";
 
 type LifecycleHost = {
   basePath: string;
@@ -49,10 +46,6 @@ export function handleConnected(host: LifecycleHost) {
   attachThemeListener(host as unknown as Parameters<typeof attachThemeListener>[0]);
   window.addEventListener("popstate", host.popStateHandler);
   connectGateway(host as unknown as Parameters<typeof connectGateway>[0]);
-  if (host.tab === "logs") {
-    startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
-  }
-
   // Keyboard shortcuts handler
   host.keyboardHandler = (e: KeyboardEvent) => {
     // ⌘K or Ctrl+K for command palette
@@ -108,16 +101,5 @@ export function handleUpdated(host: LifecycleHost, changed: Map<PropertyKey, unk
       host as unknown as Parameters<typeof scheduleChatScroll>[0],
       forcedByTab || forcedByLoad || !host.chatHasAutoScrolled,
     );
-  }
-  if (
-    host.tab === "logs" &&
-    (changed.has("logsEntries") || changed.has("logsAutoFollow") || changed.has("tab"))
-  ) {
-    if (host.logsAutoFollow && host.logsAtBottom) {
-      scheduleLogsScroll(
-        host as unknown as Parameters<typeof scheduleLogsScroll>[0],
-        changed.has("tab") || changed.has("logsAutoFollow"),
-      );
-    }
   }
 }
