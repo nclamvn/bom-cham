@@ -17,8 +17,6 @@ import type {
   NostrProfile,
   PresenceEntry,
   SessionsListResult,
-  SkillCatalogEntry,
-  SkillCatalogKind,
   SkillStatusReport,
   StatusSummary,
   UserFact,
@@ -26,11 +24,11 @@ import type {
 import type { ChatAttachment, ChatQueueItem, CronFormState } from "./ui-types";
 import type { EventLogEntry } from "./app-events";
 import type { SkillMessage } from "./controllers/skills";
-import type { ExecApprovalsFile, ExecApprovalsSnapshot } from "./controllers/exec-approvals";
-import type { DevicePairingList } from "./controllers/devices";
 import type { ExecApprovalRequest } from "./controllers/exec-approval";
 import type { NostrProfileFormState } from "./views/channels.nostr-profile-form";
 import type { AgentTab } from "./controllers/agent-tabs";
+import type { EldercareCheck, EldercareDailySummary, EldercareRoomData } from "./controllers/eldercare";
+import type { EldercareConfigSection, EldercareContact } from "./views/eldercare-config";
 export type AppViewState = {
   settings: UiSettings;
   password: string;
@@ -88,19 +86,6 @@ export type AppViewState = {
   sidebarContent: string | null;
   sidebarError: string | null;
   splitRatio: number;
-  nodesLoading: boolean;
-  nodes: Array<Record<string, unknown>>;
-  devicesLoading: boolean;
-  devicesError: string | null;
-  devicesList: DevicePairingList | null;
-  execApprovalsLoading: boolean;
-  execApprovalsSaving: boolean;
-  execApprovalsDirty: boolean;
-  execApprovalsSnapshot: ExecApprovalsSnapshot | null;
-  execApprovalsForm: ExecApprovalsFile | null;
-  execApprovalsSelectedAgent: string | null;
-  execApprovalsTarget: "gateway" | "node";
-  execApprovalsTargetNodeId: string | null;
   execApprovalQueue: ExecApprovalRequest[];
   execApprovalBusy: boolean;
   execApprovalError: string | null;
@@ -160,12 +145,6 @@ export type AppViewState = {
   skillEdits: Record<string, string>;
   skillMessages: Record<string, SkillMessage>;
   skillsBusyKey: string | null;
-  // Catalog state
-  skillsCatalog: SkillCatalogEntry[];
-  skillsCatalogLoading: boolean;
-  skillsCatalogError: string | null;
-  skillsFilterKind: SkillCatalogKind | "all" | "installed";
-  skillsSearch: string;
   // Settings panel state
   skillsSettingsOpen: boolean;
   skillsSettingsSkillId: string | null;
@@ -191,6 +170,31 @@ export type AppViewState = {
   memoryIndicatorTotal: number;
   memoryIndicatorExpanded: boolean;
   handleLoadMemory: () => Promise<void>;
+  // Eldercare dashboard state
+  eldercareLoading: boolean;
+  eldercareError: string | null;
+  eldercareHaConnected: boolean;
+  eldercareRoom: EldercareRoomData;
+  eldercareSummary: EldercareDailySummary;
+  eldercareLastCheck: EldercareCheck | null;
+  eldercareSosActive: boolean;
+  // Eldercare config state
+  eldercareConfigLoading: boolean;
+  eldercareConfigSaving: boolean;
+  eldercareConfigError: string | null;
+  eldercareConfigSection: EldercareConfigSection;
+  eldercareMonitorConfig: Record<string, unknown> | null;
+  eldercareSosContacts: EldercareContact[];
+  eldercareCompanionConfig: Record<string, unknown> | null;
+  eldercareVideocallConfig: Record<string, unknown> | null;
+  eldercareMedicationConfig: Record<string, unknown> | null;
+  eldercareExerciseConfig: Record<string, unknown> | null;
+  eldercareSafetyConfig: Record<string, unknown> | null;
+  eldercareEmergencyConfig: Record<string, unknown> | null;
+  eldercareHaEntities: Record<string, string>;
+  handleEldercareSaveConfig: () => Promise<void>;
+  handleEldercareLoadConfig: () => Promise<void>;
+  handleEldercareConfigChange: (section: string, path: string[], value: unknown) => void;
   debugLoading: boolean;
   debugStatus: StatusSummary | null;
   debugHealth: HealthSnapshot | null;

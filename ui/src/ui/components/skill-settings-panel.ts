@@ -1,14 +1,14 @@
 import { html, nothing, type TemplateResult } from "lit";
 
 import { t } from "../i18n";
-import type { SkillCatalogEntry } from "../types";
+import type { SkillCatalogStatus } from "../types";
 import { renderSchemaForm, type SchemaFormProps } from "./schema-form";
 import { renderSkillStatusBadge } from "./skill-status-badge";
 
 export type SkillSettingsPanelProps = {
   open: boolean;
   skillId: string | null;
-  skill: SkillCatalogEntry | null;
+  skill: { name: string; status: SkillCatalogStatus; kind: string | null; source: string } | null;
   schema: Record<string, unknown> | null;
   uiHints: Record<string, unknown> | null;
   currentConfig: Record<string, unknown> | null;

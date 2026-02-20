@@ -14,10 +14,9 @@ import {
 } from "./navigation";
 import { t } from "./i18n";
 
-/** All valid tab identifiers — sidebar tabs from TAB_GROUPS + hidden tabs */
+/** All valid tab identifiers — sidebar tabs from TAB_GROUPS */
 const ALL_TABS: Tab[] = [
   ...TAB_GROUPS.flatMap((group) => group.tabs) as Tab[],
-  "sessions", "instances", "cron", "skills",
 ];
 
 describe("iconForTab", () => {
@@ -34,13 +33,9 @@ describe("iconForTab", () => {
     expect(iconForTab("chat")).toBe("messageSquare");
     expect(iconForTab("overview")).toBe("barChart");
     expect(iconForTab("channels")).toBe("link");
-    expect(iconForTab("instances")).toBe("radio");
-    expect(iconForTab("sessions")).toBe("fileText");
     expect(iconForTab("cron")).toBe("loader");
     expect(iconForTab("skills")).toBe("zap");
-    expect(iconForTab("nodes")).toBe("monitor");
     expect(iconForTab("config")).toBe("settings");
-    expect(iconForTab("debug")).toBe("bug");
     expect(iconForTab("logs")).toBe("scrollText");
   });
 
@@ -126,7 +121,7 @@ describe("pathForTab", () => {
 
   it("prepends base path", () => {
     expect(pathForTab("chat", "/ui")).toBe("/ui/chat");
-    expect(pathForTab("sessions", "/apps/openclaw")).toBe("/apps/openclaw/sessions");
+    expect(pathForTab("cron", "/apps/openclaw")).toBe("/apps/openclaw/cron");
   });
 });
 
@@ -134,7 +129,7 @@ describe("tabFromPath", () => {
   it("returns tab for valid path", () => {
     expect(tabFromPath("/chat")).toBe("chat");
     expect(tabFromPath("/overview")).toBe("overview");
-    expect(tabFromPath("/sessions")).toBe("sessions");
+    expect(tabFromPath("/cron")).toBe("cron");
   });
 
   it("returns chat for root path", () => {
@@ -143,7 +138,7 @@ describe("tabFromPath", () => {
 
   it("handles base paths", () => {
     expect(tabFromPath("/ui/chat", "/ui")).toBe("chat");
-    expect(tabFromPath("/apps/openclaw/sessions", "/apps/openclaw")).toBe("sessions");
+    expect(tabFromPath("/apps/openclaw/cron", "/apps/openclaw")).toBe("cron");
   });
 
   it("returns null for unknown path", () => {
@@ -168,7 +163,7 @@ describe("inferBasePathFromPathname", () => {
 
   it("infers base path from nested paths", () => {
     expect(inferBasePathFromPathname("/ui/chat")).toBe("/ui");
-    expect(inferBasePathFromPathname("/apps/openclaw/sessions")).toBe("/apps/openclaw");
+    expect(inferBasePathFromPathname("/apps/openclaw/cron")).toBe("/apps/openclaw");
   });
 
   it("handles index.html suffix", () => {
@@ -180,7 +175,7 @@ describe("inferBasePathFromPathname", () => {
 describe("TAB_GROUPS", () => {
   it("contains all expected groups", () => {
     const labels = TAB_GROUPS.map((g) => g.label);
-    expect(labels).toEqual(["core", "admin", "deploy"]);
+    expect(labels).toEqual(["care", "system", "advanced"]);
     expect(labels).toHaveLength(3);
   });
 

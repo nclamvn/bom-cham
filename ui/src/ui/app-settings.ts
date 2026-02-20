@@ -3,12 +3,9 @@ import { loadCronJobs, loadCronStatus } from "./controllers/cron";
 import { loadChannels } from "./controllers/channels";
 import { loadDebug } from "./controllers/debug";
 import { loadLogs } from "./controllers/logs";
-import { loadDevices } from "./controllers/devices";
-import { loadNodes } from "./controllers/nodes";
-import { loadExecApprovals } from "./controllers/exec-approvals";
 import { loadPresence } from "./controllers/presence";
 import { loadSessions } from "./controllers/sessions";
-import { loadSkills, loadCatalog } from "./controllers/skills";
+import { loadSkills } from "./controllers/skills";
 import {
   inferBasePathFromPathname,
   normalizeBasePath,
@@ -24,8 +21,6 @@ import { scheduleChatScroll, scheduleLogsScroll } from "./app-scroll";
 import {
   startLogsPolling,
   stopLogsPolling,
-  startDebugPolling,
-  stopDebugPolling,
 } from "./app-polling";
 import { refreshChat } from "./app-chat";
 import type { OpenClawApp } from "./app";
@@ -133,9 +128,6 @@ export function setTab(host: SettingsHost, next: Tab) {
   if (next === "chat") host.chatHasAutoScrolled = false;
   if (next === "logs") startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
   else stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
-  if (next === "debug")
-    startDebugPolling(host as unknown as Parameters<typeof startDebugPolling>[0]);
-  else stopDebugPolling(host as unknown as Parameters<typeof stopDebugPolling>[0]);
   void refreshActiveTab(host);
   syncUrlWithTab(host, next, false);
 }
@@ -157,18 +149,9 @@ export function setTheme(host: SettingsHost, next: ThemeMode, context?: ThemeTra
 export async function refreshActiveTab(host: SettingsHost) {
   if (host.tab === "overview") await loadOverview(host);
   if (host.tab === "channels") await loadChannelsTab(host);
-  if (host.tab === "instances") await loadPresence(host as unknown as OpenClawApp);
-  if (host.tab === "sessions") await loadSessions(host as unknown as OpenClawApp);
   if (host.tab === "cron") await loadCron(host);
   if (host.tab === "skills") {
     await loadSkills(host as unknown as OpenClawApp);
-    await loadCatalog(host as unknown as OpenClawApp);
-  }
-  if (host.tab === "nodes") {
-    await loadNodes(host as unknown as OpenClawApp);
-    await loadDevices(host as unknown as OpenClawApp);
-    await loadConfig(host as unknown as OpenClawApp);
-    await loadExecApprovals(host as unknown as OpenClawApp);
   }
   if (host.tab === "chat") {
     await refreshChat(host as unknown as Parameters<typeof refreshChat>[0]);
@@ -180,10 +163,6 @@ export async function refreshActiveTab(host: SettingsHost) {
   if (host.tab === "config") {
     await loadConfigSchema(host as unknown as OpenClawApp);
     await loadConfig(host as unknown as OpenClawApp);
-  }
-  if (host.tab === "debug") {
-    await loadDebug(host as unknown as OpenClawApp);
-    host.eventLog = host.eventLogBuffer;
   }
   if (host.tab === "logs") {
     host.logsAtBottom = true;
@@ -276,9 +255,6 @@ export function setTabFromRoute(host: SettingsHost, next: Tab) {
   if (next === "chat") host.chatHasAutoScrolled = false;
   if (next === "logs") startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
   else stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
-  if (next === "debug")
-    startDebugPolling(host as unknown as Parameters<typeof startDebugPolling>[0]);
-  else stopDebugPolling(host as unknown as Parameters<typeof stopDebugPolling>[0]);
   if (host.connected) void refreshActiveTab(host);
 }
 

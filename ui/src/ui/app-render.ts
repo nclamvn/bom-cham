@@ -38,27 +38,13 @@ import { renderOverview } from "./views/overview";
 import { renderExecApprovalPrompt } from "./views/exec-approval";
 import { renderGatewayUrlConfirmation } from "./views/gateway-url-confirmation";
 import { renderCommandPalette } from "./views/command-palette";
-import {
-  approveDevicePairing,
-  loadDevices,
-  rejectDevicePairing,
-  revokeDeviceToken,
-  rotateDeviceToken,
-} from "./controllers/devices";
 import { lazyView } from "./lazy-view";
 import { renderChatControls, renderNavStatus, renderTab, renderThemeToggle } from "./app-render.helpers";
 import { loadChannels } from "./controllers/channels";
 import { toggleVoiceInput, stopTts, type VoiceHostCallbacks } from "./controllers/voice";
-import { loadPresence } from "./controllers/presence";
-import { deleteSession, loadSessions, patchSession } from "./controllers/sessions";
 import {
   installSkill,
   loadSkills,
-  loadCatalog,
-  getFilteredCatalog,
-  setSkillsSearch,
-  setSkillsFilterKind,
-  toggleCatalogSkill,
   openSkillSettings,
   closeSkillSettings,
   updateSettingsField,
@@ -78,7 +64,6 @@ import {
   deleteMemory,
   extractMemory,
 } from "./controllers/memory";
-import { loadNodes } from "./controllers/nodes";
 import { loadChatHistory } from "./controllers/chat";
 import {
   createTab,
@@ -101,19 +86,12 @@ import {
   removeConfigFormValue,
 } from "./controllers/config";
 import {
-  loadExecApprovals,
-  removeExecApprovalsFormValue,
-  saveExecApprovals,
-  updateExecApprovalsFormValue,
-} from "./controllers/exec-approvals";
-import {
   loadCronRuns,
   toggleCronJob,
   runCronJob,
   removeCronJob,
   addCronJob,
 } from "./controllers/cron";
-import { loadDebug, callDebugMethod } from "./controllers/debug";
 import { loadLogs } from "./controllers/logs";
 import {
   loadEldercare,
@@ -329,70 +307,6 @@ export function renderApp(state: AppViewState) {
         }
 
         ${
-          state.tab === "instances"
-            ? lazyView("instances", () => import("./views/instances"), (m) => m.renderInstances({
-                loading: state.presenceLoading,
-                entries: state.presenceEntries,
-                lastError: state.presenceError,
-                statusMessage: state.presenceStatus,
-                onRefresh: () => loadPresence(state),
-              }))
-            : nothing
-        }
-
-        ${
-          state.tab === "sessions"
-            ? lazyView("sessions", () => import("./views/sessions"), (m) => m.renderSessions({
-                loading: state.sessionsLoading,
-                result: state.sessionsResult,
-                error: state.sessionsError,
-                activeMinutes: state.sessionsFilterActive,
-                limit: state.sessionsFilterLimit,
-                includeGlobal: state.sessionsIncludeGlobal,
-                includeUnknown: state.sessionsIncludeUnknown,
-                basePath: state.basePath,
-                viewMode: state.settings.sessionsViewMode,
-                currentSessionKey: state.sessionKey,
-                onFiltersChange: (next) => {
-                  state.sessionsFilterActive = next.activeMinutes;
-                  state.sessionsFilterLimit = next.limit;
-                  state.sessionsIncludeGlobal = next.includeGlobal;
-                  state.sessionsIncludeUnknown = next.includeUnknown;
-                },
-                onRefresh: () => loadSessions(state),
-                onViewModeChange: (mode) => {
-                  state.applySettings({
-                    ...state.settings,
-                    sessionsViewMode: mode,
-                  });
-                },
-                onResume: (key) => {
-                  state.sessionKey = key;
-                  state.chatMessage = "";
-                  state.chatAttachments = [];
-                  state.chatStream = null;
-                  state.chatStreamStartedAt = null;
-                  state.chatRunId = null;
-                  state.chatQueue = [];
-                  state.resetToolStream();
-                  state.resetChatScroll();
-                  state.applySettings({
-                    ...state.settings,
-                    sessionKey: key,
-                    lastActiveSessionKey: key,
-                  });
-                  state.tab = "chat";
-                  void state.loadAssistantIdentity();
-                  void loadChatHistory(state);
-                  void refreshChatAvatar(state);
-                },
-                onPatch: (key, patch) => patchSession(state, key, patch),
-                onDelete: (key) => deleteSession(state, key),
-              }))
-            : nothing
-        }
-
-        ${
           state.tab === "memory"
             ? lazyView("memory", () => import("./views/memory-view"), (m) => m.renderMemory({
                 loading: state.memoryLoading,
@@ -478,26 +392,13 @@ export function renderApp(state: AppViewState) {
                 onSaveKey: (key) => saveSkillApiKey(state, key),
                 onInstall: (skillKey, name, installId) =>
                   installSkill(state, skillKey, name, installId),
-                // Catalog props
-                catalog: getFilteredCatalog(state),
-                catalogLoading: state.skillsCatalogLoading,
-                catalogError: state.skillsCatalogError,
-                filterKind: state.skillsFilterKind,
-                search: state.skillsSearch,
-                onSearch: (keyword) => setSkillsSearch(state, keyword),
-                onFilterKindChange: (kind) => setSkillsFilterKind(state, kind),
-                onCatalogRefresh: () => loadCatalog(state),
-                onCatalogToggle: (skillId, enabled) => toggleCatalogSkill(state, skillId, enabled),
-                onCatalogSettings: (skillId) => openSkillSettings(state, skillId),
-                onCatalogInstall: (skillId) => {
-                  // Use skills.update to enable a not-installed plugin
-                  toggleCatalogSkill(state, skillId, true);
-                },
                 // Settings panel
                 settingsPanel: {
                   open: state.skillsSettingsOpen,
                   skillId: state.skillsSettingsSkillId,
-                  skill: state.skillsCatalog.find((s) => s.id === state.skillsSettingsSkillId) ?? null,
+                  skill: state.skillsSettingsSkillId
+                    ? { name: state.skillsSettingsSkillId, status: "active", kind: null, source: "workspace" }
+                    : null,
                   schema: state.skillsSettingsSchema,
                   uiHints: state.skillsSettingsUiHints,
                   currentConfig: state.skillsSettingsCurrentConfig,
@@ -511,85 +412,6 @@ export function renderApp(state: AppViewState) {
                   onEnvRemove: (index) => removeSettingsEnvVar(state, index),
                   onSave: () => saveSkillSettings(state),
                   onClose: () => closeSkillSettings(state),
-                },
-              }))
-            : nothing
-        }
-
-        ${
-          state.tab === "nodes"
-            ? lazyView("nodes", () => import("./views/nodes"), (m) => m.renderNodes({
-                loading: state.nodesLoading,
-                nodes: state.nodes,
-                devicesLoading: state.devicesLoading,
-                devicesError: state.devicesError,
-                devicesList: state.devicesList,
-                configForm:
-                  state.configForm ??
-                  (state.configSnapshot?.config as Record<string, unknown> | null),
-                configLoading: state.configLoading,
-                configSaving: state.configSaving,
-                configDirty: state.configFormDirty,
-                configFormMode: state.configFormMode,
-                execApprovalsLoading: state.execApprovalsLoading,
-                execApprovalsSaving: state.execApprovalsSaving,
-                execApprovalsDirty: state.execApprovalsDirty,
-                execApprovalsSnapshot: state.execApprovalsSnapshot,
-                execApprovalsForm: state.execApprovalsForm,
-                execApprovalsSelectedAgent: state.execApprovalsSelectedAgent,
-                execApprovalsTarget: state.execApprovalsTarget,
-                execApprovalsTargetNodeId: state.execApprovalsTargetNodeId,
-                onRefresh: () => loadNodes(state),
-                onDevicesRefresh: () => loadDevices(state),
-                onDeviceApprove: (requestId) => approveDevicePairing(state, requestId),
-                onDeviceReject: (requestId) => rejectDevicePairing(state, requestId),
-                onDeviceRotate: (deviceId, role, scopes) =>
-                  rotateDeviceToken(state, { deviceId, role, scopes }),
-                onDeviceRevoke: (deviceId, role) => revokeDeviceToken(state, { deviceId, role }),
-                onLoadConfig: () => loadConfig(state),
-                onLoadExecApprovals: () => {
-                  const target =
-                    state.execApprovalsTarget === "node" && state.execApprovalsTargetNodeId
-                      ? { kind: "node" as const, nodeId: state.execApprovalsTargetNodeId }
-                      : { kind: "gateway" as const };
-                  return loadExecApprovals(state, target);
-                },
-                onBindDefault: (nodeId) => {
-                  if (nodeId) {
-                    updateConfigFormValue(state, ["tools", "exec", "node"], nodeId);
-                  } else {
-                    removeConfigFormValue(state, ["tools", "exec", "node"]);
-                  }
-                },
-                onBindAgent: (agentIndex, nodeId) => {
-                  const basePath = ["agents", "list", agentIndex, "tools", "exec", "node"];
-                  if (nodeId) {
-                    updateConfigFormValue(state, basePath, nodeId);
-                  } else {
-                    removeConfigFormValue(state, basePath);
-                  }
-                },
-                onSaveBindings: () => saveConfig(state),
-                onExecApprovalsTargetChange: (kind, nodeId) => {
-                  state.execApprovalsTarget = kind;
-                  state.execApprovalsTargetNodeId = nodeId;
-                  state.execApprovalsSnapshot = null;
-                  state.execApprovalsForm = null;
-                  state.execApprovalsDirty = false;
-                  state.execApprovalsSelectedAgent = null;
-                },
-                onExecApprovalsSelectAgent: (agentId) => {
-                  state.execApprovalsSelectedAgent = agentId;
-                },
-                onExecApprovalsPatch: (path, value) =>
-                  updateExecApprovalsFormValue(state, path, value),
-                onExecApprovalsRemove: (path) => removeExecApprovalsFormValue(state, path),
-                onSaveExecApprovals: () => {
-                  const target =
-                    state.execApprovalsTarget === "node" && state.execApprovalsTargetNodeId
-                      ? { kind: "node" as const, nodeId: state.execApprovalsTargetNodeId }
-                      : { kind: "gateway" as const };
-                  return saveExecApprovals(state, target);
                 },
               }))
             : nothing
@@ -976,27 +798,6 @@ export function renderApp(state: AppViewState) {
         }
 
         ${
-          state.tab === "debug"
-            ? lazyView("debug", () => import("./views/debug"), (m) => m.renderDebug({
-                loading: state.debugLoading,
-                status: state.debugStatus,
-                health: state.debugHealth,
-                models: state.debugModels,
-                heartbeat: state.debugHeartbeat,
-                eventLog: state.eventLog,
-                callMethod: state.debugCallMethod,
-                callParams: state.debugCallParams,
-                callResult: state.debugCallResult,
-                callError: state.debugCallError,
-                onCallMethodChange: (next) => (state.debugCallMethod = next),
-                onCallParamsChange: (next) => (state.debugCallParams = next),
-                onRefresh: () => loadDebug(state),
-                onCall: () => callDebugMethod(state),
-              }))
-            : nothing
-        }
-
-        ${
           state.tab === "logs"
             ? lazyView("logs", () => import("./views/logs"), (m) => m.renderLogs({
                 loading: state.logsLoading,
@@ -1047,6 +848,10 @@ export function renderApp(state: AppViewState) {
                 sosContacts: state.eldercareSosContacts,
                 companionConfig: state.eldercareCompanionConfig,
                 videocallConfig: state.eldercareVideocallConfig,
+                medicationConfig: state.eldercareMedicationConfig,
+                exerciseConfig: state.eldercareExerciseConfig,
+                safetyConfig: state.eldercareSafetyConfig,
+                emergencyConfig: state.eldercareEmergencyConfig,
                 haEntities: state.eldercareHaEntities,
                 onSave: () => void state.handleEldercareSaveConfig(),
                 onRefresh: () => void state.handleEldercareLoadConfig(),

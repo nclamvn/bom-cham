@@ -7,7 +7,19 @@ import type {
   EldercareRoomData,
   EldercareDailySummary,
   EldercareSosEvent,
+  EldercareHealthEntry,
+  EldercareMedication,
+  EldercareMedDose,
+  EldercareSleepData,
+  EldercareExerciseData,
+  EldercareWeatherData,
+  EldercareVisitorEntry,
+  EldercareMultiRoomData,
+  EldercareFallEvent,
+  EldercareQueueStatus,
+  EldercareEmergencyInfo,
 } from "../controllers/eldercare";
+import { icons } from "../icons";
 import { t } from "../i18n";
 
 export type EldercareDashboardProps = {
@@ -57,8 +69,320 @@ function formatTime(iso: string): string {
   }
 }
 
+// ── Health Card ──────────────────────────────────────
+function renderHealthCard(entries: EldercareHealthEntry[]) {
+  const tr = t().eldercare;
+  const typeLabels: Record<string, string> = {
+    blood_pressure: tr.healthBP, glucose: tr.healthGlucose,
+    heart_rate: tr.healthHR, temperature: tr.healthTemp,
+    spo2: tr.healthSpO2, weight: tr.healthWeight,
+  };
+  const latest = new Map<string, EldercareHealthEntry>();
+  for (const e of entries) {
+    if (!latest.has(e.type) || e.timestamp > (latest.get(e.type)!.timestamp)) latest.set(e.type, e);
+  }
+
+  return html`
+    <div class="ec-card">
+      <div class="ec-card__header">
+        <span class="ec-card__icon">${icons.activity}</span>
+        <span class="ec-card__title">${tr.healthLog}</span>
+      </div>
+      <div class="ec-card__body">
+        ${latest.size > 0
+          ? html`${Array.from(latest.values()).map(
+              (e) => html`
+                <div class="ec-stat-row">
+                  <span class="ec-stat-label">${typeLabels[e.type] ?? e.type}</span>
+                  <span class="ec-stat-value ${e.status === "high" || e.status === "dangerous" ? "ec-text--danger" : e.status === "low" ? "ec-text--warn" : ""}">
+                    ${e.value} ${e.unit}
+                  </span>
+                </div>
+              `,
+            )}`
+          : html`<div class="ec-empty-state"><div class="ec-empty-state__text">${tr.noHealthData}</div></div>`}
+      </div>
+    </div>
+  `;
+}
+
+// ── Medication Card ──────────────────────────────────
+function renderMedicationCard(medications: EldercareMedication[], doses: EldercareMedDose[]) {
+  const tr = t().eldercare;
+  const totalDoses = medications.reduce((sum, m) => sum + m.times.length, 0);
+  const takenCount = doses.filter((d) => d.taken).length;
+
+  return html`
+    <div class="ec-card">
+      <div class="ec-card__header">
+        <span class="ec-card__icon">${icons.pill}</span>
+        <span class="ec-card__title">${tr.medication}</span>
+      </div>
+      <div class="ec-card__body">
+        ${medications.length > 0
+          ? html`
+              <div class="ec-stat-row">
+                <span class="ec-stat-label">${tr.medAdherence}</span>
+                <span class="ec-stat-value ${takenCount < totalDoses ? "ec-text--warn" : "ec-text--ok"}">
+                  ${takenCount}/${totalDoses}
+                </span>
+              </div>
+              ${medications.map(
+                (med) => html`
+                  <div class="ec-stat-row">
+                    <span class="ec-stat-label">${med.shortName || med.name}</span>
+                    <span class="ec-stat-value ec-text--muted">${med.times.join(", ")}</span>
+                  </div>
+                `,
+              )}
+            `
+          : html`<div class="ec-empty-state"><div class="ec-empty-state__text">${tr.noMedications}</div></div>`}
+      </div>
+    </div>
+  `;
+}
+
+// ── Sleep Card ───────────────────────────────────────
+function renderSleepCard(sleep: EldercareSleepData) {
+  const tr = t().eldercare;
+  const qualityClass = sleep.quality === "good" ? "ec-text--ok" : sleep.quality === "poor" ? "ec-text--danger" : "";
+  const qualityLabel = sleep.quality ? (tr.sleepQualities as Record<string, string>)[sleep.quality] ?? sleep.quality : "—";
+  const trendIcon = sleep.trend === "improving" ? "↑" : sleep.trend === "declining" ? "↓" : "→";
+
+  return html`
+    <div class="ec-card">
+      <div class="ec-card__header">
+        <span class="ec-card__icon">${icons.moon}</span>
+        <span class="ec-card__title">${tr.sleepTracker}</span>
+      </div>
+      <div class="ec-card__body">
+        <div class="ec-sensor-grid">
+          <div class="ec-sensor">
+            <div class="ec-sensor__value">${sleep.totalHours != null ? sleep.totalHours.toFixed(1) : "—"}</div>
+            <div class="ec-sensor__label">${tr.sleepHours}</div>
+          </div>
+          <div class="ec-sensor">
+            <div class="ec-sensor__value ${qualityClass}">${qualityLabel}</div>
+            <div class="ec-sensor__label">${tr.sleepQuality}</div>
+          </div>
+          <div class="ec-sensor">
+            <div class="ec-sensor__value">${sleep.wakeEvents}</div>
+            <div class="ec-sensor__label">${tr.sleepWakes}</div>
+          </div>
+        </div>
+        ${sleep.avg7day != null
+          ? html`<div class="ec-stat-row">
+              <span class="ec-stat-label">${tr.sleepAvg7d}</span>
+              <span class="ec-stat-value">${sleep.avg7day.toFixed(1)}h ${trendIcon}</span>
+            </div>`
+          : nothing}
+      </div>
+    </div>
+  `;
+}
+
+// ── Exercise Card ────────────────────────────────────
+function renderExerciseCard(exercise: EldercareExerciseData) {
+  const tr = t().eldercare;
+  const levelLabels: Record<number, string> = { 1: tr.exerciseLevel1, 2: tr.exerciseLevel2, 3: tr.exerciseLevel3 };
+
+  return html`
+    <div class="ec-card">
+      <div class="ec-card__header">
+        <span class="ec-card__icon">${icons.dumbbell}</span>
+        <span class="ec-card__title">${tr.exercise}</span>
+      </div>
+      <div class="ec-card__body">
+        <div class="ec-stat-row">
+          <span class="ec-stat-label">${tr.exerciseToday}</span>
+          <span class="ec-stat-value ${exercise.completedToday ? "ec-text--ok" : "ec-text--muted"}">
+            ${exercise.completedToday ? tr.exerciseDone : tr.exerciseNotYet}
+          </span>
+        </div>
+        ${exercise.level != null
+          ? html`<div class="ec-stat-row">
+              <span class="ec-stat-label">${tr.exerciseLevel}</span>
+              <span class="ec-stat-value">${levelLabels[exercise.level] ?? exercise.level}</span>
+            </div>`
+          : nothing}
+        ${exercise.durationMin != null
+          ? html`<div class="ec-stat-row">
+              <span class="ec-stat-label">${tr.exerciseDuration}</span>
+              <span class="ec-stat-value">${exercise.durationMin} ${tr.exerciseMin}</span>
+            </div>`
+          : nothing}
+      </div>
+    </div>
+  `;
+}
+
+// ── Weather Card ─────────────────────────────────────
+function renderWeatherCard(weather: EldercareWeatherData) {
+  const tr = t().eldercare;
+
+  return html`
+    <div class="ec-card">
+      <div class="ec-card__header">
+        <span class="ec-card__icon">${icons.cloudSun}</span>
+        <span class="ec-card__title">${tr.weatherAlert}</span>
+      </div>
+      <div class="ec-card__body">
+        <div class="ec-sensor-grid" style="grid-template-columns: 1fr 1fr;">
+          <div class="ec-sensor">
+            <div class="ec-sensor__value">${weather.outdoorTemp != null ? `${weather.outdoorTemp}°C` : "—"}</div>
+            <div class="ec-sensor__label">${tr.weatherOutdoor}</div>
+          </div>
+          <div class="ec-sensor">
+            <div class="ec-sensor__value">${weather.outdoorHumidity != null ? `${weather.outdoorHumidity}%` : "—"}</div>
+            <div class="ec-sensor__label">${tr.humidity}</div>
+          </div>
+        </div>
+        ${weather.conditions.length > 0
+          ? html`<div class="ec-env-warn">${weather.conditions.join(", ")}</div>`
+          : html`<div class="ec-stat-row">
+              <span class="ec-stat-label">${tr.weatherStatus}</span>
+              <span class="ec-stat-value ec-text--ok">${tr.weatherNormal}</span>
+            </div>`}
+      </div>
+    </div>
+  `;
+}
+
+// ── Visitors Card ────────────────────────────────────
+function renderVisitorCard(visitors: EldercareVisitorEntry[], active: boolean) {
+  const tr = t().eldercare;
+
+  return html`
+    <div class="ec-card">
+      <div class="ec-card__header">
+        <span class="ec-card__icon">${icons.usersRound}</span>
+        <span class="ec-card__title">${tr.visitorLog}</span>
+        ${active ? html`<span class="ec-badge ec-badge--ok">${tr.visitorHere}</span>` : nothing}
+      </div>
+      <div class="ec-card__body">
+        <div class="ec-stat-row">
+          <span class="ec-stat-label">${tr.visitorsToday}</span>
+          <span class="ec-stat-value">${visitors.length}</span>
+        </div>
+        ${visitors.length > 0
+          ? html`<div class="ec-calls-list">
+              ${visitors.slice(0, 5).map(
+                (v) => html`
+                  <div class="ec-call-item">
+                    <span class="ec-call-caller">${v.count ? `${v.count} ${tr.visitorPeople}` : tr.visitorVisit}</span>
+                    <span class="ec-call-time">${v.start ? formatTime(v.start) : ""}${v.durationMin ? ` (${v.durationMin}m)` : ""}</span>
+                  </div>
+                `,
+              )}
+            </div>`
+          : html`<div class="ec-empty-state"><div class="ec-empty-state__text">${tr.noVisitors}</div></div>`}
+      </div>
+    </div>
+  `;
+}
+
+// ── Safety Card (fall detect + multi-room + queue) ───
+function renderSafetyCard(
+  multiRoom: EldercareMultiRoomData,
+  fallEvent: EldercareFallEvent | null,
+  queue: EldercareQueueStatus,
+) {
+  const tr = t().eldercare;
+  const roomLabels: Record<string, string> = {
+    bedroom: tr.roomBedroom, bathroom: tr.roomBathroom, wc: tr.roomBathroom,
+    living_room: tr.roomLiving, kitchen: tr.roomKitchen,
+  };
+
+  return html`
+    <div class="ec-card">
+      <div class="ec-card__header">
+        <span class="ec-card__icon">${icons.shieldAlert}</span>
+        <span class="ec-card__title">${tr.safety}</span>
+        ${queue.pending > 0 ? html`<span class="ec-badge ec-badge--warn">${queue.pending} ${tr.queuePending}</span>` : nothing}
+      </div>
+      <div class="ec-card__body">
+        <!-- Multi-room -->
+        <div class="ec-stat-row">
+          <span class="ec-stat-label">${tr.currentRoom}</span>
+          <span class="ec-stat-value">
+            ${multiRoom.currentRoom ? (roomLabels[multiRoom.currentRoom] ?? multiRoom.currentRoom) : "—"}
+          </span>
+        </div>
+        <div class="ec-stat-row">
+          <span class="ec-stat-label">${tr.bathroomVisits}</span>
+          <span class="ec-stat-value">${multiRoom.bathroomVisitsToday}</span>
+        </div>
+        <!-- Fall detection -->
+        <div class="ec-stat-row">
+          <span class="ec-stat-label">${tr.fallDetection}</span>
+          <span class="ec-stat-value ${fallEvent?.escalated ? "ec-text--danger" : "ec-text--ok"}">
+            ${fallEvent
+              ? `${fallEvent.result === "confirmed_ok" ? tr.fallOk : tr.fallEscalated} (${fallEvent.source})`
+              : tr.fallNone}
+          </span>
+        </div>
+        <!-- Offline queue -->
+        ${queue.failed > 0
+          ? html`<div class="ec-env-warn">${queue.failed} ${tr.queueFailed}</div>`
+          : nothing}
+      </div>
+    </div>
+  `;
+}
+
+// ── Emergency Info Card ──────────────────────────────
+function renderEmergencyCard(emergency: EldercareEmergencyInfo) {
+  const tr = t().eldercare;
+  const hasData = emergency.nearestHospital || emergency.familyDoctor || emergency.bloodType;
+  if (!hasData) return nothing;
+
+  return html`
+    <div class="ec-card">
+      <div class="ec-card__header">
+        <span class="ec-card__icon">${icons.siren}</span>
+        <span class="ec-card__title">${tr.emergencyInfo}</span>
+      </div>
+      <div class="ec-card__body">
+        ${emergency.nearestHospital
+          ? html`<div class="ec-stat-row">
+              <span class="ec-stat-label">${tr.emergencyHospital}</span>
+              <span class="ec-stat-value">${emergency.nearestHospital}</span>
+            </div>`
+          : nothing}
+        ${emergency.hospitalPhone
+          ? html`<div class="ec-stat-row">
+              <span class="ec-stat-label">${tr.emergencyPhone}</span>
+              <span class="ec-stat-value">${emergency.hospitalPhone}</span>
+            </div>`
+          : nothing}
+        ${emergency.bloodType
+          ? html`<div class="ec-stat-row">
+              <span class="ec-stat-label">${tr.emergencyBloodType}</span>
+              <span class="ec-stat-value">${emergency.bloodType}</span>
+            </div>`
+          : nothing}
+        ${emergency.allergies.length > 0
+          ? html`<div class="ec-stat-row">
+              <span class="ec-stat-label">${tr.emergencyAllergies}</span>
+              <span class="ec-stat-value ec-text--warn">${emergency.allergies.join(", ")}</span>
+            </div>`
+          : nothing}
+        ${emergency.conditions.length > 0
+          ? html`<div class="ec-stat-row">
+              <span class="ec-stat-label">${tr.emergencyConditions}</span>
+              <span class="ec-stat-value">${emergency.conditions.join(", ")}</span>
+            </div>`
+          : nothing}
+      </div>
+    </div>
+  `;
+}
+
+// ── Main Dashboard ───────────────────────────────────
+
 export function renderEldercareDashboard(props: EldercareDashboardProps) {
   const tr = t().eldercare;
+  const s = props.summary;
 
   return html`
     <div class="ec-dashboard">
@@ -66,7 +390,7 @@ export function renderEldercareDashboard(props: EldercareDashboardProps) {
       ${props.sosActive
         ? html`
             <div class="ec-sos-banner">
-              <div class="ec-sos-banner__icon">🚨</div>
+              <div class="ec-sos-banner__icon">${icons.bellRing}</div>
               <div class="ec-sos-banner__text">${tr.sosActive}</div>
             </div>
           `
@@ -94,7 +418,7 @@ export function renderEldercareDashboard(props: EldercareDashboardProps) {
         <!-- Grandma Status Card -->
         <div class="ec-card ${props.sosActive ? "ec-card--danger" : ""}">
           <div class="ec-card__header">
-            <span class="ec-card__icon">👵</span>
+            <span class="ec-card__icon">${icons.heartPulse}</span>
             <span class="ec-card__title">${tr.grandmaStatus}</span>
           </div>
           <div class="ec-card__body">
@@ -116,12 +440,12 @@ export function renderEldercareDashboard(props: EldercareDashboardProps) {
             </div>
             <div class="ec-stat-row">
               <span class="ec-stat-label">${tr.checksToday}</span>
-              <span class="ec-stat-value">${props.summary.checksToday}</span>
+              <span class="ec-stat-value">${s.checksToday}</span>
             </div>
             <div class="ec-stat-row">
               <span class="ec-stat-label">${tr.alertsToday}</span>
-              <span class="ec-stat-value ${props.summary.alertsToday > 0 ? "ec-text--warn" : ""}">
-                ${props.summary.alertsToday}
+              <span class="ec-stat-value ${s.alertsToday > 0 ? "ec-text--warn" : ""}">
+                ${s.alertsToday}
               </span>
             </div>
           </div>
@@ -130,7 +454,7 @@ export function renderEldercareDashboard(props: EldercareDashboardProps) {
         <!-- Room Environment Card -->
         <div class="ec-card">
           <div class="ec-card__header">
-            <span class="ec-card__icon">🌡️</span>
+            <span class="ec-card__icon">${icons.thermometer}</span>
             <span class="ec-card__title">${tr.roomEnvironment}</span>
             ${!props.haConnected
               ? html`<span class="ec-badge ec-badge--warn">${tr.haOffline}</span>`
@@ -162,17 +486,29 @@ export function renderEldercareDashboard(props: EldercareDashboardProps) {
           </div>
         </div>
 
+        <!-- Health Log Card -->
+        ${renderHealthCard(s.healthEntries ?? [])}
+
+        <!-- Medication Card -->
+        ${renderMedicationCard(s.medications ?? [], s.medDoses ?? [])}
+
+        <!-- Sleep Card -->
+        ${renderSleepCard(s.sleep ?? { sleepTime: null, wakeTime: null, totalHours: null, wakeEvents: 0, quality: null, avg7day: null, trend: null })}
+
+        <!-- Exercise Card -->
+        ${renderExerciseCard(s.exercise ?? { completedToday: false, level: null, durationMin: null, startedAt: null })}
+
         <!-- Family Calls Card -->
         <div class="ec-card">
           <div class="ec-card__header">
-            <span class="ec-card__icon">📞</span>
+            <span class="ec-card__icon">${icons.phone}</span>
             <span class="ec-card__title">${tr.familyCalls}</span>
           </div>
           <div class="ec-card__body">
-            ${props.summary.callsToday.length > 0
+            ${s.callsToday.length > 0
               ? html`
                   <div class="ec-calls-list">
-                    ${props.summary.callsToday.map(
+                    ${s.callsToday.map(
                       (call) => html`
                         <div class="ec-call-item">
                           <span class="ec-call-caller">${call.caller}</span>
@@ -193,35 +529,51 @@ export function renderEldercareDashboard(props: EldercareDashboardProps) {
         <!-- Companion Activity Card -->
         <div class="ec-card">
           <div class="ec-card__header">
-            <span class="ec-card__icon">🎵</span>
+            <span class="ec-card__icon">${icons.music}</span>
             <span class="ec-card__title">${tr.companionActivity}</span>
           </div>
           <div class="ec-card__body">
             <div class="ec-stat-row">
               <span class="ec-stat-label">${tr.musicSessions}</span>
-              <span class="ec-stat-value">${props.summary.musicPlayed}</span>
+              <span class="ec-stat-value">${s.musicPlayed}</span>
             </div>
             <div class="ec-stat-row">
               <span class="ec-stat-label">${tr.reminders}</span>
-              <span class="ec-stat-value">${props.summary.remindersDelivered}</span>
+              <span class="ec-stat-value">${s.remindersDelivered}</span>
             </div>
             <div class="ec-stat-row">
               <span class="ec-stat-label">${tr.storyActive}</span>
               <span class="ec-stat-value">
-                ${props.summary.storyActive ? tr.yes : tr.no}
+                ${s.storyActive ? tr.yes : tr.no}
               </span>
             </div>
           </div>
         </div>
+
+        <!-- Weather Card -->
+        ${renderWeatherCard(s.weather ?? { outdoorTemp: null, outdoorHumidity: null, conditions: [], alertSent: false })}
+
+        <!-- Visitors Card -->
+        ${renderVisitorCard(s.visitorsToday ?? [], s.visitorActive ?? false)}
+
+        <!-- Safety Card (fall detect + multi-room + queue) -->
+        ${renderSafetyCard(
+          s.multiRoom ?? { currentRoom: null, since: null, bathroomVisitsToday: 0, movements: [] },
+          s.lastFallEvent ?? null,
+          s.queueStatus ?? { pending: 0, retrying: 0, failed: 0, lastFallbackAt: null },
+        )}
+
+        <!-- Emergency Info Card -->
+        ${renderEmergencyCard(s.emergency ?? { nearestHospital: null, hospitalPhone: null, familyDoctor: null, doctorPhone: null, bloodType: null, allergies: [], conditions: [] })}
       </div>
 
       <!-- SOS Events Section (if any today) -->
-      ${props.summary.sosEvents.length > 0
+      ${s.sosEvents.length > 0
         ? html`
             <div class="ec-section">
-              <h3 class="ec-section__title">🚨 ${tr.sosEventsToday}</h3>
+              <h3 class="ec-section__title"><span class="ec-section__icon">${icons.bellRing}</span> ${tr.sosEventsToday}</h3>
               <div class="ec-sos-list">
-                ${props.summary.sosEvents.map(
+                ${s.sosEvents.map(
                   (ev) => html`
                     <div class="ec-sos-item ${ev.resolved ? "" : "ec-sos-item--active"}">
                       <div class="ec-sos-item__time">${formatTime(ev.timestamp)}</div>
@@ -241,12 +593,12 @@ export function renderEldercareDashboard(props: EldercareDashboardProps) {
         : nothing}
 
       <!-- Last Daily Report -->
-      ${props.summary.lastReport
+      ${s.lastReport
         ? html`
             <div class="ec-section">
-              <h3 class="ec-section__title">📊 ${tr.lastReport} (${props.summary.lastReportDate ?? ""})</h3>
+              <h3 class="ec-section__title"><span class="ec-section__icon">${icons.fileBarChart}</span> ${tr.lastReport} (${s.lastReportDate ?? ""})</h3>
               <div class="ec-report-card">
-                <pre class="ec-report-text">${props.summary.lastReport}</pre>
+                <pre class="ec-report-text">${s.lastReport}</pre>
               </div>
             </div>
           `

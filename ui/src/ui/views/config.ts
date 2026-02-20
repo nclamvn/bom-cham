@@ -266,17 +266,10 @@ const sidebarIcons = {
 // Section definitions - keys map to config.sections translations
 const SECTION_KEYS = [
   "env",
-  "update",
   "agents",
   "auth",
   "channels",
-  "messages",
-  "commands",
-  "hooks",
-  "skills",
-  "tools",
   "gateway",
-  "wizard",
 ] as const;
 
 // Map section keys to translation keys
@@ -425,13 +418,8 @@ export function renderConfig(props: ConfigProps) {
     label: getSectionLabel(key),
   }));
 
-  // Add any sections in schema but not in our list
-  const knownKeys = new Set(SECTION_KEYS);
-  const extraSections = Object.keys(schemaProps)
-    .filter((k) => !knownKeys.has(k))
-    .map((k) => ({ key: k, label: getSectionLabel(k) }));
-
-  const allSections = [...availableSections, ...extraSections];
+  // Bờm Chăm: only show sections in SECTION_KEYS, no extras
+  const allSections = [...availableSections];
 
   const activeSectionSchema =
     props.activeSection && analysis.schema && schemaType(analysis.schema) === "object"

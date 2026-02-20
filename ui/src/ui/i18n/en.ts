@@ -8,13 +8,9 @@ export const en = {
     chat: "Chat",
     overview: "Overview",
     channels: "Channels",
-    instances: "Instances",
-    sessions: "Sessions",
     cronJobs: "Cron Jobs",
     skills: "Skills",
-    nodes: "Nodes",
     config: "Config",
-    debug: "Debug",
     logs: "Logs",
     memory: "Memory",
     docs: "Docs",
@@ -24,7 +20,6 @@ export const en = {
     // Groups - Minimal 2-group structure
     core: "Core",
     admin: "Admin",
-    eldercare: "Eldercare",
 
     // Legacy groups (keep for compatibility)
     conversations: "CONVERSATIONS",
@@ -41,14 +36,10 @@ export const en = {
     subtitles: {
       overview: "Gateway status, access points and quick health check.",
       channels: "Manage channels and settings.",
-      instances: "Presence signals from clients and connected nodes.",
-      sessions: "Check active sessions and adjust per-session defaults.",
       cron: "Schedule wake-ups and periodic agent runs.",
       skills: "Manage skill availability and API key injection.",
-      nodes: "Paired devices, capabilities and command exposure.",
       chat: "Direct gateway chat session for quick intervention.",
       config: "Edit ~/.openclaw/openclaw.json safely.",
-      debug: "Gateway snapshots, events and manual RPC calls.",
       logs: "Live tail gateway file logs.",
       memory: "Browse and manage user facts extracted from conversations.",
       eldercare: "Monitor grandma's health, alerts, calls and daily activities.",
@@ -325,19 +316,6 @@ export const en = {
   },
 
   // ============================================
-  // INSTANCES
-  // ============================================
-  instances: {
-    title: "Connected Instances",
-    description: "Presence signals from gateway and clients.",
-    empty: "No instances reported yet.",
-    unknownHost: "unknown host",
-    lastInput: "Last input",
-    reason: "Reason",
-    secondsAgo: "seconds ago",
-  },
-
-  // ============================================
   // SESSIONS
   // ============================================
   sessions: {
@@ -491,33 +469,6 @@ export const en = {
     saveKey: "Save Key",
 
     catalog: {
-      title: "Skills",
-      hint: "Manage plugins, channels, tools and services.",
-      search: "Search skills...",
-      empty: "No skills found.",
-      filters: {
-        all: "All",
-        installed: "Installed",
-        channel: "Channels",
-        tool: "Tools",
-        service: "Services",
-        memory: "Memory",
-        provider: "Auth",
-        skill: "Skills",
-      },
-      status: {
-        active: "Active",
-        disabled: "Disabled",
-        needsConfig: "Needs config",
-        error: "Error",
-        notInstalled: "Not installed",
-      },
-      actions: {
-        install: "Install",
-        settings: "Settings",
-        enable: "Enable",
-        disable: "Disable",
-      },
       settings: {
         title: "Settings: {name}",
         type: "Type",
@@ -778,47 +729,6 @@ export const en = {
   },
 
   // ============================================
-  // DEBUG
-  // ============================================
-  debug: {
-    title: "Debug",
-
-    snapshots: {
-      title: "Snapshots",
-      description: "Status, health, and heartbeat data.",
-      refreshing: "Refreshing...",
-      status: "Status",
-      securityAudit: "Security audit:",
-      critical: "critical",
-      warnings: "warnings",
-      noCritical: "No critical issues",
-      health: "Health",
-      lastHeartbeat: "Last Heartbeat",
-      forDetails: "for details.",
-    },
-
-    rpc: {
-      title: "Manual RPC",
-      description: "Send raw gateway methods with JSON params.",
-      method: "Method",
-      methodPlaceholder: "system-presence",
-      params: "Params (JSON)",
-      call: "Call",
-    },
-
-    models: {
-      title: "Models",
-      description: "Catalog from models.list.",
-    },
-
-    eventLog: {
-      title: "Event Log",
-      description: "Recent gateway events.",
-      empty: "No events yet.",
-    },
-  },
-
-  // ============================================
   // THEME
   // ============================================
   theme: {
@@ -934,58 +844,6 @@ export const en = {
     failed: "failed",
     probeOk: "Probe ok",
     probeFailed: "Probe failed",
-  },
-
-  // ============================================
-  // NODES VIEW EXTENDED
-  // ============================================
-  nodesView: {
-    refresh: "Refresh",
-    loading: "Loading...",
-    save: "Save",
-    saving: "Saving...",
-    loadConfig: "Load Config",
-    loadApprovals: "Load Approvals",
-
-    security: {
-      deny: "Deny",
-      allowlist: "Allowlist",
-      full: "Full access",
-      defaultMode: "Default security mode.",
-      defaultIs: "Default:",
-    },
-
-    ask: {
-      off: "Off",
-      onMiss: "On miss",
-      always: "Always",
-      defaultPolicy: "Default ask policy.",
-      defaultIs: "Default:",
-      fallbackDesc: "Applied when ask UI is unavailable.",
-    },
-
-    autoAllow: {
-      allowSkillExecs: "Allow skill executables listed by Gateway.",
-      usingDefault: "Using default",
-      override: "Override",
-      on: "on",
-      off: "off",
-    },
-
-    allowlist: {
-      newPattern: "New pattern",
-      lastUsed: "Last used: ",
-    },
-
-    binding: {
-      defaultAgent: "default agent",
-      agent: "agent",
-      usesDefault: "uses default",
-      any: "any",
-    },
-
-    noProfile: "No profile yet. Click \"Edit profile\" to add name, bio and avatar.",
-    about: "About",
   },
 
   // ============================================
@@ -1190,125 +1048,6 @@ export const en = {
   },
 
   // ============================================
-  // PROJECTS
-  // ============================================
-  projects: {
-    title: "Projects",
-    description: "Registered projects and environment health.",
-    empty: "No projects found.",
-    scan: "Scan",
-    scanning: "Scanning...",
-    scanned: "Scanned!",
-    rescan: "Rescan",
-    addProject: "Add Project",
-    health: {
-      healthy: "Healthy",
-      warning: "Warning",
-      error: "Error",
-      unknown: "Unknown",
-    },
-    env: {
-      title: "Environment",
-      valid: "Valid",
-      missing: "Missing variables",
-      check: "Check env",
-    },
-    card: {
-      lastDeploy: "Last deploy",
-      platform: "Platform",
-      branch: "Branch",
-      never: "Never",
-    },
-  },
-
-  // ============================================
-  // DEPLOY
-  // ============================================
-  deploy: {
-    title: "Deploy",
-    description: "Deploy projects to production or staging.",
-    empty: "No deployments yet.",
-    start: "Deploy",
-    deploying: "Deploying...",
-    cancel: "Cancel",
-    platform: "Platform",
-    target: "Target",
-    branch: "Branch",
-    selectProject: "Select project",
-    selectPlatform: "Select platform",
-    platforms: {
-      fly: "Fly.io",
-      railway: "Railway",
-      vercel: "Vercel",
-      docker: "Docker",
-      custom: "Custom",
-    },
-    targets: {
-      production: "Production",
-      staging: "Staging",
-      preview: "Preview",
-    },
-    status: {
-      pending: "Pending",
-      building: "Building",
-      deploying: "Deploying",
-      success: "Success",
-      failed: "Failed",
-      cancelled: "Cancelled",
-    },
-    log: {
-      title: "Deploy Log",
-      empty: "No output yet.",
-      copy: "Copy log",
-      download: "Download log",
-    },
-    history: {
-      title: "History",
-      empty: "No deploy history.",
-      viewLog: "View log",
-    },
-    confirm: {
-      title: "Confirm deploy",
-      message: "Deploy {project} to {target}?",
-      proceed: "Deploy now",
-    },
-  },
-
-  // ============================================
-  // PREVIEW
-  // ============================================
-  preview: {
-    title: "Preview",
-    description: "Preview deployments with shareable URLs.",
-    empty: "No preview deployments.",
-    create: "Create Preview",
-    creating: "Creating...",
-    delete: "Delete",
-    deleting: "Deleting...",
-    promote: "Promote to production",
-    promoting: "Promoting...",
-    open: "Open preview",
-    copyUrl: "Copy URL",
-    urlCopied: "URL copied!",
-    iframe: {
-      title: "Preview",
-      loading: "Loading preview...",
-      openExternal: "Open in new tab",
-    },
-    card: {
-      branch: "Branch",
-      created: "Created",
-      expires: "Expires",
-      url: "URL",
-    },
-    form: {
-      project: "Project",
-      branch: "Branch",
-      branchPlaceholder: "feature/my-branch",
-    },
-  },
-
-  // ============================================
   // ELDERCARE — GRANDMA CARE
   // ============================================
   eldercare: {
@@ -1348,11 +1087,72 @@ export const en = {
       emergency: "Emergency",
     } as Record<string, string>,
     // Config sections
+    // Sprint 6-8 Dashboard
+    healthLog: "Health Log",
+    healthBP: "Blood Pressure",
+    healthGlucose: "Glucose",
+    healthHR: "Heart Rate",
+    healthTemp: "Temperature",
+    healthSpO2: "SpO2",
+    healthWeight: "Weight",
+    noHealthData: "No health data recorded today",
+    medication: "Medication",
+    medAdherence: "Doses taken",
+    noMedications: "No medications configured",
+    sleepTracker: "Sleep",
+    sleepHours: "Hours",
+    sleepQuality: "Quality",
+    sleepWakes: "Wakes",
+    sleepAvg7d: "7-day avg",
+    sleepQualities: { good: "Good", normal: "Normal", poor: "Poor" } as Record<string, string>,
+    exercise: "Exercise",
+    exerciseToday: "Today",
+    exerciseDone: "Completed",
+    exerciseNotYet: "Not done yet",
+    exerciseLevel: "Level",
+    exerciseLevel1: "Very light",
+    exerciseLevel2: "Light",
+    exerciseLevel3: "Moderate",
+    exerciseDuration: "Duration",
+    exerciseMin: "min",
+    weatherAlert: "Weather",
+    weatherOutdoor: "Outdoor",
+    weatherStatus: "Status",
+    weatherNormal: "Normal",
+    visitorLog: "Visitors",
+    visitorHere: "Visiting now",
+    visitorsToday: "Visits today",
+    visitorPeople: "people",
+    visitorVisit: "Visit",
+    noVisitors: "No visitors today",
+    safety: "Safety",
+    currentRoom: "Location",
+    bathroomVisits: "Bathroom visits",
+    fallDetection: "Fall detection",
+    fallOk: "OK",
+    fallEscalated: "Escalated",
+    fallNone: "No events",
+    queuePending: "pending",
+    queueFailed: "alerts failed to send",
+    roomBedroom: "Bedroom",
+    roomBathroom: "Bathroom",
+    roomLiving: "Living room",
+    roomKitchen: "Kitchen",
+    emergencyInfo: "Emergency",
+    emergencyHospital: "Hospital",
+    emergencyPhone: "Phone",
+    emergencyBloodType: "Blood type",
+    emergencyAllergies: "Allergies",
+    emergencyConditions: "Conditions",
     configSections: {
       monitor: "Monitor",
       sos: "SOS",
       companion: "Companion",
       videocall: "Video Call",
+      medication: "Medication",
+      exercise: "Exercise",
+      safety: "Safety",
+      emergency: "Emergency",
     } as Record<string, string>,
     config: {
       monitorThresholds: "Monitor Thresholds",
@@ -1386,6 +1186,41 @@ export const en = {
       morningReminder: "Morning Reminder Time",
       quietHoursStart: "Quiet Hours Start",
       quietHoursEnd: "Quiet Hours End",
+      // Medication config
+      medSettings: "Medication Reminders",
+      medEnabled: "Enable reminders",
+      medList: "Medication List",
+      medWithFood: "With food",
+      medNone: "No medications configured",
+      medHint: "Edit via memory key eldercare_medication_list",
+      // Exercise config
+      exerciseSettings: "Exercise Settings",
+      exerciseEnabled: "Enable exercise reminders",
+      exerciseLevelSetting: "Difficulty level (1-3)",
+      exerciseLevelHint: "1=Very light, 2=Light, 3=Moderate",
+      exerciseTime: "Reminder time",
+      // Safety config
+      fallDetectSettings: "Fall Detection",
+      fallStillness: "Stillness threshold (min)",
+      fallStillnessHint: "Minutes of stillness after fall indicator",
+      fallTtsWait: "TTS wait (seconds)",
+      fallCooldown: "Cooldown between checks (min)",
+      multiroomSettings: "Multi-room Monitoring",
+      wcMaxMinutes: "Bathroom max time (min)",
+      wcMaxHint: "Alert if bathroom visit exceeds this time",
+      // Emergency config
+      emergencyHospitalSettings: "Nearest Hospital",
+      emergencyHospitalName: "Hospital name",
+      emergencyHospitalPhone: "Emergency phone",
+      emergencyDoctorSettings: "Family Doctor",
+      emergencyDoctorName: "Doctor name",
+      emergencyDoctorPhone: "Doctor phone",
+      emergencyMedicalProfile: "Medical Profile",
+      emergencyBloodType: "Blood type",
+      emergencyAllergies: "Allergies (comma separated)",
+      emergencyAllergiesHint: "e.g. Penicillin, Aspirin",
+      emergencyConditions: "Chronic conditions (comma separated)",
+      emergencyConditionsHint: "e.g. Hypertension, Diabetes",
     },
   },
 } as const;

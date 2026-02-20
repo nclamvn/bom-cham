@@ -58,8 +58,14 @@
 }
 
 .ec-card__icon {
-  font-size: 18px;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent);
+}
+
+.ec-card__icon svg {
+  width: 18px;
+  height: 18px;
 }
 
 .ec-card__title {
@@ -230,7 +236,13 @@
 }
 
 .ec-sos-banner__icon {
-  font-size: 24px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ec-sos-banner__icon svg {
+  width: 24px;
+  height: 24px;
 }
 
 .ec-sos-banner__text {
@@ -286,10 +298,24 @@
 }
 
 .ec-section__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 15px;
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 12px;
+}
+
+.ec-section__icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent);
+}
+
+.ec-section__icon svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* ─── Report card ────────────────────────── */
@@ -359,6 +385,9 @@
 }
 
 .ec-config-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 8px 16px;
   font-size: 13px;
   font-weight: 500;
@@ -373,6 +402,16 @@
 
 .ec-config-tab:hover {
   color: var(--text);
+}
+
+.ec-config-tab__icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ec-config-tab__icon svg {
+  width: 14px;
+  height: 14px;
 }
 
 .ec-config-tab--active {

@@ -1,11 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  loadCatalog,
-  getFilteredCatalog,
-  setSkillsSearch,
-  setSkillsFilterKind,
-  toggleCatalogSkill,
   openSkillSettings,
   closeSkillSettings,
   updateSettingsField,
@@ -15,23 +10,6 @@ import {
   saveSkillSettings,
   type SkillsState,
 } from "./skills";
-import type { SkillCatalogEntry } from "../types";
-
-function createCatalogEntry(id: string, overrides: Partial<SkillCatalogEntry> = {}): SkillCatalogEntry {
-  return {
-    id,
-    name: `Skill ${id}`,
-    kind: "tool",
-    description: `Description for ${id}`,
-    version: "1.0.0",
-    installed: true,
-    enabled: true,
-    hasConfig: false,
-    source: "bundled",
-    status: "active",
-    ...overrides,
-  };
-}
 
 function createState(overrides: Partial<SkillsState> = {}): SkillsState {
   return {
@@ -43,11 +21,6 @@ function createState(overrides: Partial<SkillsState> = {}): SkillsState {
     skillsBusyKey: null,
     skillEdits: {},
     skillMessages: {},
-    skillsCatalog: [],
-    skillsCatalogLoading: false,
-    skillsCatalogError: null,
-    skillsFilterKind: "all",
-    skillsSearch: "",
     skillsSettingsOpen: false,
     skillsSettingsSkillId: null,
     skillsSettingsSchema: null,
@@ -66,152 +39,6 @@ function mockClient(overrides: Partial<{ request: ReturnType<typeof vi.fn> }> = 
     request: overrides.request ?? vi.fn().mockResolvedValue({}),
   } as unknown as SkillsState["client"];
 }
-
-// ─── loadCatalog ─────────────────────────────────────────
-
-describe("loadCatalog", () => {
-  it("does nothing when client is null", async () => {
-    const state = createState();
-    await loadCatalog(state);
-    expect(state.skillsCatalog).toEqual([]);
-  });
-
-  it("loads catalog from gateway", async () => {
-    const skills = [createCatalogEntry("s1"), createCatalogEntry("s2")];
-    const client = mockClient({ request: vi.fn().mockResolvedValue({ skills }) });
-    const state = createState({ client });
-    await loadCatalog(state);
-    expect(state.skillsCatalog).toEqual(skills);
-    expect(state.skillsCatalogLoading).toBe(false);
-  });
-
-  it("sets error on failure", async () => {
-    const client = mockClient({ request: vi.fn().mockRejectedValue(new Error("catalog fail")) });
-    const state = createState({ client });
-    await loadCatalog(state);
-    expect(state.skillsCatalogError).toBe("catalog fail");
-    expect(state.skillsCatalogLoading).toBe(false);
-  });
-
-  it("skips when already loading", async () => {
-    const client = mockClient();
-    const state = createState({ client, skillsCatalogLoading: true });
-    await loadCatalog(state);
-    expect(client!.request).not.toHaveBeenCalled();
-  });
-
-  it("handles empty response", async () => {
-    const client = mockClient({ request: vi.fn().mockResolvedValue({}) });
-    const state = createState({ client });
-    await loadCatalog(state);
-    expect(state.skillsCatalog).toEqual([]);
-  });
-});
-
-// ─── getFilteredCatalog ──────────────────────────────────
-
-describe("getFilteredCatalog", () => {
-  it("returns all items when filter is 'all'", () => {
-    const state = createState({
-      skillsCatalog: [createCatalogEntry("s1"), createCatalogEntry("s2")],
-      skillsFilterKind: "all",
-    });
-    expect(getFilteredCatalog(state)).toHaveLength(2);
-  });
-
-  it("filters by kind", () => {
-    const state = createState({
-      skillsCatalog: [
-        createCatalogEntry("s1", { kind: "tool" }),
-        createCatalogEntry("s2", { kind: "channel" }),
-      ],
-      skillsFilterKind: "tool",
-    });
-    const result = getFilteredCatalog(state);
-    expect(result).toHaveLength(1);
-    expect(result[0].id).toBe("s1");
-  });
-
-  it("filters by installed", () => {
-    const state = createState({
-      skillsCatalog: [
-        createCatalogEntry("s1", { installed: true }),
-        createCatalogEntry("s2", { installed: false }),
-      ],
-      skillsFilterKind: "installed",
-    });
-    const result = getFilteredCatalog(state);
-    expect(result).toHaveLength(1);
-    expect(result[0].id).toBe("s1");
-  });
-
-  it("filters by search keyword", () => {
-    const state = createState({
-      skillsCatalog: [
-        createCatalogEntry("s1", { name: "Discord Bot" }),
-        createCatalogEntry("s2", { name: "Telegram Channel" }),
-      ],
-      skillsSearch: "discord",
-    });
-    const result = getFilteredCatalog(state);
-    expect(result).toHaveLength(1);
-    expect(result[0].id).toBe("s1");
-  });
-
-  it("combines kind and search filters", () => {
-    const state = createState({
-      skillsCatalog: [
-        createCatalogEntry("s1", { kind: "channel", name: "Discord" }),
-        createCatalogEntry("s2", { kind: "channel", name: "Telegram" }),
-        createCatalogEntry("s3", { kind: "tool", name: "Discord Tool" }),
-      ],
-      skillsFilterKind: "channel",
-      skillsSearch: "discord",
-    });
-    const result = getFilteredCatalog(state);
-    expect(result).toHaveLength(1);
-    expect(result[0].id).toBe("s1");
-  });
-});
-
-// ─── setSkillsSearch / setSkillsFilterKind ───────────────
-
-describe("setSkillsSearch", () => {
-  it("sets search keyword", () => {
-    const state = createState();
-    setSkillsSearch(state, "hello");
-    expect(state.skillsSearch).toBe("hello");
-  });
-});
-
-describe("setSkillsFilterKind", () => {
-  it("sets filter kind", () => {
-    const state = createState();
-    setSkillsFilterKind(state, "channel");
-    expect(state.skillsFilterKind).toBe("channel");
-  });
-});
-
-// ─── toggleCatalogSkill ──────────────────────────────────
-
-describe("toggleCatalogSkill", () => {
-  it("calls skills.update and reloads catalog", async () => {
-    const request = vi.fn().mockResolvedValue({});
-    const client = mockClient({ request });
-    const state = createState({ client });
-    await toggleCatalogSkill(state, "my-skill", true);
-    expect(request).toHaveBeenCalledWith("skills.update", { skillKey: "my-skill", enabled: true });
-    expect(state.skillsBusyKey).toBeNull();
-  });
-
-  it("sets error on failure", async () => {
-    const client = mockClient({ request: vi.fn().mockRejectedValue(new Error("toggle fail")) });
-    const state = createState({ client });
-    await toggleCatalogSkill(state, "s1", false);
-    expect(state.skillsCatalogError).toBe("toggle fail");
-    expect(state.skillsBusyKey).toBeNull();
-  });
-});
 
 // ─── openSkillSettings / closeSkillSettings ──────────────
 
@@ -249,7 +76,7 @@ describe("openSkillSettings", () => {
     const client = mockClient({ request: vi.fn().mockRejectedValue(new Error("schema fail")) });
     const state = createState({ client });
     await openSkillSettings(state, "s1");
-    expect(state.skillsCatalogError).toBe("schema fail");
+    expect(state.skillsError).toBe("schema fail");
     expect(state.skillsSettingsLoading).toBe(false);
   });
 });

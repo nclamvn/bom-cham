@@ -11,11 +11,7 @@ import {
 import { observeTopbar, scheduleChatScroll, scheduleLogsScroll } from "./app-scroll";
 import {
   startLogsPolling,
-  startNodesPolling,
   stopLogsPolling,
-  stopNodesPolling,
-  startDebugPolling,
-  stopDebugPolling,
 } from "./app-polling";
 
 type LifecycleHost = {
@@ -53,12 +49,8 @@ export function handleConnected(host: LifecycleHost) {
   attachThemeListener(host as unknown as Parameters<typeof attachThemeListener>[0]);
   window.addEventListener("popstate", host.popStateHandler);
   connectGateway(host as unknown as Parameters<typeof connectGateway>[0]);
-  startNodesPolling(host as unknown as Parameters<typeof startNodesPolling>[0]);
   if (host.tab === "logs") {
     startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
-  }
-  if (host.tab === "debug") {
-    startDebugPolling(host as unknown as Parameters<typeof startDebugPolling>[0]);
   }
 
   // Keyboard shortcuts handler
@@ -92,9 +84,7 @@ export function handleDisconnected(host: LifecycleHost) {
   if (host.keyboardHandler) {
     window.removeEventListener("keydown", host.keyboardHandler);
   }
-  stopNodesPolling(host as unknown as Parameters<typeof stopNodesPolling>[0]);
   stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
-  stopDebugPolling(host as unknown as Parameters<typeof stopDebugPolling>[0]);
   detachThemeListener(host as unknown as Parameters<typeof detachThemeListener>[0]);
   host.topbarObserver?.disconnect();
   host.topbarObserver = null;

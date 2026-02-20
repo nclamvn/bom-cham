@@ -40,10 +40,10 @@ function getCommands(props: CommandPaletteProps): Command[] {
   const translations = t();
   const commands: Command[] = [];
 
-  // Navigation commands — sidebar tabs + hidden tabs still accessible via ⌘K
+  // Navigation commands — sidebar tabs only (dead tabs removed)
   const allTabs: Tab[] = [
     ...TAB_GROUPS.flatMap(group => [...group.tabs]),
-    "sessions", "instances", "cron", "skills",
+    "cron", "skills",
   ];
 
   allTabs.forEach((tab, index) => {
@@ -93,18 +93,17 @@ function getCommands(props: CommandPaletteProps): Command[] {
 }
 
 function getTabIcon(tab: Tab): keyof typeof icons {
-  const iconMap: Record<Tab, keyof typeof icons> = {
+  const iconMap: Partial<Record<Tab, keyof typeof icons>> = {
     chat: "messageSquare",
-    sessions: "fileText",
     channels: "link",
-    instances: "radio",
     overview: "barChart",
     cron: "loader",
     logs: "scrollText",
     config: "settings",
     skills: "zap",
-    nodes: "monitor",
-    debug: "bug",
+    memory: "brain",
+    eldercare: "activity",
+    "eldercare-config": "settings",
   };
   return iconMap[tab] || "folder";
 }

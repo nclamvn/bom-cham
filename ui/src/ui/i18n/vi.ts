@@ -9,13 +9,9 @@ export const vi = {
     chat: "Trò chuyện",
     overview: "Tổng quan",
     channels: "Kênh kết nối",
-    instances: "Phiên bản",
-    sessions: "Phiên làm việc",
     cronJobs: "Lịch trình",
     skills: "Kỹ năng",
-    nodes: "Thiết bị",
     config: "Cấu hình",
-    debug: "Gỡ lỗi",
     logs: "Nhật ký",
     memory: "Trí nhớ",
     docs: "Tài liệu",
@@ -25,7 +21,6 @@ export const vi = {
     // Groups - Minimal 2-group structure
     core: "Chính",
     admin: "Quản trị",
-    eldercare: "Bà nội care",
 
     // Legacy groups (keep for compatibility)
     conversations: "HỘI THOẠI",
@@ -42,14 +37,10 @@ export const vi = {
     subtitles: {
       overview: "Trạng thái gateway, điểm truy cập và kiểm tra sức khỏe nhanh.",
       channels: "Quản lý kênh và cài đặt.",
-      instances: "Tín hiệu hiện diện từ các client và nút đã kết nối.",
-      sessions: "Kiểm tra phiên hoạt động và điều chỉnh mặc định theo phiên.",
       cron: "Lên lịch đánh thức và chạy tác tử định kỳ.",
       skills: "Quản lý khả dụng kỹ năng và tiêm khóa API.",
-      nodes: "Thiết bị đã ghép nối, khả năng và phơi bày lệnh.",
       chat: "Phiên trò chuyện gateway trực tiếp cho can thiệp nhanh.",
       config: "Chỉnh sửa ~/.openclaw/openclaw.json an toàn.",
-      debug: "Ảnh chụp gateway, sự kiện và gọi RPC thủ công.",
       logs: "Theo dõi trực tiếp nhật ký tệp gateway.",
       memory: "Duyệt và quản lý sự kiện người dùng trích xuất từ hội thoại.",
       eldercare: "Giám sát sức khỏe bà, cảnh báo, cuộc gọi và hoạt động hàng ngày.",
@@ -326,19 +317,6 @@ export const vi = {
   },
 
   // ============================================
-  // INSTANCES
-  // ============================================
-  instances: {
-    title: "Phiên bản kết nối",
-    description: "Tín hiệu hiện diện từ gateway và các client.",
-    empty: "Chưa có phiên bản nào được báo cáo.",
-    unknownHost: "máy chủ không xác định",
-    lastInput: "Nhập liệu cuối",
-    reason: "Lý do",
-    secondsAgo: "giây trước",
-  },
-
-  // ============================================
   // SESSIONS
   // ============================================
   sessions: {
@@ -492,33 +470,6 @@ export const vi = {
     saveKey: "Lưu khóa",
 
     catalog: {
-      title: "Kỹ năng",
-      hint: "Quản lý plugin, kênh, công cụ và dịch vụ.",
-      search: "Tìm kỹ năng...",
-      empty: "Không tìm thấy kỹ năng nào.",
-      filters: {
-        all: "Tất cả",
-        installed: "Đã cài",
-        channel: "Kênh",
-        tool: "Công cụ",
-        service: "Dịch vụ",
-        memory: "Bộ nhớ",
-        provider: "Xác thực",
-        skill: "Kỹ năng",
-      },
-      status: {
-        active: "Hoạt động",
-        disabled: "Đã tắt",
-        needsConfig: "Cần cấu hình",
-        error: "Lỗi",
-        notInstalled: "Chưa cài",
-      },
-      actions: {
-        install: "Cài đặt",
-        settings: "Cài đặt",
-        enable: "Bật",
-        disable: "Tắt",
-      },
       settings: {
         title: "Cài đặt: {name}",
         type: "Loại",
@@ -779,47 +730,6 @@ export const vi = {
   },
 
   // ============================================
-  // DEBUG
-  // ============================================
-  debug: {
-    title: "Gỡ lỗi",
-
-    snapshots: {
-      title: "Ảnh chụp",
-      description: "Dữ liệu trạng thái, sức khỏe và nhịp tim.",
-      refreshing: "Đang làm mới…",
-      status: "Trạng thái",
-      securityAudit: "Kiểm tra bảo mật:",
-      critical: "nghiêm trọng",
-      warnings: "cảnh báo",
-      noCritical: "Không có vấn đề nghiêm trọng",
-      health: "Sức khỏe",
-      lastHeartbeat: "Nhịp tim cuối",
-      forDetails: "để biết chi tiết.",
-    },
-
-    rpc: {
-      title: "RPC Thủ công",
-      description: "Gửi phương thức gateway raw với tham số JSON.",
-      method: "Phương thức",
-      methodPlaceholder: "system-presence",
-      params: "Tham số (JSON)",
-      call: "Gọi",
-    },
-
-    models: {
-      title: "Mô hình",
-      description: "Danh mục từ models.list.",
-    },
-
-    eventLog: {
-      title: "Nhật ký sự kiện",
-      description: "Các sự kiện gateway gần nhất.",
-      empty: "Chưa có sự kiện nào.",
-    },
-  },
-
-  // ============================================
   // THEME
   // ============================================
   theme: {
@@ -935,58 +845,6 @@ export const vi = {
     failed: "thất bại",
     probeOk: "Kiểm tra ok",
     probeFailed: "Kiểm tra thất bại",
-  },
-
-  // ============================================
-  // NODES VIEW EXTENDED
-  // ============================================
-  nodesView: {
-    refresh: "Làm mới",
-    loading: "Đang tải…",
-    save: "Lưu",
-    saving: "Đang lưu…",
-    loadConfig: "Tải cấu hình",
-    loadApprovals: "Tải phê duyệt",
-
-    security: {
-      deny: "Từ chối",
-      allowlist: "Danh sách cho phép",
-      full: "Toàn quyền",
-      defaultMode: "Chế độ bảo mật mặc định.",
-      defaultIs: "Mặc định:",
-    },
-
-    ask: {
-      off: "Tắt",
-      onMiss: "Khi thiếu",
-      always: "Luôn luôn",
-      defaultPolicy: "Chính sách nhắc mặc định.",
-      defaultIs: "Mặc định:",
-      fallbackDesc: "Áp dụng khi nhắc UI không khả dụng.",
-    },
-
-    autoAllow: {
-      allowSkillExecs: "Cho phép file thực thi kỹ năng được liệt kê bởi Gateway.",
-      usingDefault: "Dùng mặc định",
-      override: "Ghi đè",
-      on: "bật",
-      off: "tắt",
-    },
-
-    allowlist: {
-      newPattern: "Mẫu mới",
-      lastUsed: "Dùng lần cuối: ",
-    },
-
-    binding: {
-      defaultAgent: "tác tử mặc định",
-      agent: "tác tử",
-      usesDefault: "dùng mặc định",
-      any: "bất kỳ",
-    },
-
-    noProfile: "Chưa có hồ sơ. Nhấn \"Chỉnh sửa hồ sơ\" để thêm tên, tiểu sử và ảnh đại diện.",
-    about: "Giới thiệu",
   },
 
   // ============================================
@@ -1191,125 +1049,6 @@ export const vi = {
   },
 
   // ============================================
-  // PROJECTS
-  // ============================================
-  projects: {
-    title: "Dự án",
-    description: "Dự án đã đăng ký và sức khỏe môi trường.",
-    empty: "Không tìm thấy dự án nào.",
-    scan: "Quét",
-    scanning: "Đang quét...",
-    scanned: "Đã quét!",
-    rescan: "Quét lại",
-    addProject: "Thêm dự án",
-    health: {
-      healthy: "Khỏe mạnh",
-      warning: "Cảnh báo",
-      error: "Lỗi",
-      unknown: "Không rõ",
-    },
-    env: {
-      title: "Môi trường",
-      valid: "Hợp lệ",
-      missing: "Thiếu biến",
-      check: "Kiểm tra env",
-    },
-    card: {
-      lastDeploy: "Triển khai cuối",
-      platform: "Nền tảng",
-      branch: "Nhánh",
-      never: "Chưa bao giờ",
-    },
-  },
-
-  // ============================================
-  // DEPLOY
-  // ============================================
-  deploy: {
-    title: "Triển khai",
-    description: "Triển khai dự án lên production hoặc staging.",
-    empty: "Chưa có triển khai nào.",
-    start: "Triển khai",
-    deploying: "Đang triển khai...",
-    cancel: "Hủy",
-    platform: "Nền tảng",
-    target: "Mục tiêu",
-    branch: "Nhánh",
-    selectProject: "Chọn dự án",
-    selectPlatform: "Chọn nền tảng",
-    platforms: {
-      fly: "Fly.io",
-      railway: "Railway",
-      vercel: "Vercel",
-      docker: "Docker",
-      custom: "Tùy chỉnh",
-    },
-    targets: {
-      production: "Production",
-      staging: "Staging",
-      preview: "Preview",
-    },
-    status: {
-      pending: "Đang chờ",
-      building: "Đang build",
-      deploying: "Đang triển khai",
-      success: "Thành công",
-      failed: "Thất bại",
-      cancelled: "Đã hủy",
-    },
-    log: {
-      title: "Nhật ký triển khai",
-      empty: "Chưa có đầu ra.",
-      copy: "Sao chép log",
-      download: "Tải log",
-    },
-    history: {
-      title: "Lịch sử",
-      empty: "Không có lịch sử triển khai.",
-      viewLog: "Xem log",
-    },
-    confirm: {
-      title: "Xác nhận triển khai",
-      message: "Triển khai {project} lên {target}?",
-      proceed: "Triển khai ngay",
-    },
-  },
-
-  // ============================================
-  // PREVIEW
-  // ============================================
-  preview: {
-    title: "Xem trước",
-    description: "Bản triển khai xem trước với URL chia sẻ.",
-    empty: "Không có bản triển khai xem trước.",
-    create: "Tạo Preview",
-    creating: "Đang tạo...",
-    delete: "Xóa",
-    deleting: "Đang xóa...",
-    promote: "Nâng lên production",
-    promoting: "Đang nâng cấp...",
-    open: "Mở xem trước",
-    copyUrl: "Sao chép URL",
-    urlCopied: "Đã sao chép URL!",
-    iframe: {
-      title: "Xem trước",
-      loading: "Đang tải xem trước...",
-      openExternal: "Mở trong tab mới",
-    },
-    card: {
-      branch: "Nhánh",
-      created: "Tạo lúc",
-      expires: "Hết hạn",
-      url: "URL",
-    },
-    form: {
-      project: "Dự án",
-      branch: "Nhánh",
-      branchPlaceholder: "feature/nhánh-tôi",
-    },
-  },
-
-  // ============================================
   // ELDERCARE — BÀ NỘI CARE
   // ============================================
   eldercare: {
@@ -1349,11 +1088,72 @@ export const vi = {
       emergency: "Khẩn cấp",
     } as Record<string, string>,
     // Config sections
+    // Sprint 6-8 Dashboard
+    healthLog: "Sức khoẻ",
+    healthBP: "Huyết áp",
+    healthGlucose: "Đường huyết",
+    healthHR: "Nhịp tim",
+    healthTemp: "Nhiệt độ",
+    healthSpO2: "SpO2",
+    healthWeight: "Cân nặng",
+    noHealthData: "Chưa có dữ liệu sức khoẻ hôm nay",
+    medication: "Thuốc",
+    medAdherence: "Đã uống",
+    noMedications: "Chưa cài đặt thuốc",
+    sleepTracker: "Giấc ngủ",
+    sleepHours: "Giờ ngủ",
+    sleepQuality: "Chất lượng",
+    sleepWakes: "Thức giấc",
+    sleepAvg7d: "TB 7 ngày",
+    sleepQualities: { good: "Tốt", normal: "Bình thường", poor: "Kém" } as Record<string, string>,
+    exercise: "Bài tập",
+    exerciseToday: "Hôm nay",
+    exerciseDone: "Đã tập",
+    exerciseNotYet: "Chưa tập",
+    exerciseLevel: "Cấp độ",
+    exerciseLevel1: "Siêu nhẹ",
+    exerciseLevel2: "Nhẹ",
+    exerciseLevel3: "Trung bình",
+    exerciseDuration: "Thời gian",
+    exerciseMin: "phút",
+    weatherAlert: "Thời tiết",
+    weatherOutdoor: "Ngoài trời",
+    weatherStatus: "Tình trạng",
+    weatherNormal: "Bình thường",
+    visitorLog: "Khách thăm",
+    visitorHere: "Đang có khách",
+    visitorsToday: "Lượt thăm hôm nay",
+    visitorPeople: "người",
+    visitorVisit: "Lượt thăm",
+    noVisitors: "Chưa có khách hôm nay",
+    safety: "An toàn",
+    currentRoom: "Vị trí",
+    bathroomVisits: "Lần vào WC",
+    fallDetection: "Phát hiện ngã",
+    fallOk: "Ổn",
+    fallEscalated: "Đã báo SOS",
+    fallNone: "Không có sự kiện",
+    queuePending: "đang chờ",
+    queueFailed: "cảnh báo gửi thất bại",
+    roomBedroom: "Phòng ngủ",
+    roomBathroom: "Nhà vệ sinh",
+    roomLiving: "Phòng khách",
+    roomKitchen: "Nhà bếp",
+    emergencyInfo: "Khẩn cấp",
+    emergencyHospital: "Bệnh viện",
+    emergencyPhone: "Điện thoại",
+    emergencyBloodType: "Nhóm máu",
+    emergencyAllergies: "Dị ứng",
+    emergencyConditions: "Bệnh nền",
     configSections: {
       monitor: "Giám sát",
       sos: "SOS",
       companion: "Bạn đồng hành",
       videocall: "Video call",
+      medication: "Thuốc",
+      exercise: "Bài tập",
+      safety: "An toàn",
+      emergency: "Khẩn cấp",
     } as Record<string, string>,
     config: {
       monitorThresholds: "Ngưỡng giám sát",
@@ -1387,6 +1187,41 @@ export const vi = {
       morningReminder: "Giờ nhắc sáng",
       quietHoursStart: "Giờ yên tĩnh bắt đầu",
       quietHoursEnd: "Giờ yên tĩnh kết thúc",
+      // Medication config
+      medSettings: "Nhắc uống thuốc",
+      medEnabled: "Bật nhắc thuốc",
+      medList: "Danh sách thuốc",
+      medWithFood: "Uống sau ăn",
+      medNone: "Chưa cài đặt thuốc",
+      medHint: "Chỉnh sửa trong memory key eldercare_medication_list",
+      // Exercise config
+      exerciseSettings: "Cài đặt bài tập",
+      exerciseEnabled: "Bật nhắc tập",
+      exerciseLevelSetting: "Cấp độ (1-3)",
+      exerciseLevelHint: "1=Siêu nhẹ, 2=Nhẹ, 3=Trung bình",
+      exerciseTime: "Giờ nhắc tập",
+      // Safety config
+      fallDetectSettings: "Phát hiện ngã",
+      fallStillness: "Ngưỡng bất động (phút)",
+      fallStillnessHint: "Số phút bất động sau dấu hiệu ngã",
+      fallTtsWait: "Chờ xác nhận TTS (giây)",
+      fallCooldown: "Thời gian nghỉ giữa các lần kiểm tra (phút)",
+      multiroomSettings: "Giám sát nhiều phòng",
+      wcMaxMinutes: "Thời gian tối đa trong WC (phút)",
+      wcMaxHint: "Cảnh báo nếu ở trong WC quá lâu",
+      // Emergency config
+      emergencyHospitalSettings: "Bệnh viện gần nhất",
+      emergencyHospitalName: "Tên bệnh viện",
+      emergencyHospitalPhone: "Số cấp cứu",
+      emergencyDoctorSettings: "Bác sĩ gia đình",
+      emergencyDoctorName: "Tên bác sĩ",
+      emergencyDoctorPhone: "Số điện thoại",
+      emergencyMedicalProfile: "Hồ sơ y tế",
+      emergencyBloodType: "Nhóm máu",
+      emergencyAllergies: "Dị ứng (phân cách bằng dấu phẩy)",
+      emergencyAllergiesHint: "VD: Penicillin, Aspirin",
+      emergencyConditions: "Bệnh nền (phân cách bằng dấu phẩy)",
+      emergencyConditionsHint: "VD: Tăng huyết áp, Tiểu đường",
     },
   },
 } as const;

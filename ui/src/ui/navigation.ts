@@ -6,14 +6,14 @@ export const TAB_GROUPS = [
   {
     label: "care",
     labelKey: "eldercare",
-    tabs: ["eldercare", "eldercare-config"],
+    tabs: ["chat", "eldercare", "eldercare-config"],
     icon: "activity",
     shortcut: "1"
   },
   {
     label: "system",
     labelKey: "core",
-    tabs: ["overview", "chat", "channels", "config"],
+    tabs: ["overview", "channels", "config"],
     icon: "messageSquare",
     shortcut: "2"
   },
@@ -47,15 +47,11 @@ export function getTabGroupShortcut(group: (typeof TAB_GROUPS)[number]): string 
 export type Tab =
   | "overview"
   | "channels"
-  | "instances"
-  | "sessions"
   | "cron"
   | "skills"
-  | "nodes"
   | "chat"
   | "memory"
   | "config"
-  | "debug"
   | "logs"
   | "eldercare"
   | "eldercare-config";
@@ -63,15 +59,11 @@ export type Tab =
 const TAB_PATHS: Record<Tab, string> = {
   overview: "/overview",
   channels: "/channels",
-  instances: "/instances",
-  sessions: "/sessions",
   cron: "/cron",
   skills: "/skills",
   memory: "/memory",
-  nodes: "/nodes",
   chat: "/chat",
   config: "/config",
-  debug: "/debug",
   logs: "/logs",
   eldercare: "/eldercare",
   "eldercare-config": "/eldercare-config",
@@ -150,22 +142,14 @@ export function iconForTab(tab: Tab): IconName {
       return "barChart";
     case "channels":
       return "link";
-    case "instances":
-      return "radio";
-    case "sessions":
-      return "fileText";
     case "cron":
       return "loader";
     case "memory":
       return "brain";
     case "skills":
       return "zap";
-    case "nodes":
-      return "monitor";
     case "config":
       return "settings";
-    case "debug":
-      return "bug";
     case "logs":
       return "scrollText";
     default:
@@ -184,24 +168,16 @@ export function titleForTab(tab: Tab) {
       return translations.nav.overview;
     case "channels":
       return translations.nav.channels;
-    case "instances":
-      return translations.nav.instances;
-    case "sessions":
-      return translations.nav.sessions;
     case "cron":
       return translations.nav.cronJobs;
     case "memory":
       return translations.nav.memory;
     case "skills":
       return translations.nav.skills;
-    case "nodes":
-      return translations.nav.nodes;
     case "chat":
       return translations.nav.chat;
     case "config":
       return translations.nav.config;
-    case "debug":
-      return translations.nav.debug;
     case "logs":
       return translations.nav.logs;
     default:
@@ -220,24 +196,16 @@ export function subtitleForTab(tab: Tab) {
       return subtitles.overview;
     case "channels":
       return subtitles.channels;
-    case "instances":
-      return subtitles.instances;
-    case "sessions":
-      return subtitles.sessions;
     case "cron":
       return subtitles.cron;
     case "memory":
       return subtitles.memory;
     case "skills":
       return subtitles.skills;
-    case "nodes":
-      return subtitles.nodes;
     case "chat":
       return subtitles.chat;
     case "config":
       return subtitles.config;
-    case "debug":
-      return subtitles.debug;
     case "logs":
       return subtitles.logs;
     default:

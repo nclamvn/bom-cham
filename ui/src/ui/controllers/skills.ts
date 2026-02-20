@@ -1,5 +1,5 @@
 import type { GatewayBrowserClient } from "../gateway";
-import type { SkillCatalogEntry, SkillCatalogKind, SkillStatusReport } from "../types";
+import type { SkillStatusReport } from "../types";
 
 export type SkillsState = {
   client: GatewayBrowserClient | null;
@@ -10,12 +10,6 @@ export type SkillsState = {
   skillsBusyKey: string | null;
   skillEdits: Record<string, string>;
   skillMessages: SkillMessageMap;
-  // Catalog state
-  skillsCatalog: SkillCatalogEntry[];
-  skillsCatalogLoading: boolean;
-  skillsCatalogError: string | null;
-  skillsFilterKind: SkillCatalogKind | "all" | "installed";
-  skillsSearch: string;
   // Settings panel state
   skillsSettingsOpen: boolean;
   skillsSettingsSkillId: string | null;
@@ -83,7 +77,6 @@ export async function updateSkillEnabled(state: SkillsState, skillKey: string, e
   try {
     await state.client.request("skills.update", { skillKey, enabled });
     await loadSkills(state);
-    await loadCatalog(state);
     setSkillMessage(state, skillKey, {
       kind: "success",
       message: enabled ? "Skill enabled" : "Skill disabled",
@@ -140,7 +133,6 @@ export async function installSkill(
       timeoutMs: 120000,
     })) as { ok?: boolean; message?: string };
     await loadSkills(state);
-    await loadCatalog(state);
     setSkillMessage(state, skillKey, {
       kind: "success",
       message: result?.message ?? "Installed",
@@ -152,72 +144,6 @@ export async function installSkill(
       kind: "error",
       message,
     });
-  } finally {
-    state.skillsBusyKey = null;
-  }
-}
-
-// ─── Catalog functions (new) ─────────────────────────────
-
-export async function loadCatalog(state: SkillsState) {
-  if (!state.client || !state.connected) return;
-  if (state.skillsCatalogLoading) return;
-  state.skillsCatalogLoading = true;
-  state.skillsCatalogError = null;
-  try {
-    const res = (await state.client.request("skills.catalog", {})) as {
-      skills?: SkillCatalogEntry[];
-    };
-    state.skillsCatalog = Array.isArray(res?.skills) ? res.skills : [];
-  } catch (err) {
-    state.skillsCatalogError = getErrorMessage(err);
-  } finally {
-    state.skillsCatalogLoading = false;
-  }
-}
-
-export function setSkillsSearch(state: SkillsState, keyword: string) {
-  state.skillsSearch = keyword;
-}
-
-export function setSkillsFilterKind(state: SkillsState, kind: SkillCatalogKind | "all" | "installed") {
-  state.skillsFilterKind = kind;
-}
-
-export function getFilteredCatalog(state: SkillsState): SkillCatalogEntry[] {
-  let items = state.skillsCatalog;
-
-  // Kind filter
-  if (state.skillsFilterKind === "installed") {
-    items = items.filter((s) => s.installed);
-  } else if (state.skillsFilterKind !== "all") {
-    items = items.filter((s) => s.kind === state.skillsFilterKind);
-  }
-
-  // Search filter
-  const keyword = state.skillsSearch.trim().toLowerCase();
-  if (keyword) {
-    items = items.filter(
-      (s) =>
-        s.name.toLowerCase().includes(keyword) ||
-        s.description.toLowerCase().includes(keyword) ||
-        s.id.toLowerCase().includes(keyword),
-    );
-  }
-
-  return items;
-}
-
-// ─── Catalog toggle (uses skills.update for plugins) ─────
-
-export async function toggleCatalogSkill(state: SkillsState, skillId: string, enabled: boolean) {
-  if (!state.client || !state.connected) return;
-  state.skillsBusyKey = skillId;
-  try {
-    await state.client.request("skills.update", { skillKey: skillId, enabled });
-    await loadCatalog(state);
-  } catch (err) {
-    state.skillsCatalogError = getErrorMessage(err);
   } finally {
     state.skillsBusyKey = null;
   }
@@ -259,7 +185,7 @@ export async function openSkillSettings(state: SkillsState, skillId: string) {
       }));
     }
   } catch (err) {
-    state.skillsCatalogError = getErrorMessage(err);
+    state.skillsError = getErrorMessage(err);
   } finally {
     state.skillsSettingsLoading = false;
   }
@@ -313,10 +239,10 @@ export async function saveSkillSettings(state: SkillsState) {
       env: Object.keys(env).length > 0 ? env : undefined,
     });
 
-    await loadCatalog(state);
+    await loadSkills(state);
     closeSkillSettings(state);
   } catch (err) {
-    state.skillsCatalogError = getErrorMessage(err);
+    state.skillsError = getErrorMessage(err);
   } finally {
     state.skillsSettingsSaving = false;
   }

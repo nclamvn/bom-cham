@@ -21,8 +21,6 @@ import type {
   PresenceEntry,
   ChannelsStatusSnapshot,
   SessionsListResult,
-  SkillCatalogEntry,
-  SkillCatalogKind,
   SkillStatusReport,
   StatusSummary,
   NostrProfile,
@@ -31,9 +29,8 @@ import type {
 import { type ChatAttachment, type ChatQueueItem, type CronFormState } from "./ui-types";
 import type { EventLogEntry } from "./app-events";
 import { DEFAULT_CRON_FORM, DEFAULT_LOG_LEVEL_FILTERS } from "./app-defaults";
-import type { ExecApprovalsFile, ExecApprovalsSnapshot } from "./controllers/exec-approvals";
-import type { DevicePairingList } from "./controllers/devices";
 import type { ExecApprovalRequest } from "./controllers/exec-approval";
+import type { SkillMessage } from "./controllers/skills";
 import {
   resetToolStream as resetToolStreamInternal,
   type ToolStreamEntry,
@@ -176,19 +173,6 @@ export class OpenClawApp extends LitElement {
   @state() sidebarError: string | null = null;
   @state() splitRatio = this.settings.splitRatio;
 
-  @state() nodesLoading = false;
-  @state() nodes: Array<Record<string, unknown>> = [];
-  @state() devicesLoading = false;
-  @state() devicesError: string | null = null;
-  @state() devicesList: DevicePairingList | null = null;
-  @state() execApprovalsLoading = false;
-  @state() execApprovalsSaving = false;
-  @state() execApprovalsDirty = false;
-  @state() execApprovalsSnapshot: ExecApprovalsSnapshot | null = null;
-  @state() execApprovalsForm: ExecApprovalsFile | null = null;
-  @state() execApprovalsSelectedAgent: string | null = null;
-  @state() execApprovalsTarget: "gateway" | "node" = "gateway";
-  @state() execApprovalsTargetNodeId: string | null = null;
   @state() execApprovalQueue: ExecApprovalRequest[] = [];
   @state() execApprovalBusy = false;
   @state() execApprovalError: string | null = null;
@@ -239,11 +223,10 @@ export class OpenClawApp extends LitElement {
   @state() sessionsLoading = false;
   @state() sessionsResult: SessionsListResult | null = null;
   @state() sessionsError: string | null = null;
-  @state() sessionsFilterActive = "";
-  @state() sessionsFilterLimit = "120";
+  @state() sessionsFilterActive = "60";
+  @state() sessionsFilterLimit = "50";
   @state() sessionsIncludeGlobal = true;
   @state() sessionsIncludeUnknown = false;
-
   @state() cronLoading = false;
   @state() cronJobs: CronJob[] = [];
   @state() cronStatus: CronStatus | null = null;
@@ -260,12 +243,6 @@ export class OpenClawApp extends LitElement {
   @state() skillEdits: Record<string, string> = {};
   @state() skillsBusyKey: string | null = null;
   @state() skillMessages: Record<string, SkillMessage> = {};
-  // Catalog state
-  @state() skillsCatalog: SkillCatalogEntry[] = [];
-  @state() skillsCatalogLoading = false;
-  @state() skillsCatalogError: string | null = null;
-  @state() skillsFilterKind: SkillCatalogKind | "all" | "installed" = "all";
-  @state() skillsSearch = "";
   // Settings panel state
   @state() skillsSettingsOpen = false;
   @state() skillsSettingsSkillId: string | null = null;
@@ -305,6 +282,10 @@ export class OpenClawApp extends LitElement {
   @state() eldercareSosContacts: import("./views/eldercare-config").EldercareContact[] = [];
   @state() eldercareCompanionConfig: Record<string, unknown> | null = null;
   @state() eldercareVideocallConfig: Record<string, unknown> | null = null;
+  @state() eldercareMedicationConfig: Record<string, unknown> | null = null;
+  @state() eldercareExerciseConfig: Record<string, unknown> | null = null;
+  @state() eldercareSafetyConfig: Record<string, unknown> | null = null;
+  @state() eldercareEmergencyConfig: Record<string, unknown> | null = null;
   @state() eldercareHaEntities: Record<string, string> = {
     presence: "binary_sensor.grandma_room_presence",
     temperature: "sensor.grandma_room_temperature",
@@ -324,7 +305,7 @@ export class OpenClawApp extends LitElement {
   @state() debugModels: unknown[] = [];
   @state() debugHeartbeat: unknown | null = null;
   @state() debugCallMethod = "";
-  @state() debugCallParams = "{}";
+  @state() debugCallParams = "";
   @state() debugCallResult: string | null = null;
   @state() debugCallError: string | null = null;
 
@@ -349,9 +330,7 @@ export class OpenClawApp extends LitElement {
   private chatScrollTimeout: number | null = null;
   private chatHasAutoScrolled = false;
   private chatUserNearBottom = true;
-  private nodesPollInterval: number | null = null;
   private logsPollInterval: number | null = null;
-  private debugPollInterval: number | null = null;
   private logsScrollFrame: number | null = null;
   private toolStreamById = new Map<string, ToolStreamEntry>();
   private toolStreamOrder: string[] = [];
@@ -669,16 +648,25 @@ export class OpenClawApp extends LitElement {
     try {
       // Load config files from memory
       const res = (await this.client.request("memory.search", {
-        query: "eldercare_config",
-        limit: 20,
-      })) as Array<{ id: string; content: string }> | undefined;
-      const facts = Array.isArray(res) ? res : [];
+        keyword: "eldercare_config",
+        limit: 30,
+      })) as { facts?: Array<{ id: string; content: string }> } | Array<{ id: string; content: string }> | undefined;
+      const raw = res && typeof res === "object" && "facts" in res ? (res as { facts: unknown[] }).facts : res;
+      const facts = Array.isArray(raw) ? raw as Array<{ id: string; content: string }> : [];
       for (const fact of facts) {
         try {
           const data = JSON.parse(fact.content);
           if (fact.id === "eldercare_monitor_config") this.eldercareMonitorConfig = data;
           if (fact.id === "eldercare_companion_config") this.eldercareCompanionConfig = data;
           if (fact.id === "eldercare_videocall_config") this.eldercareVideocallConfig = data;
+          if (fact.id === "eldercare_medication_config" || fact.id?.includes("_medication_list")) this.eldercareMedicationConfig = data;
+          if (fact.id === "eldercare_exercise_config") this.eldercareExerciseConfig = data;
+          if (fact.id === "eldercare_safety_config" || fact.id === "eldercare_fall_config" || fact.id === "eldercare_multiroom_config") {
+            this.eldercareSafetyConfig = { ...(this.eldercareSafetyConfig ?? {}), ...data };
+          }
+          if (fact.id === "eldercare_emergency_config" || fact.id?.includes("_emergency_list") || fact.id?.includes("_medical_profile")) {
+            this.eldercareEmergencyConfig = { ...(this.eldercareEmergencyConfig ?? {}), ...data };
+          }
           if (fact.id === "eldercare_contacts") {
             this.eldercareSosContacts = Array.isArray(data) ? data : [];
           }
@@ -722,6 +710,30 @@ export class OpenClawApp extends LitElement {
           content: JSON.stringify(this.eldercareSosContacts),
         });
       }
+      if (this.eldercareMedicationConfig) {
+        await this.client.request("memory.upsert", {
+          key: "eldercare_medication_config",
+          content: JSON.stringify(this.eldercareMedicationConfig),
+        });
+      }
+      if (this.eldercareExerciseConfig) {
+        await this.client.request("memory.upsert", {
+          key: "eldercare_exercise_config",
+          content: JSON.stringify(this.eldercareExerciseConfig),
+        });
+      }
+      if (this.eldercareSafetyConfig) {
+        await this.client.request("memory.upsert", {
+          key: "eldercare_safety_config",
+          content: JSON.stringify(this.eldercareSafetyConfig),
+        });
+      }
+      if (this.eldercareEmergencyConfig) {
+        await this.client.request("memory.upsert", {
+          key: "eldercare_emergency_config",
+          content: JSON.stringify(this.eldercareEmergencyConfig),
+        });
+      }
     } catch (err) {
       this.eldercareConfigError = String(err);
     } finally {
@@ -751,6 +763,18 @@ export class OpenClawApp extends LitElement {
         break;
       case "videocall":
         this.eldercareVideocallConfig = setNested(this.eldercareVideocallConfig ?? {}, path, value);
+        break;
+      case "medication":
+        this.eldercareMedicationConfig = setNested(this.eldercareMedicationConfig ?? {}, path, value);
+        break;
+      case "exercise":
+        this.eldercareExerciseConfig = setNested(this.eldercareExerciseConfig ?? {}, path, value);
+        break;
+      case "safety":
+        this.eldercareSafetyConfig = setNested(this.eldercareSafetyConfig ?? {}, path, value);
+        break;
+      case "emergency":
+        this.eldercareEmergencyConfig = setNested(this.eldercareEmergencyConfig ?? {}, path, value);
         break;
     }
   }

@@ -512,24 +512,7 @@ export type SkillStatusReport = {
   skills: SkillStatusEntry[];
 };
 
-export type SkillCatalogKind = "memory" | "skill" | "tool" | "channel" | "service" | "provider";
-
 export type SkillCatalogStatus = "active" | "disabled" | "needsConfig" | "error" | "notInstalled";
-
-export type SkillCatalogEntry = {
-  id: string;
-  name: string;
-  kind: SkillCatalogKind | null;
-  description: string;
-  version: string | null;
-  installed: boolean;
-  enabled: boolean;
-  hasConfig: boolean;
-  source: "bundled" | "workspace" | "global" | "config";
-  status: SkillCatalogStatus;
-  channels?: string[];
-  providers?: string[];
-};
 
 export type StatusSummary = Record<string, unknown>;
 
