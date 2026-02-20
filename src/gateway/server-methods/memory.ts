@@ -193,6 +193,44 @@ export const memoryHandlers: GatewayRequestHandlers = {
     }
   },
 
+  "memory.upsert": ({ params, respond }) => {
+    try {
+      const key = typeof params.key === "string" ? params.key.trim() : "";
+      if (!key) {
+        respond(false, undefined, errorShape(ErrorCodes.INVALID_REQUEST, "key required"));
+        return;
+      }
+      const content = typeof params.content === "string" ? params.content : "";
+      const store = getStore();
+      const existing = store.get(key);
+      if (existing) {
+        const updated = store.update(key, { content });
+        respond(true, { fact: updated, created: false }, undefined);
+      } else {
+        const category =
+          typeof params.category === "string"
+            ? (params.category as MemoryCategory)
+            : "preference";
+        const now = new Date().toISOString();
+        const newFact = {
+          id: key,
+          content,
+          category,
+          confidence: 1.0,
+          source: "ui",
+          verified: true,
+          createdAt: now,
+          updatedAt: now,
+        };
+        (store as any).data.facts.push(newFact);
+        store.persist();
+        respond(true, { fact: newFact, created: true }, undefined);
+      }
+    } catch (err) {
+      respond(false, undefined, errorShape(ErrorCodes.UNAVAILABLE, String(err)));
+    }
+  },
+
   "memory.getActiveContext": ({ params, respond }) => {
     try {
       const sessionKey = typeof params.sessionKey === "string" ? params.sessionKey.trim() : "";

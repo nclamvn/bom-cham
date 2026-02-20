@@ -97,6 +97,7 @@ const WRITE_METHODS = new Set([
   "chat.send",
   "chat.abort",
   "memory.update",
+  "memory.upsert",
   "memory.delete",
   "memory.extract",
 ]);
