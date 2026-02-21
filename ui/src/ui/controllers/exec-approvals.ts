@@ -1,6 +1,7 @@
 import type { GatewayBrowserClient } from "../gateway";
 import { cloneConfigObject, removePathValue, setPathValue } from "./config/form-utils";
 import { t } from "../i18n";
+import { addToast } from "../toast";
 
 export type ExecApprovalsDefaults = {
   security?: string;
@@ -80,17 +81,16 @@ export async function loadExecApprovals(
   if (!state.client || !state.connected) return;
   if (state.execApprovalsLoading) return;
   state.execApprovalsLoading = true;
-  state.lastError = null;
   try {
     const rpc = resolveExecApprovalsRpc(target);
     if (!rpc) {
-      state.lastError = t().controllers.selectDeviceFirst;
+      addToast("error", t().controllers.selectDeviceFirst);
       return;
     }
     const res = (await state.client.request(rpc.method, rpc.params)) as ExecApprovalsSnapshot;
     applyExecApprovalsSnapshot(state, res);
   } catch (err) {
-    state.lastError = String(err);
+    addToast("error", String(err));
   } finally {
     state.execApprovalsLoading = false;
   }
@@ -112,24 +112,23 @@ export async function saveExecApprovals(
 ) {
   if (!state.client || !state.connected) return;
   state.execApprovalsSaving = true;
-  state.lastError = null;
   try {
     const baseHash = state.execApprovalsSnapshot?.hash;
     if (!baseHash) {
-      state.lastError = t().controllers.missingApprovalHash;
+      addToast("error", t().controllers.missingApprovalHash);
       return;
     }
     const file = state.execApprovalsForm ?? state.execApprovalsSnapshot?.file ?? {};
     const rpc = resolveExecApprovalsSaveRpc(target, { file, baseHash });
     if (!rpc) {
-      state.lastError = t().controllers.selectDeviceBeforeSave;
+      addToast("error", t().controllers.selectDeviceBeforeSave);
       return;
     }
     await state.client.request(rpc.method, rpc.params);
     state.execApprovalsDirty = false;
     await loadExecApprovals(state, target);
   } catch (err) {
-    state.lastError = String(err);
+    addToast("error", String(err));
   } finally {
     state.execApprovalsSaving = false;
   }

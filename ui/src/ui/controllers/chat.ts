@@ -3,6 +3,7 @@ import type { GatewayBrowserClient } from "../gateway";
 import { generateUUID } from "../uuid";
 import type { ChatAttachment } from "../ui-types";
 import { t } from "../i18n";
+import { addToast } from "../toast";
 
 export type ChatState = {
   client: GatewayBrowserClient | null;
@@ -31,7 +32,6 @@ export type ChatEventPayload = {
 export async function loadChatHistory(state: ChatState) {
   if (!state.client || !state.connected) return;
   state.chatLoading = true;
-  state.lastError = null;
   try {
     const res = (await state.client.request("chat.history", {
       sessionKey: state.sessionKey,
@@ -40,7 +40,7 @@ export async function loadChatHistory(state: ChatState) {
     state.chatMessages = Array.isArray(res.messages) ? res.messages : [];
     state.chatThinkingLevel = res.thinkingLevel ?? null;
   } catch (err) {
-    state.lastError = String(err);
+    addToast("error", String(err));
   } finally {
     state.chatLoading = false;
   }
@@ -91,7 +91,6 @@ export async function sendChatMessage(
   ];
 
   state.chatSending = true;
-  state.lastError = null;
   const runId = generateUUID();
   state.chatRunId = runId;
   state.chatStream = "";
@@ -128,7 +127,7 @@ export async function sendChatMessage(
     state.chatRunId = null;
     state.chatStream = null;
     state.chatStreamStartedAt = null;
-    state.lastError = error;
+    addToast("error", error);
     state.chatMessages = [
       ...state.chatMessages,
       {
@@ -153,7 +152,7 @@ export async function abortChatRun(state: ChatState): Promise<boolean> {
     );
     return true;
   } catch (err) {
-    state.lastError = String(err);
+    addToast("error", String(err));
     return false;
   }
 }
@@ -189,7 +188,7 @@ export function handleChatEvent(state: ChatState, payload?: ChatEventPayload) {
     state.chatStream = null;
     state.chatRunId = null;
     state.chatStreamStartedAt = null;
-    state.lastError = payload.errorMessage ?? "chat error";
+    addToast("error", payload.errorMessage ?? "chat error");
   }
   return payload.state;
 }

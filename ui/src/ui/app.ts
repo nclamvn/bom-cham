@@ -80,6 +80,7 @@ import { connectionManager, type ConnectionState } from "./connection/connection
 import { loadMemory as loadMemoryInternal } from "./controllers/memory";
 import { type SetupGuideState, createSetupGuideState } from "./views/setup-guide";
 import type { AgentTab } from "./controllers/agent-tabs";
+import { subscribeToasts, type ToastItem } from "./toast";
 
 declare global {
   interface Window {
@@ -109,6 +110,7 @@ export class OpenClawApp extends LitElement {
   @state() themeResolved: ResolvedTheme = "dark";
   @state() hello: GatewayHelloOk | null = null;
   @state() lastError: string | null = null;
+  @state() toasts: ToastItem[] = [];
   @state() eventLog: EventLogEntry[] = [];
   private eventLogBuffer: EventLogEntry[] = [];
   private toolStreamSyncTimer: number | null = null;
@@ -351,6 +353,10 @@ export class OpenClawApp extends LitElement {
     // Subscribe to connection manager state
     connectionManager.subscribe((state) => {
       this.connectionState = state;
+    });
+    // Subscribe to toast notifications
+    subscribeToasts((items) => {
+      this.toasts = items;
     });
     // Detect voice/TTS support
     const w = window as unknown as Record<string, unknown>;

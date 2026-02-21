@@ -25,6 +25,7 @@ import type { ExecApprovalRequest } from "./controllers/exec-approval";
 import { loadAssistantIdentity } from "./controllers/assistant-identity";
 import { loadSessions } from "./controllers/sessions";
 import { incrementUnread } from "./controllers/agent-tabs";
+import { addToast } from "./toast";
 
 type GatewayHost = {
   settings: UiSettings;
@@ -149,8 +150,7 @@ export function connectGateway(host: GatewayHost) {
       host.connected = false;
       // Code 1012 = Service Restart (expected during config saves, don't show as error)
       if (code !== 1012) {
-        host.lastError = `disconnected (${code}): ${reason || "no reason"}`;
-        // Notify connection manager
+        // Notify connection manager (banner handles visual feedback)
         connectionManager.onDisconnected(code, reason);
       }
     },
@@ -160,7 +160,7 @@ export function connectGateway(host: GatewayHost) {
     },
     onGap: ({ expected, received }) => {
       if (host.client !== client) return;
-      host.lastError = `event gap detected (expected seq ${expected}, got ${received}); refresh recommended`;
+      addToast("warning", `event gap detected (expected seq ${expected}, got ${received}); refresh recommended`);
     },
   });
   host.client = client;

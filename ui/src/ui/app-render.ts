@@ -101,6 +101,7 @@ import type { EldercareConfigSection } from "./views/eldercare-config";
 import { renderConnectionBanner } from "./components/connection-banner";
 import { renderSetupGuide, type SetupGuideState } from "./views/setup-guide";
 import { type ConnectionState } from "./connection/connection-manager";
+import { addToast, renderToasts, type ToastItem } from "./toast";
 
 const AVATAR_DATA_RE = /^data:/i;
 const AVATAR_HTTP_RE = /^https?:\/\//i;
@@ -223,7 +224,6 @@ export function renderApp(state: AppViewState) {
             ${!isChat ? html`<div class="page-sub">${subtitleForTab(state.tab)}</div>` : nothing}
           </div>
           <div class="page-meta">
-            ${state.lastError ? html`<div class="pill danger">${state.lastError}</div>` : nothing}
             ${isChat ? renderChatControls(state) : nothing}
           </div>
         </section>
@@ -454,7 +454,7 @@ export function renderApp(state: AppViewState) {
                 connected: state.connected,
                 canSend: state.connected,
                 disabledReason: chatDisabledReason,
-                error: state.lastError,
+                error: null,
                 sessions: state.sessionsResult,
                 focusMode: chatFocus,
                 onRefresh: () => {
@@ -541,7 +541,7 @@ export function renderApp(state: AppViewState) {
                       });
                     } catch (err) {
                       console.error("Failed to change model:", err);
-                      state.lastError = `Failed to change model: ${err}`;
+                      addToast("error", `Failed to change model: ${err}`);
                     }
                   }
                 },
@@ -574,7 +574,7 @@ export function renderApp(state: AppViewState) {
                     },
                     getDraft: () => state.chatMessage,
                     setError: (msg) => {
-                      state.lastError = msg;
+                      addToast("error", msg);
                     },
                     sendMessage: () => {
                       if (state.chatMessage.trim()) {
@@ -604,7 +604,7 @@ export function renderApp(state: AppViewState) {
                   } catch (err) {
                     console.error("Failed to save API key:", err);
                     state.chatApiKeySaveStatus = 'error';
-                    state.lastError = `Failed to save API key: ${err instanceof Error ? err.message : err}`;
+                    addToast("error", `Failed to save API key: ${err instanceof Error ? err.message : err}`);
                   }
                   setTimeout(() => { state.chatApiKeySaveStatus = 'idle'; }, 3000);
                 },
@@ -885,6 +885,7 @@ export function renderApp(state: AppViewState) {
         onPrevStep: () => appState.setupGuidePrevStep?.(),
         onCopyCommand: (cmd) => appState.copyCommand?.(cmd),
       })}
+      ${renderToasts((state as unknown as { toasts: ToastItem[] }).toasts ?? [])}
     </div>
   `;
 }

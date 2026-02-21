@@ -718,7 +718,7 @@ export function renderChat(props: ChatProps) {
     <section class="card chat">
       ${props.disabledReason ? html`<div class="callout">${props.disabledReason}</div>` : nothing}
 
-      ${props.error ? html`<div class="callout danger">${props.error}</div>` : nothing}
+      ${nothing}
 
       ${renderCompactionIndicator(props.compactionStatus)}
 

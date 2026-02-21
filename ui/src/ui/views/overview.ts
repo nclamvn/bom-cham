@@ -210,9 +210,8 @@ export function renderOverview(props: OverviewProps) {
           </div>
         </div>
         ${
-          props.lastError
+          (authHint || insecureContextHint)
             ? html`<div class="callout danger" style="margin-top: 14px;">
-              <div>${props.lastError}</div>
               ${authHint ?? ""}
               ${insecureContextHint ?? ""}
             </div>`

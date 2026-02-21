@@ -6,6 +6,7 @@ import {
   serializeConfigForm,
   setPathValue,
 } from "./config/form-utils";
+import { addToast } from "../toast";
 
 export type ConfigState = {
   client: GatewayBrowserClient | null;
@@ -37,12 +38,11 @@ export type ConfigState = {
 export async function loadConfig(state: ConfigState) {
   if (!state.client || !state.connected) return;
   state.configLoading = true;
-  state.lastError = null;
   try {
     const res = (await state.client.request("config.get", {})) as ConfigSnapshot;
     applyConfigSnapshot(state, res);
   } catch (err) {
-    state.lastError = String(err);
+    addToast("error", String(err));
   } finally {
     state.configLoading = false;
   }
@@ -56,7 +56,7 @@ export async function loadConfigSchema(state: ConfigState) {
     const res = (await state.client.request("config.schema", {})) as ConfigSchemaResponse;
     applyConfigSchema(state, res);
   } catch (err) {
-    state.lastError = String(err);
+    addToast("error", String(err));
   } finally {
     state.configSchemaLoading = false;
   }
@@ -96,7 +96,6 @@ export function applyConfigSnapshot(state: ConfigState, snapshot: ConfigSnapshot
 export async function saveConfig(state: ConfigState) {
   if (!state.client || !state.connected) return;
   state.configSaving = true;
-  state.lastError = null;
   try {
     const raw =
       state.configFormMode === "form" && state.configForm
@@ -104,14 +103,14 @@ export async function saveConfig(state: ConfigState) {
         : state.configRaw;
     const baseHash = state.configSnapshot?.hash;
     if (!baseHash) {
-      state.lastError = "Config hash missing; reload and retry.";
+      addToast("error", "Config hash missing; reload and retry.");
       return;
     }
     await state.client.request("config.set", { raw, baseHash });
     state.configFormDirty = false;
     await loadConfig(state);
   } catch (err) {
-    state.lastError = String(err);
+    addToast("error", String(err));
   } finally {
     state.configSaving = false;
   }
@@ -120,7 +119,6 @@ export async function saveConfig(state: ConfigState) {
 export async function applyConfig(state: ConfigState) {
   if (!state.client || !state.connected) return;
   state.configApplying = true;
-  state.lastError = null;
   try {
     const raw =
       state.configFormMode === "form" && state.configForm
@@ -128,7 +126,7 @@ export async function applyConfig(state: ConfigState) {
         : state.configRaw;
     const baseHash = state.configSnapshot?.hash;
     if (!baseHash) {
-      state.lastError = "Config hash missing; reload and retry.";
+      addToast("error", "Config hash missing; reload and retry.");
       return;
     }
     await state.client.request("config.apply", {
@@ -139,7 +137,7 @@ export async function applyConfig(state: ConfigState) {
     state.configFormDirty = false;
     await loadConfig(state);
   } catch (err) {
-    state.lastError = String(err);
+    addToast("error", String(err));
   } finally {
     state.configApplying = false;
   }
@@ -148,13 +146,12 @@ export async function applyConfig(state: ConfigState) {
 export async function runUpdate(state: ConfigState) {
   if (!state.client || !state.connected) return;
   state.updateRunning = true;
-  state.lastError = null;
   try {
     await state.client.request("update.run", {
       sessionKey: state.applySessionKey,
     });
   } catch (err) {
-    state.lastError = String(err);
+    addToast("error", String(err));
   } finally {
     state.updateRunning = false;
   }

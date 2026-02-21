@@ -29,6 +29,7 @@ import type { NostrProfileFormState } from "./views/channels.nostr-profile-form"
 import type { AgentTab } from "./controllers/agent-tabs";
 import type { EldercareCheck, EldercareDailySummary, EldercareRoomData } from "./controllers/eldercare";
 import type { EldercareConfigSection, EldercareContact } from "./views/eldercare-config";
+import type { ToastItem } from "./toast";
 export type AppViewState = {
   settings: UiSettings;
   password: string;
@@ -40,6 +41,7 @@ export type AppViewState = {
   themeResolved: "light" | "dark";
   hello: GatewayHelloOk | null;
   lastError: string | null;
+  toasts: ToastItem[];
   eventLog: EventLogEntry[];
   assistantName: string;
   assistantAvatar: string | null;
