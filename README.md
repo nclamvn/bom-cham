@@ -7,7 +7,7 @@
 > "Để gia đình yên tâm, để ông bà an vui"
 
 Bờm Chăm là nền tảng AI chăm sóc người cao tuổi tại nhà. Tích hợp cảm biến,
-camera, loa thông minh — giám sát 24/7, cảnh báo qua Zalo/Telegram/WhatsApp/Viber,
+camera, loa thông minh — giám sát 24/7, cảnh báo qua Zalo/Telegram/Viber,
 hỗ trợ giải trí và sinh hoạt.
 
 Hỗ trợ **nhiều người thân** (bà nội, ông nội, bố mẹ...) với profile riêng cho từng người.
@@ -16,7 +16,7 @@ Gia đình xem trạng thái trên **Family PWA** — dùng như app trên đi�
 ## Kiến trúc
 
 ```
-[Cảm biến]  ->  [Home Assistant]  ->  [Bờm Chăm Gateway]  ->  [Zalo/TG/WA/Viber]
+[Cảm biến]  ->  [Home Assistant]  ->  [Bờm Chăm Gateway]  ->  [Zalo/TG/Viber]
   FP2             Raspberry Pi          Docker                  Gia đình
   Camera                                18 AI Skills
   Nút SOS                               Multi-elder
@@ -120,7 +120,7 @@ Cài đặt lần đầu 5 bước:
 - **Runtime:** Node.js 22 (ESM)
 - **AI:** Claude / GPT-4o / Gemini / Ollama
 - **IoT:** Home Assistant + Zigbee
-- **Messaging:** Zalo, Telegram, WhatsApp, Viber
+- **Messaging:** Zalo (Bot + User), Telegram, Viber
 - **Admin UI:** LitElement + TypeScript
 - **Family PWA:** Vanilla HTML/CSS/JS
 - **Deploy:** Docker
@@ -129,9 +129,9 @@ Cài đặt lần đầu 5 bước:
 
 | Kênh | Trạng thái |
 |------|-----------|
+| Zalo (Bot) | OA API |
+| Zalo (User) | User API |
 | Telegram | Bot API |
-| WhatsApp | QR link |
-| Google Chat | Chat API |
 | Viber | REST API |
 
 ## Giấy phép

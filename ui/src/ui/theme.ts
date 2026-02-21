@@ -1,4 +1,4 @@
-export type ThemeMode = "system" | "light" | "dark";
+export type ThemeMode = "system" | "light" | "dark" | "eldercare";
 export type ResolvedTheme = "light" | "dark";
 
 export function getSystemTheme(): ResolvedTheme {
@@ -10,5 +10,6 @@ export function getSystemTheme(): ResolvedTheme {
 
 export function resolveTheme(mode: ThemeMode): ResolvedTheme {
   if (mode === "system") return getSystemTheme();
+  if (mode === "eldercare") return "light";
   return mode;
 }

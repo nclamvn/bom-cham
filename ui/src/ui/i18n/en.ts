@@ -14,8 +14,12 @@ export const en = {
     logs: "Logs",
     memory: "Memory",
     docs: "Docs",
-    eldercare: "Eldercare",
-    eldercareConfig: "Eldercare Config",
+    eldercare: "Monitoring",
+    eldercareConfig: "Care Settings",
+    eldercareHome: "Home",
+    eldercareHistory: "History",
+    eldercareFamily: "Family",
+    care: "Care",
 
     // Groups - Minimal 2-group structure
     core: "Core",
@@ -38,12 +42,15 @@ export const en = {
       channels: "Manage channels and settings.",
       cron: "Schedule wake-ups and periodic agent runs.",
       skills: "Manage skill availability and API key injection.",
-      chat: "Direct gateway chat session for quick intervention.",
+      chat: "Chat directly — ask anything you like.",
       config: "Edit ~/.openclaw/openclaw.json safely.",
       logs: "Live tail gateway file logs.",
-      memory: "Browse and manage user facts extracted from conversations.",
-      eldercare: "Monitor grandma's health, alerts, calls and daily activities.",
+      memory: "What Bom remembers about you — browse and edit.",
+      eldercare: "Monitor health, alerts, calls and daily activities.",
       eldercareConfig: "Configure monitoring thresholds, SOS contacts, music and video calls.",
+      eldercareHome: "Home — quick care overview.",
+      eldercareHistory: "Checks and alerts from the last 7 days.",
+      eldercareFamily: "Quick view for family — status, medication, video call.",
     },
   },
 
@@ -51,10 +58,10 @@ export const en = {
   // COMMON / SHARED
   // ============================================
   common: {
-    loading: "Loading...",
+    loading: "One moment…",
     refresh: "Refresh",
     save: "Save",
-    saving: "Saving...",
+    saving: "Saving, one moment…",
     cancel: "Cancel",
     delete: "Delete",
     edit: "Edit",
@@ -81,17 +88,17 @@ export const en = {
     connect: "Connect",
     disconnect: "Disconnect",
     connected: "Connected",
-    disconnected: "Disconnected",
+    disconnected: "Disconnected — trying to reconnect",
     offline: "Offline",
     online: "Online",
     active: "Active",
     inactive: "Inactive",
-    pending: "Pending",
+    pending: "Waiting…",
     running: "Running",
     stopped: "Stopped",
-    error: "Error",
-    success: "Success",
-    warning: "Warning",
+    error: "Something went wrong",
+    success: "All done!",
+    warning: "Heads up",
     info: "Info",
     status: "Status",
     actions: "Actions",
@@ -117,9 +124,9 @@ export const en = {
   // ============================================
   health: {
     title: "Health",
-    ok: "OK",
-    offline: "Offline",
-    degraded: "Degraded",
+    ok: "Looking good!",
+    offline: "Offline right now",
+    degraded: "A bit slow",
   },
 
   // ============================================
@@ -136,16 +143,16 @@ export const en = {
   // ============================================
   chat: {
     title: "Chat",
-    placeholder: "What can I help you with today?",
-    inputPlaceholder: "Type a message (Enter to send, Shift+Enter for newline, paste images)",
-    inputPlaceholderWithImages: "Add a message or paste more images...",
-    connectPrompt: "Connect to gateway to start chatting...",
-    loadingChat: "Loading chat...",
-    connectButton: "Connect to gateway...",
+    placeholder: "Hi there! What can I help you with?",
+    inputPlaceholder: "Say or type something… (Enter to send, Shift+Enter for newline)",
+    inputPlaceholderWithImages: "Add a message or paste more images…",
+    connectPrompt: "Connect to gateway to start chatting…",
+    loadingChat: "Opening your chat, one moment…",
+    connectButton: "Connect to gateway…",
 
     // Compaction
-    compacting: "Compacting context...",
-    compacted: "Context compacted",
+    compacting: "Tidying up the conversation…",
+    compacted: "All tidied up!",
 
     // Queue
     queued: "Queued",
@@ -154,37 +161,37 @@ export const en = {
 
     // Quick actions
     quickActions: {
-      build: "Build app",
-      code: "Write code",
-      write: "Write text",
-      create: "Create",
-      learn: "Learn",
-      analyze: "Analyze",
+      build: "Health check",
+      code: "Today's meds",
+      write: "Video call",
+      create: "Daily report",
+      learn: "History",
+      analyze: "Ask AI",
     },
 
-    // Vibecode Kit
+    // Quick start templates
     vibecode: {
-      quickStart: "Choose project type",
-      landing: "Landing Page",
-      saas: "SaaS App",
-      dashboard: "Dashboard",
-      blog: "Blog",
-      portfolio: "Portfolio",
+      quickStart: "What would you like to do today?",
+      landing: "Health",
+      saas: "Meds",
+      dashboard: "Video call",
+      blog: "Report",
+      portfolio: "Ask AI",
       steps: { vision: "VISION", context: "CONTEXT", blueprint: "BLUEPRINT", contract: "CONTRACT", build: "BUILD", refine: "REFINE" },
-      viewBlueprint: "View Blueprint",
-      buildingWith: "Building with Vibecode",
+      viewBlueprint: "View details",
+      buildingWith: "Working on it…",
     },
 
     // Model selector
     selectModel: "Select model",
     apiKey: "API Key",
     enterApiKey: "Enter API key...",
-    apiKeyNeeded: "Enter API key to start chatting",
-    apiKeySaved: "API key saved!",
+    apiKeyNeeded: "Enter your API key to start chatting",
+    apiKeySaved: "API key saved — you're all set!",
     configureApiKey: "Configure API key",
     saveToGateway: "Save to gateway (auth-profiles)",
-    apiKeySaveError: "Failed to save — check console",
-    apiKeySaving: "Saving...",
+    apiKeySaveError: "Couldn't save — please try again",
+    apiKeySaving: "Saving, one moment…",
 
     // Providers
     providers: {
@@ -204,10 +211,10 @@ export const en = {
     // Voice
     stopRecording: "Stop recording",
     voiceInput: "Voice input",
-    microphoneError: "Cannot access microphone",
-    voiceError: "Voice recognition error",
-    voiceListening: "Listening...",
-    voiceSpeaking: "Speaking...",
+    microphoneError: "Couldn't access microphone — please check permissions",
+    voiceError: "Didn't catch that — please try again",
+    voiceListening: "Listening…",
+    voiceSpeaking: "Speaking…",
     ttsOn: "Enable voice response",
     ttsOff: "Disable voice response",
 
@@ -220,19 +227,19 @@ export const en = {
     toggleThinking: "Toggle thinking/activity display",
     toggleFocus: "Toggle focus mode (hide sidebar + header)",
     disabledDuringSetup: "Disabled during setup",
-    gatewayDisconnected: "Gateway disconnected.",
+    gatewayDisconnected: "Gateway disconnected — reconnecting…",
 
     // Copy
     copyAsMarkdown: "Copy as markdown",
-    copied: "Copied",
-    copyFailed: "Copy failed",
+    copied: "Copied!",
+    copyFailed: "Couldn't copy — please try again",
 
     // User label
     you: "You",
 
     // Avatar initials
     userInitial: "U",
-    assistantDefault: "Assistant",
+    assistantDefault: "Bom",
   },
 
   // ============================================
@@ -735,14 +742,15 @@ export const en = {
     system: "System theme",
     light: "Light theme",
     dark: "Dark theme",
+    eldercare: "Elder Care",
   },
 
   // ============================================
   // ASSISTANT
   // ============================================
   assistant: {
-    defaultName: "Assistant",
-    reasoning: "_Reasoning:_",
+    defaultName: "Bom",
+    reasoning: "_Bom is thinking:_",
     tool: "Tool",
   },
 
@@ -751,9 +759,9 @@ export const en = {
   // ============================================
   toolCards: {
     view: "View",
-    completed: "Completed",
+    completed: "Done!",
     command: "Command:",
-    noOutputSuccess: "No output — tool completed successfully.",
+    noOutputSuccess: "No output — all done!",
   },
 
   // ============================================
@@ -839,9 +847,9 @@ export const en = {
     unpaired: "unpaired",
     connected: "connected",
     offline: "offline",
-    unknown: "unknown",
-    ok: "ok",
-    failed: "failed",
+    unknown: "not sure yet",
+    ok: "good",
+    failed: "didn't work",
     probeOk: "ok",
     probeFailed: "failed",
   },
@@ -911,13 +919,13 @@ export const en = {
   // ERROR MESSAGES
   // ============================================
   errors: {
-    failedToChangeModel: "Failed to change model:",
-    disconnectedFromGateway: "Disconnected from gateway.",
-    connectionFailed: "Connection failed",
-    authFailed: "Authentication failed",
-    loadFailed: "Load failed",
-    saveFailed: "Save failed",
-    unknownError: "Unknown error",
+    failedToChangeModel: "Couldn't switch model — please try again:",
+    disconnectedFromGateway: "Lost connection to gateway — reconnecting…",
+    connectionFailed: "Couldn't connect — please try again",
+    authFailed: "Authentication didn't work — please check and retry",
+    loadFailed: "Couldn't load — please try again",
+    saveFailed: "Couldn't save — please try again",
+    unknownError: "Something went wrong — please try again",
   },
 
   // ============================================
@@ -955,22 +963,22 @@ export const en = {
   // ============================================
   memory: {
     title: "Memory",
-    search: "Search memories...",
-    extractButton: "Extract",
-    extracting: "Extracting...",
-    extracted: "Extracted!",
-    empty: "No memories yet.",
-    privacy: "Memories are stored locally and never shared.",
-    deleteConfirm: "Delete this memory?",
+    search: "Search memories…",
+    extractButton: "Remember more",
+    extracting: "Remembering…",
+    extracted: "Got it!",
+    empty: "No memories yet — keep chatting and I'll learn!",
+    privacy: "Memories stay private on your device, never shared.",
+    deleteConfirm: "Remove this memory?",
     save: "Save",
     cancel: "Cancel",
     verified: "Verified",
     unverified: "Unverified",
     // Indicator (chat header)
-    indicatorActive: "memories active",
-    indicatorOff: "Memory off",
+    indicatorActive: "Bom is remembering",
+    indicatorOff: "Memory is off",
     indicatorToggle: "Toggle memory",
-    indicatorNone: "No memories",
+    indicatorNone: "No memories yet",
     categories: {
       all: "All",
       identity: "Identity",
@@ -1033,10 +1041,10 @@ export const en = {
     rename: "Rename",
     presets: {
       title: "Choose agent type",
-      code: "Code",
-      writer: "Writer",
-      research: "Research",
-      translator: "Translator",
+      medication: "Medication",
+      health: "Health",
+      entertainment: "Entertainment",
+      companion: "Companion",
       custom: "Custom",
     },
     unread: "unread",
@@ -1051,8 +1059,34 @@ export const en = {
   // ELDERCARE — GRANDMA CARE
   // ============================================
   eldercare: {
+    // Home grid
+    greeting: {
+      morning: "Good morning! How are you today?",
+      noon: "Good afternoon! Have you eaten?",
+      afternoon: "Good afternoon!",
+      evening: "Good evening! Did you have a nice day?",
+      night: "It's late, time to rest!",
+    },
+    home: {
+      chat: "Talk",
+      medication: "Medication",
+      music: "Music",
+      family: "Call Family",
+      sos: "Emergency",
+    },
+    sos: {
+      button: "SOS",
+      confirmTitle: "Call emergency?",
+      confirmMessage: "Press confirm or wait for the countdown to call.",
+      confirm: "CONFIRM — CALL EMERGENCY",
+      cancel: "CANCEL — I'm fine",
+      autoCall: "Auto-call in",
+      calling: "Contacting...",
+      placeholder: "This feature will be available in the next version.",
+      close: "Close",
+    },
     // Dashboard
-    grandmaStatus: "Grandma Status",
+    careStatus: "Health Status",
     roomEnvironment: "Room Environment",
     familyCalls: "Family Calls",
     companionActivity: "Companion Activity",
@@ -1072,7 +1106,7 @@ export const en = {
     storyActive: "Story Active",
     yes: "Yes",
     no: "No",
-    noCalls: "No one called grandma today",
+    noCalls: "No calls today",
     sosActive: "SOS ACTIVE — Needs immediate attention!",
     sosActiveShort: "Active",
     resolved: "Resolved",
@@ -1144,6 +1178,28 @@ export const en = {
     emergencyBloodType: "Blood type",
     emergencyAllergies: "Allergies",
     emergencyConditions: "Conditions",
+    // SOS escalation (P0-1, P0-5)
+    cancelSos: "Cancel SOS",
+    cancelSosConfirm: "Confirm cancel SOS?",
+    sosLevel1: "Level 1: Zalo",
+    sosLevel2: "Level 2: Phone call",
+    sosLevel3: "Level 3: All contacts",
+    sosNotified: "Notified",
+    sosTime: "Elapsed",
+    // Fall detection (P2-6)
+    fallDetected: "Fall Detected",
+    // Export (P2-1)
+    exportData: "Export Data",
+    // Family view (P1-3)
+    familyVideoCall: "Video call",
+    familyMedToday: "Medication today",
+    familyMedTaken: "Taken",
+    familyMedNotYet: "Not yet",
+    // History view (P1-2)
+    historyNoData: "No data available",
+    historyChecks: "checks",
+    historySosEvents: "SOS events",
+    historyHealthEntries: "health entries",
     configSections: {
       monitor: "Monitor",
       sos: "SOS",
@@ -1153,6 +1209,7 @@ export const en = {
       exercise: "Exercise",
       safety: "Safety",
       emergency: "Emergency",
+      report: "Report",
     } as Record<string, string>,
     config: {
       monitorThresholds: "Monitor Thresholds",
@@ -1164,6 +1221,12 @@ export const en = {
       tempLow: "Low temperature (°C)",
       tempHigh: "High temperature (°C)",
       haEntities: "Entity IDs (Home Assistant)",
+      haEntitiesTitle: "Device Connections",
+      haEntitiesHint: "Sensor names in Home Assistant. Only change if you know what you're doing.",
+      haEntity_presence: "Presence sensor",
+      haEntity_temperature: "Temperature sensor",
+      haEntity_humidity: "Humidity sensor",
+      haEntity_motion: "Motion sensor",
       sosContacts: "SOS Contacts",
       noContacts: "No SOS contacts configured",
       contactsHint: "Edit via memory key eldercare_contacts",
@@ -1177,7 +1240,7 @@ export const en = {
       volume: "Volume (0-1)",
       ttsSettings: "TTS Settings",
       ttsRate: "Speech Rate",
-      ttsRateHint: "0.8 = slower than normal (better for grandma)",
+      ttsRateHint: "0.8 = slower than normal (better for elderly)",
       ttsVoice: "TTS Voice",
       tabletSettings: "Tablet Settings",
       tabletIp: "Tablet IP",
@@ -1221,6 +1284,32 @@ export const en = {
       emergencyAllergiesHint: "e.g. Penicillin, Aspirin",
       emergencyConditions: "Chronic conditions (comma separated)",
       emergencyConditionsHint: "e.g. Hypertension, Diabetes",
+      // Contact CRUD (P0-3)
+      contactName: "Name",
+      contactPhone: "Phone",
+      contactRole: "Role",
+      addContact: "Add contact",
+      removeContact: "Remove",
+      // Medication CRUD (P0-4, P1-5)
+      medName: "Medicine name",
+      medDosage: "Dosage",
+      medTimes: "Times",
+      medNote: "Note",
+      medMorning: "Morning",
+      medNoon: "Noon",
+      medAfternoon: "Afternoon",
+      medEvening: "Evening",
+      medSchedule: "Medication schedule",
+      addMed: "Add medication",
+      removeMed: "Remove",
+      // Report config (P2-3)
+      reportSettings: "Report Settings",
+      reportTime: "Report delivery time",
+      reportChannel: "Delivery channel",
+      reportAll: "All",
+      reportRecipients: "Recipients",
+      pushEnabled: "Push notifications",
+      pushHint: "Receive browser push notifications",
     },
   },
 } as const;

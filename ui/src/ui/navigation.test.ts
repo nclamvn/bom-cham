@@ -131,8 +131,8 @@ describe("tabFromPath", () => {
     expect(tabFromPath("/cron")).toBe("cron");
   });
 
-  it("returns chat for root path", () => {
-    expect(tabFromPath("/")).toBe("chat");
+  it("returns eldercare for root path", () => {
+    expect(tabFromPath("/")).toBe("eldercare");
   });
 
   it("handles base paths", () => {

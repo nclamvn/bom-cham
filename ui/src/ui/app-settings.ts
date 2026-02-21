@@ -179,8 +179,14 @@ export function applyResolvedTheme(host: SettingsHost, resolved: ResolvedTheme) 
   host.themeResolved = resolved;
   if (typeof document === "undefined") return;
   const root = document.documentElement;
-  root.dataset.theme = resolved;
-  root.style.colorScheme = resolved;
+  // For eldercare, set data-theme="eldercare" directly so CSS variables apply
+  if (host.theme === "eldercare") {
+    root.dataset.theme = "eldercare";
+    root.style.colorScheme = "light";
+  } else {
+    root.dataset.theme = resolved;
+    root.style.colorScheme = resolved;
+  }
 }
 
 export function attachThemeListener(host: SettingsHost) {
@@ -216,7 +222,8 @@ export function detachThemeListener(host: SettingsHost) {
 
 export function syncTabWithLocation(host: SettingsHost, replace: boolean) {
   if (typeof window === "undefined") return;
-  const resolved = tabFromPath(window.location.pathname, host.basePath) ?? "chat";
+  const defaultTab = host.theme === "eldercare" ? "eldercare-home" : "chat";
+  const resolved = tabFromPath(window.location.pathname, host.basePath) ?? defaultTab;
   setTabFromRoute(host, resolved);
   syncUrlWithTab(host, resolved, replace);
 }

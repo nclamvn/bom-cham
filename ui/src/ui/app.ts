@@ -271,7 +271,19 @@ export class OpenClawApp extends LitElement {
   @state() eldercareError: string | null = null;
   @state() eldercareHaConnected = false;
   @state() eldercareRoom: import("./controllers/eldercare").EldercareRoomData = { temperature: null, humidity: null, motionMinutes: null, presence: null };
-  @state() eldercareSummary: import("./controllers/eldercare").EldercareDailySummary = { checksToday: 0, alertsToday: 0, highestLevel: "normal", callsToday: [], musicPlayed: 0, remindersDelivered: 0, storyActive: false, sosEvents: [], lastReport: null, lastReportDate: null };
+  @state() eldercareSummary: import("./controllers/eldercare").EldercareDailySummary = {
+    checksToday: 0, alertsToday: 0, highestLevel: "normal", callsToday: [], musicPlayed: 0,
+    remindersDelivered: 0, storyActive: false, sosEvents: [], sosLevel: 0, sosContactsNotified: [],
+    sosStartedAt: null, lastReport: null, lastReportDate: null, healthEntries: [], medications: [],
+    medDoses: [], sleep: { sleepTime: null, wakeTime: null, totalHours: null, wakeEvents: 0, quality: null, avg7day: null, trend: null },
+    exercise: { completedToday: false, level: null, durationMin: null, startedAt: null },
+    weather: { outdoorTemp: null, outdoorHumidity: null, conditions: [], alertSent: false },
+    visitorsToday: [], visitorActive: false,
+    multiRoom: { currentRoom: null, since: null, bathroomVisitsToday: 0, movements: [] },
+    lastFallEvent: null,
+    queueStatus: { pending: 0, retrying: 0, failed: 0, lastFallbackAt: null },
+    emergency: { nearestHospital: null, hospitalPhone: null, familyDoctor: null, doctorPhone: null, bloodType: null, allergies: [], conditions: [] },
+  };
   @state() eldercareLastCheck: import("./controllers/eldercare").EldercareCheck | null = null;
   @state() eldercareSosActive = false;
 
@@ -294,6 +306,14 @@ export class OpenClawApp extends LitElement {
     humidity: "sensor.grandma_room_humidity",
     motion: "sensor.grandma_room_motion_minutes",
   };
+
+  // Elder profile switcher (P1-1)
+  @state() eldercareProfiles: Array<{ id: string; name: string }> = [{ id: "ba_noi", name: "Bà nội" }];
+  @state() eldercareActiveProfile = "ba_noi";
+
+  // Alert history (P1-2)
+  @state() eldercareHistoryLoading = false;
+  @state() eldercareHistory: import("./controllers/eldercare").EldercareHistoryDay[] = [];
 
   // Memory indicator (chat header)
   @state() memoryIndicatorEnabled = true;
@@ -647,6 +667,29 @@ export class OpenClawApp extends LitElement {
   }
 
   // Eldercare handlers
+  async handleEldercareCancelSos() {
+    const { cancelSos } = await import("./controllers/eldercare");
+    await cancelSos(this);
+  }
+
+  async handleEldercareLoadProfiles() {
+    const { loadElderProfiles } = await import("./controllers/eldercare");
+    this.eldercareProfiles = await loadElderProfiles(this);
+  }
+
+  async handleEldercareLoadHistory() {
+    const { loadEldercareHistory } = await import("./controllers/eldercare");
+    this.eldercareHistoryLoading = true;
+    this.eldercareHistory = await loadEldercareHistory(this);
+    this.eldercareHistoryLoading = false;
+  }
+
+  handleEldercareExportHealth() {
+    import("./controllers/eldercare").then(({ exportHealthCsv }) => {
+      exportHealthCsv(this.eldercareSummary.healthEntries ?? []);
+    });
+  }
+
   async handleEldercareLoadConfig() {
     if (!this.client || !this.connected) return;
     this.eldercareConfigLoading = true;
@@ -763,6 +806,11 @@ export class OpenClawApp extends LitElement {
     switch (section) {
       case "monitor":
         this.eldercareMonitorConfig = setNested(this.eldercareMonitorConfig ?? {}, path, value);
+        break;
+      case "sos":
+        if (path[0] === "contacts" && Array.isArray(value)) {
+          this.eldercareSosContacts = value as import("./views/eldercare-config").EldercareContact[];
+        }
         break;
       case "companion":
         this.eldercareCompanionConfig = setNested(this.eldercareCompanionConfig ?? {}, path, value);

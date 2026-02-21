@@ -291,12 +291,12 @@ function resolveSessionOptions(
   return options;
 }
 
-const THEME_ORDER: ThemeMode[] = ["light", "dark"];
+const THEME_ORDER: ThemeMode[] = ["light", "dark", "eldercare"];
 
 export function renderThemeToggle(state: AppViewState) {
   // Map system theme to resolved theme for display
   const effectiveTheme = state.theme === "system" ? state.themeResolved : state.theme;
-  const themeIndex = effectiveTheme === "dark" ? 1 : 0;
+  const themeIndex = effectiveTheme === "eldercare" ? 2 : effectiveTheme === "dark" ? 1 : 0;
   const language = state.settings.language || "vi";
   const langIndex = language === "vi" ? 0 : 1;
 
@@ -364,6 +364,15 @@ export function renderThemeToggle(state: AppViewState) {
           >
             ${renderMoonIcon()}
           </button>
+          <button
+            class="settings-toggle__button ${effectiveTheme === "eldercare" ? "active" : ""}"
+            @click=${applyTheme("eldercare")}
+            aria-pressed=${effectiveTheme === "eldercare"}
+            aria-label=${t().theme.eldercare}
+            title="Eldercare"
+          >
+            ${renderHeartIcon()}
+          </button>
         </div>
       </div>
     </div>
@@ -393,6 +402,37 @@ function renderMoonIcon() {
         d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
       ></path>
     </svg>
+  `;
+}
+
+function renderHeartIcon() {
+  return html`
+    <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+      ></path>
+    </svg>
+  `;
+}
+
+// Font size toggle (P1-6: Accessibility)
+const FONT_SIZES = ["normal", "large", "xlarge"] as const;
+const FONT_SIZE_LABELS: Record<string, string> = { normal: "A", large: "A+", xlarge: "A++" };
+
+export function renderFontSizeToggle(state: AppViewState) {
+  const current = state.settings.fontSize || "normal";
+
+  const cycle = () => {
+    const idx = FONT_SIZES.indexOf(current as typeof FONT_SIZES[number]);
+    const next = FONT_SIZES[(idx + 1) % FONT_SIZES.length];
+    state.applySettings({ ...state.settings, fontSize: next });
+  };
+
+  return html`
+    <button class="btn btn--ghost btn--xs font-size-toggle" @click=${cycle}
+      title="Font size: ${current}" aria-label="Font size">
+      ${FONT_SIZE_LABELS[current]}
+    </button>
   `;
 }
 

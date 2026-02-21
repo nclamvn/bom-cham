@@ -1,0 +1,103 @@
+/* Print stylesheet — P2-5 */
+@media print {
+  /* Hide navigation and interactive elements */
+  .topbar,
+  .nav,
+  .ec-actions,
+  .ec-sos-cancel,
+  .btn,
+  .toast-container,
+  .command-palette,
+  .content-header,
+  .chat-controls,
+  .ec-config-tabs,
+  .ec-fam__call-btn,
+  .ec-fam__footer,
+  .ec-family__action-btn,
+  .ec-family__refresh {
+    display: none !important;
+  }
+
+  /* Full width layout */
+  .shell {
+    display: block !important;
+  }
+
+  .content {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    grid-column: 1 / -1 !important;
+  }
+
+  /* Card grid — single column */
+  .ec-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Cards — clean borders */
+  .ec-card {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Text — black on white */
+  body,
+  .ec-card,
+  .ec-stat-value,
+  .ec-stat-label,
+  .ec-sensor__value,
+  .ec-sensor__label,
+  .ec-card__title,
+  .ec-section__title,
+  .ec-report-text {
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  .ec-text--ok { color: #006600 !important; }
+  .ec-text--warn { color: #996600 !important; }
+  .ec-text--danger { color: #cc0000 !important; }
+  .ec-text--muted { color: #666 !important; }
+
+  /* No animations */
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* SOS banner — visible but not animated */
+  .ec-sos-banner {
+    background: #cc0000 !important;
+    color: #fff !important;
+    animation: none !important;
+    padding: 8px 12px !important;
+  }
+
+  /* Level badges */
+  .ec-level-badge {
+    border: 1px solid currentColor !important;
+    background: transparent !important;
+  }
+
+  .ec-level--emergency {
+    background: #cc0000 !important;
+    color: #fff !important;
+  }
+
+  /* Report card */
+  .ec-report-card {
+    border: 1px solid #ccc !important;
+    background: #fff !important;
+  }
+
+  /* Page settings */
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+}

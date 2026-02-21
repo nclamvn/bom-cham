@@ -291,11 +291,11 @@ function renderAttachmentPreview(props: ChatProps) {
 
 function getDefaultQuickActions(): QuickAction[] {
   return [
-    { id: 'build', label: t().chat.quickActions.build, icon: 'zap', prompt: '/build' },
-    { id: 'code', label: t().chat.quickActions.code, icon: 'code', prompt: '' },
-    { id: 'write', label: t().chat.quickActions.write, icon: 'penLine', prompt: '' },
-    { id: 'create', label: t().chat.quickActions.create, icon: 'sparkles', prompt: '' },
-    { id: 'learn', label: t().chat.quickActions.learn, icon: 'graduationCap', prompt: '' },
+    { id: 'build', label: t().chat.quickActions.build, icon: 'heartPulse', prompt: 'kiểm tra tình trạng sức khoẻ ngay' },
+    { id: 'code', label: t().chat.quickActions.code, icon: 'pill', prompt: 'đã uống thuốc gì hôm nay chưa?' },
+    { id: 'write', label: t().chat.quickActions.write, icon: 'phone', prompt: 'gọi video' },
+    { id: 'create', label: t().chat.quickActions.create, icon: 'fileBarChart', prompt: 'báo cáo tình trạng hôm nay' },
+    { id: 'learn', label: t().chat.quickActions.learn, icon: 'clock', prompt: 'lịch sử cảnh báo 7 ngày gần nhất' },
     { id: 'analyze', label: t().chat.quickActions.analyze, icon: 'brain', prompt: '' },
   ];
 }
@@ -338,11 +338,11 @@ type VibecodeTemplate = {
 
 function getVibecodeTemplates(): VibecodeTemplate[] {
   return [
-    { id: 'landing', label: t().chat.vibecode.landing, icon: 'monitor', prompt: '/build quick landing' },
-    { id: 'saas', label: t().chat.vibecode.saas, icon: 'code', prompt: '/build quick saas' },
-    { id: 'dashboard', label: t().chat.vibecode.dashboard, icon: 'barChart', prompt: '/build quick dashboard' },
-    { id: 'blog', label: t().chat.vibecode.blog, icon: 'fileText', prompt: '/build quick blog' },
-    { id: 'portfolio', label: t().chat.vibecode.portfolio, icon: 'sparkles', prompt: '/build quick portfolio' },
+    { id: 'landing', label: t().chat.vibecode.landing, icon: 'heartPulse', prompt: 'kiểm tra tình trạng sức khoẻ ngay' },
+    { id: 'saas', label: t().chat.vibecode.saas, icon: 'pill', prompt: 'đã uống thuốc gì hôm nay?' },
+    { id: 'dashboard', label: t().chat.vibecode.dashboard, icon: 'phone', prompt: 'gọi video' },
+    { id: 'blog', label: t().chat.vibecode.blog, icon: 'fileBarChart', prompt: 'báo cáo tình trạng hôm nay' },
+    { id: 'portfolio', label: t().chat.vibecode.portfolio, icon: 'brain', prompt: 'tình trạng hiện tại thế nào?' },
   ];
 }
 

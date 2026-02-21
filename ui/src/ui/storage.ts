@@ -6,6 +6,8 @@ import type { AgentTab } from "./controllers/agent-tabs";
 
 export type Language = "vi" | "en";
 
+export type FontSize = "normal" | "large" | "xlarge";
+
 export type UiSettings = {
   gatewayUrl: string;
   token: string;
@@ -13,6 +15,7 @@ export type UiSettings = {
   lastActiveSessionKey: string;
   theme: ThemeMode;
   language: Language;
+  fontSize: FontSize;
   chatFocusMode: boolean;
   chatShowThinking: boolean;
   splitRatio: number; // Sidebar split ratio (0.4 to 0.7, default 0.6)
@@ -41,6 +44,7 @@ export function loadSettings(): UiSettings {
     lastActiveSessionKey: "main",
     theme: "system",
     language: "vi",
+    fontSize: "normal",
     chatFocusMode: false,
     chatShowThinking: true,
     splitRatio: 0.5, // 50/50 split like Claude.ai
@@ -84,13 +88,17 @@ export function loadSettings(): UiSettings {
           : (typeof parsed.sessionKey === "string" && parsed.sessionKey.trim()) ||
             defaults.lastActiveSessionKey,
       theme:
-        parsed.theme === "light" || parsed.theme === "dark" || parsed.theme === "system"
+        parsed.theme === "light" || parsed.theme === "dark" || parsed.theme === "system" || parsed.theme === "eldercare"
           ? parsed.theme
           : defaults.theme,
       language:
         parsed.language === "vi" || parsed.language === "en"
           ? parsed.language
           : defaults.language,
+      fontSize:
+        parsed.fontSize === "normal" || parsed.fontSize === "large" || parsed.fontSize === "xlarge"
+          ? parsed.fontSize
+          : defaults.fontSize,
       chatFocusMode:
         typeof parsed.chatFocusMode === "boolean" ? parsed.chatFocusMode : defaults.chatFocusMode,
       chatShowThinking:

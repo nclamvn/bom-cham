@@ -5,8 +5,8 @@ import { t } from "./i18n";
 export const TAB_GROUPS = [
   {
     label: "care",
-    labelKey: "eldercare",
-    tabs: ["chat", "eldercare", "eldercare-config"],
+    labelKey: "care",
+    tabs: ["eldercare-home", "chat", "eldercare", "eldercare-history", "eldercare-family", "eldercare-config"],
     icon: "activity",
     shortcut: "1"
   },
@@ -26,11 +26,25 @@ export const TAB_GROUPS = [
   },
 ] as const;
 
+export const ELDERCARE_TAB_GROUPS = [{
+  label: "care",
+  labelKey: "care",
+  tabs: ["eldercare-home", "chat", "eldercare", "eldercare-history", "eldercare-family", "eldercare-config", "memory"],
+  icon: "heartPulse",
+  shortcut: "1"
+}] as const;
+
+export function getActiveTabGroups(theme: string): readonly typeof TAB_GROUPS[number][] {
+  return theme === "eldercare" ? ELDERCARE_TAB_GROUPS as unknown as typeof TAB_GROUPS[number][] : TAB_GROUPS;
+}
+
 export function getTabGroupLabel(group: (typeof TAB_GROUPS)[number]): string {
   const translations = t();
   switch (group.labelKey) {
+    case "care":
+      return (translations.nav as Record<string, string>).care ?? "Chăm sóc";
     case "eldercare":
-      return (translations.nav as Record<string, string>).eldercare ?? "Chăm sóc";
+      return (translations.nav as Record<string, string>).care ?? "Chăm sóc";
     case "core":
       return (translations.nav as Record<string, string>).core ?? "Hệ thống";
     case "admin":
@@ -39,6 +53,7 @@ export function getTabGroupLabel(group: (typeof TAB_GROUPS)[number]): string {
       return group.label.toUpperCase();
   }
 }
+
 
 export function getTabGroupShortcut(group: (typeof TAB_GROUPS)[number]): string {
   return (group as { shortcut?: string }).shortcut ?? "";
@@ -53,7 +68,10 @@ export type Tab =
   | "memory"
   | "config"
   | "eldercare"
-  | "eldercare-config";
+  | "eldercare-config"
+  | "eldercare-history"
+  | "eldercare-family"
+  | "eldercare-home";
 
 const TAB_PATHS: Record<Tab, string> = {
   overview: "/overview",
@@ -65,6 +83,9 @@ const TAB_PATHS: Record<Tab, string> = {
   config: "/config",
   eldercare: "/eldercare",
   "eldercare-config": "/eldercare-config",
+  "eldercare-history": "/eldercare-history",
+  "eldercare-family": "/eldercare-family",
+  "eldercare-home": "/eldercare-home",
 };
 
 const PATH_TO_TAB = new Map(Object.entries(TAB_PATHS).map(([tab, path]) => [path, tab as Tab]));
@@ -130,10 +151,16 @@ export function inferBasePathFromPathname(pathname: string): string {
 
 export function iconForTab(tab: Tab): IconName {
   switch (tab) {
+    case "eldercare-home":
+      return "home";
     case "eldercare":
       return "activity";
     case "eldercare-config":
       return "settings";
+    case "eldercare-history":
+      return "clock";
+    case "eldercare-family":
+      return "usersRound";
     case "chat":
       return "messageSquare";
     case "overview":
@@ -156,10 +183,16 @@ export function iconForTab(tab: Tab): IconName {
 export function titleForTab(tab: Tab) {
   const translations = t();
   switch (tab) {
+    case "eldercare-home":
+      return (translations.nav as Record<string, string>).eldercareHome ?? "Trang chính";
     case "eldercare":
       return (translations.nav as Record<string, string>).eldercare ?? "Dashboard";
     case "eldercare-config":
       return (translations.nav as Record<string, string>).eldercareConfig ?? "Cài đặt chăm sóc";
+    case "eldercare-history":
+      return (translations.nav as Record<string, string>).eldercareHistory ?? "History";
+    case "eldercare-family":
+      return (translations.nav as Record<string, string>).eldercareFamily ?? "Family";
     case "overview":
       return translations.nav.overview;
     case "channels":
@@ -182,10 +215,16 @@ export function titleForTab(tab: Tab) {
 export function subtitleForTab(tab: Tab) {
   const subtitles = t().nav.subtitles;
   switch (tab) {
+    case "eldercare-home":
+      return (subtitles as Record<string, string>).eldercareHome ?? "";
     case "eldercare":
       return (subtitles as Record<string, string>).eldercare ?? "Giám sát người thân";
     case "eldercare-config":
       return (subtitles as Record<string, string>).eldercareConfig ?? "Cài đặt chăm sóc";
+    case "eldercare-history":
+      return (subtitles as Record<string, string>).eldercareHistory ?? "Alerts from the last 7 days";
+    case "eldercare-family":
+      return (subtitles as Record<string, string>).eldercareFamily ?? "Quick view for family";
     case "overview":
       return subtitles.overview;
     case "channels":

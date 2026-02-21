@@ -1,6 +1,6 @@
 // Agent tab management: types + pure functions
 
-export type AgentPreset = "code" | "writer" | "research" | "translator" | "custom";
+export type AgentPreset = "medication" | "health" | "entertainment" | "companion" | "custom";
 
 export type AgentTab = {
   sessionKey: string;
@@ -11,10 +11,10 @@ export type AgentTab = {
 };
 
 export const AGENT_PRESETS: Record<AgentPreset, { labelKey: string; icon: string }> = {
-  code: { labelKey: "agentTabs.presets.code", icon: "code" },
-  writer: { labelKey: "agentTabs.presets.writer", icon: "penLine" },
-  research: { labelKey: "agentTabs.presets.research", icon: "search" },
-  translator: { labelKey: "agentTabs.presets.translator", icon: "globe" },
+  medication: { labelKey: "agentTabs.presets.medication", icon: "pill" },
+  health: { labelKey: "agentTabs.presets.health", icon: "heartPulse" },
+  entertainment: { labelKey: "agentTabs.presets.entertainment", icon: "music" },
+  companion: { labelKey: "agentTabs.presets.companion", icon: "smile" },
   custom: { labelKey: "agentTabs.presets.custom", icon: "sparkles" },
 };
 

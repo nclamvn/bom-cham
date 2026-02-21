@@ -512,6 +512,559 @@
   color: var(--accent);
 }
 
+/* ─── SOS Banner enhanced (P0-1, P0-5) ──── */
+
+.ec-sos-banner__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ec-sos-progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.9;
+  flex-wrap: wrap;
+}
+
+.ec-sos-progress__step {
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  white-space: nowrap;
+}
+
+.ec-sos-progress__step--done {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.ec-sos-progress__step--active {
+  background: rgba(255, 255, 255, 0.4);
+  animation: ec-pulse 1.5s infinite;
+}
+
+.ec-sos-progress__arrow {
+  opacity: 0.5;
+}
+
+.ec-sos-cancel {
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.ec-sos-banner__contacts,
+.ec-sos-banner__time {
+  font-size: 12px;
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+/* ─── Contact CRUD (P0-3) ───────────────── */
+
+.ec-contact-edit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ec-contact-edit {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  background: var(--bg);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.ec-contact-remove {
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ec-contact-remove:hover {
+  background: var(--danger-subtle);
+}
+
+/* ─── Medication CRUD (P0-4, P1-5) ──────── */
+
+.ec-med-edit {
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ec-med-time-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ec-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  user-select: none;
+}
+
+.ec-chip:hover {
+  border-color: var(--accent);
+}
+
+.ec-chip--active {
+  background: var(--accent-subtle);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.ec-med-schedule {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ec-med-schedule .ec-config-field {
+  margin-bottom: 0;
+}
+
+/* ─── Sparkline (P2-2) ──────────────────── */
+
+.ec-sparkline {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+/* ─── Profile Select (P1-1) ─────────────── */
+
+.ec-profile-select {
+  padding: 6px 10px;
+  font-size: 13px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--duration-normal) var(--ease-out);
+}
+
+.ec-profile-select:focus {
+  border-color: var(--accent);
+}
+
+/* ─── Family View (P1-3) ────────────────── */
+
+.ec-fam {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Hero — status at a glance */
+.ec-fam__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 20px 24px;
+  border-radius: var(--radius-xl, 20px);
+  text-align: center;
+}
+
+.ec-fam__hero.ec-level--normal {
+  background: var(--ok-subtle);
+}
+.ec-fam__hero.ec-level--attention {
+  background: var(--warn-subtle);
+}
+.ec-fam__hero.ec-level--warning {
+  background: rgba(229, 72, 77, 0.1);
+}
+.ec-fam__hero.ec-level--emergency {
+  background: var(--danger);
+  color: #fff;
+  animation: ec-pulse 1.5s infinite;
+}
+
+.ec-fam__hero-emoji {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.ec-fam__hero-label {
+  font-size: 13px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+.ec-fam__hero.ec-level--emergency .ec-fam__hero-label {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ec-fam__hero-level {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+.ec-fam__hero.ec-level--normal .ec-fam__hero-level { color: var(--ok); }
+.ec-fam__hero.ec-level--attention .ec-fam__hero-level { color: var(--warn); }
+.ec-fam__hero.ec-level--warning .ec-fam__hero-level { color: var(--danger); }
+.ec-fam__hero.ec-level--emergency .ec-fam__hero-level { color: #fff; }
+
+.ec-fam__hero-checks {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.ec-fam__hero.ec-level--emergency .ec-fam__hero-checks {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Tile grid — 2×2 info cards */
+.ec-fam__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ec-fam__tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  transition: border-color var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.ec-fam__tile:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.ec-fam__tile--warn {
+  border-color: var(--warn);
+  background: var(--warn-subtle);
+}
+
+.ec-fam__tile-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.ec-fam__tile-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.ec-fam__tile-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.ec-fam__tile-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+
+.ec-fam__tile-alert {
+  font-size: 11px;
+  color: var(--warn);
+  margin-top: 2px;
+}
+
+.ec-fam__tile-status {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.ec-fam__tile-status--ok {
+  background: var(--ok-subtle);
+  color: var(--ok);
+}
+
+.ec-fam__tile-status--pending {
+  background: var(--warn-subtle);
+  color: var(--warn);
+}
+
+/* Call-to-action button */
+.ec-fam__call-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--ok);
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--duration-normal) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+
+.ec-fam__call-btn:hover {
+  background: var(--ok-muted);
+}
+
+.ec-fam__call-btn:active {
+  transform: scale(0.98);
+}
+
+.ec-fam__call-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ec-fam__call-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ec-fam__call-text {
+  font-size: 16px;
+}
+
+/* Footer */
+.ec-fam__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ─── History Timeline (P1-2) ───────────── */
+
+.ec-history-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ec-history-day {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.ec-history-day summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--card);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-strong);
+  list-style: none;
+  user-select: none;
+}
+
+.ec-history-day summary::-webkit-details-marker {
+  display: none;
+}
+
+.ec-history-day summary::before {
+  content: "▸";
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.ec-history-day[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.ec-history-day__date {
+  flex: 1;
+}
+
+.ec-history-day__stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ec-history-day__detail,
+.ec-history-day__body {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ec-history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ec-history-section strong {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+/* ─── Toggle Switch ─────────────────────── */
+
+.ec-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 10px 0;
+  user-select: none;
+}
+
+.ec-toggle input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.ec-toggle__switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 24px;
+  background: var(--border-strong);
+  border-radius: 12px;
+  transition: background var(--duration-normal) var(--ease-out);
+}
+
+.ec-toggle__switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.ec-toggle input:checked + .ec-toggle__switch {
+  background: var(--ok);
+}
+
+.ec-toggle input:checked + .ec-toggle__switch::after {
+  transform: translateX(20px);
+}
+
+.ec-toggle input:focus-visible + .ec-toggle__switch {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ec-toggle__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.ec-toggle__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ec-toggle__text .ec-toggle__label {
+  font-size: 14px;
+}
+
+.ec-toggle__hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ─── Button XS (utility) ───────────────── */
+
+.btn--xs {
+  padding: 2px 8px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* ─── Toast action button (P2-7) ─────────── */
+
+.toast-action {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  cursor: pointer;
+  transition: background var(--duration-normal) var(--ease-out);
+}
+
+.toast-action:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 /* ─── Responsive ─────────────────────────── */
 
 @media (max-width: 768px) {
@@ -531,4 +1084,304 @@
   .ec-contact-item {
     grid-template-columns: 1fr 1fr;
   }
+
+  .ec-contact-edit {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ec-sos-progress {
+    font-size: 11px;
+  }
+
+  .ec-med-schedule {
+    grid-template-columns: 1fr;
+  }
+
+  .ec-fam__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ec-fam__tile-value {
+    font-size: 24px;
+  }
+}
+
+/* ===========================================
+   Eldercare Home Grid
+   =========================================== */
+
+.eldercare-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: var(--space-6, 24px) var(--space-4, 16px);
+  gap: var(--space-6, 24px);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.eldercare-greeting {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--text-strong);
+  text-align: center;
+}
+
+.eldercare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4, 16px);
+  width: 100%;
+}
+
+.eldercare-grid-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2, 8px);
+  padding: var(--space-6, 24px) var(--space-4, 16px);
+  min-height: 120px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg, 20px);
+  cursor: pointer;
+  transition: all 200ms ease;
+  user-select: none;
+}
+
+.eldercare-grid-btn:hover,
+.eldercare-grid-btn:active {
+  border-color: var(--accent);
+  background: var(--bg-hover, var(--card));
+}
+
+.eldercare-grid-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.eldercare-grid-btn .icon {
+  width: 36px;
+  height: 36px;
+  color: var(--accent);
+}
+
+.eldercare-grid-btn .icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.eldercare-grid-btn .label {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+@media (max-width: 400px) {
+  .eldercare-grid-btn {
+    min-height: 100px;
+    padding: var(--space-4, 16px) var(--space-3, 12px);
+  }
+}
+
+/* SOS Floating Button */
+.sos-floating {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--danger, #D4382C);
+  color: #FFF;
+  border: 3px solid #FFF;
+  box-shadow: var(--shadow-lg), 0 0 0 4px rgba(212, 56, 44, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 14px;
+  animation: sos-pulse 2s infinite;
+}
+
+@keyframes sos-pulse {
+  0%, 100% { box-shadow: var(--shadow-lg), 0 0 0 4px rgba(212, 56, 44, 0.3); }
+  50% { box-shadow: var(--shadow-lg), 0 0 0 8px rgba(212, 56, 44, 0.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sos-floating { animation: none; }
+}
+
+@media (max-width: 600px) {
+  .sos-floating { right: 50%; transform: translateX(50%); }
+}
+
+/* SOS Overlay + Dialog */
+.sos-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 16px;
+}
+
+.sos-dialog {
+  background: var(--card, #fff);
+  border-radius: var(--radius-xl, 20px);
+  padding: 32px 24px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+}
+
+.sos-dialog__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--danger, #D4382C);
+  margin-bottom: 12px;
+}
+
+.sos-dialog__message {
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.sos-dialog__countdown {
+  height: 6px;
+  background: var(--border, #ddd);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.sos-dialog__countdown-bar {
+  height: 100%;
+  background: var(--danger, #D4382C);
+  border-radius: 3px;
+  transition: width 1s linear;
+}
+
+.sos-dialog__countdown-text {
+  font-size: 16px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.sos-dialog__confirm {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: var(--danger, #D4382C);
+  color: #FFF;
+  border: none;
+  border-radius: var(--radius-md, 12px);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 12px;
+  min-height: 56px;
+}
+
+.sos-dialog__confirm:hover { opacity: 0.9; }
+
+.sos-dialog__cancel {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: var(--secondary, #f0eeeb);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 12px);
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.sos-dialog__cancel:hover { background: var(--bg-hover); }
+
+/* ===========================================
+   TIP-006: Accessibility — Eldercare scoped
+   =========================================== */
+
+/* Touch targets ≥ 48px (exclude compact toggle buttons, nav items, config tabs) */
+:root[data-theme="eldercare"] button:not(.settings-toggle__button):not(.nav-label):not(.nav-sidebar-toggle):not(.ec-config-tab):not(.font-size-toggle),
+:root[data-theme="eldercare"] a:not(.nav-item),
+:root[data-theme="eldercare"] [role="button"],
+:root[data-theme="eldercare"] input,
+:root[data-theme="eldercare"] select {
+  min-height: 48px;
+  min-width: 48px;
+}
+:root[data-theme="eldercare"] .nav-item {
+  min-height: 40px;
+}
+:root[data-theme="eldercare"] .settings-toggle__button {
+  min-height: var(--toggle-item, 24px);
+  min-width: var(--toggle-item, 24px);
+}
+
+/* Focus indicators 3px+ */
+:root[data-theme="eldercare"] :focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme="eldercare"] * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Chat polish */
+:root[data-theme="eldercare"] .message-content {
+  font-size: 20px;
+  line-height: 1.7;
+}
+
+:root[data-theme="eldercare"] .chat-composer textarea {
+  font-size: 18px;
+  min-height: 56px;
+}
+
+:root[data-theme="eldercare"] .chat-composer .btn--send,
+:root[data-theme="eldercare"] .chat-input-actions button {
+  min-height: 56px;
+  min-width: 56px;
+}
+
+/* Voice button prominence */
+:root[data-theme="eldercare"] .btn--voice {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+
+/* Wider scrollbars for easier grab */
+:root[data-theme="eldercare"] ::-webkit-scrollbar {
+  width: 12px;
+}
+
+:root[data-theme="eldercare"] ::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 6px;
+}
+
+/* High contrast text on eldercare cards */
+:root[data-theme="eldercare"] .ec-card {
+  color: var(--text-strong);
 }

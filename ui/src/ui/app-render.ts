@@ -6,12 +6,14 @@ import { parseAgentSessionKey } from "../lib/session-key.js";
 import {
   TAB_GROUPS,
   getTabGroupLabel,
+  getActiveTabGroups,
   iconForTab,
   pathForTab,
   subtitleForTab,
   titleForTab,
   type Tab,
 } from "./navigation";
+import { renderEldercareHome } from "./views/eldercare-home";
 import { icons } from "./icons";
 import type { UiSettings } from "./storage";
 import type { ThemeMode } from "./theme";
@@ -39,7 +41,7 @@ import { renderExecApprovalPrompt } from "./views/exec-approval";
 import { renderGatewayUrlConfirmation } from "./views/gateway-url-confirmation";
 import { renderCommandPalette } from "./views/command-palette";
 import { lazyView } from "./lazy-view";
-import { renderChatControls, renderNavStatus, renderTab, renderThemeToggle } from "./app-render.helpers";
+import { renderChatControls, renderNavStatus, renderTab, renderThemeToggle, renderFontSizeToggle } from "./app-render.helpers";
 import { loadChannels } from "./controllers/channels";
 import { toggleVoiceInput, stopTts, type VoiceHostCallbacks } from "./controllers/voice";
 import {
@@ -99,6 +101,7 @@ import {
 } from "./controllers/eldercare";
 import type { EldercareConfigSection } from "./views/eldercare-config";
 import { renderConnectionBanner } from "./components/connection-banner";
+import { renderSosFloating, type SosState } from "./components/sos-button";
 import { renderSetupGuide, type SetupGuideState } from "./views/setup-guide";
 import { type ConnectionState } from "./connection/connection-manager";
 import { addToast, renderToasts, type ToastItem } from "./toast";
@@ -145,7 +148,7 @@ export function renderApp(state: AppViewState) {
 
   const hasSplitPanel = isChat && state.sidebarOpen;
   return html`
-    <div class="shell ${isChat ? "shell--chat" : ""} ${chatFocus ? "shell--chat-focus" : ""} ${state.settings.navCollapsed ? "shell--nav-collapsed" : ""} ${state.onboarding ? "shell--onboarding" : ""} ${hasSplitPanel ? "shell--split-panel" : ""}">
+    <div class="shell ${isChat ? "shell--chat" : ""} ${chatFocus ? "shell--chat-focus" : ""} ${state.settings.navCollapsed ? "shell--nav-collapsed" : ""} ${state.onboarding ? "shell--onboarding" : ""} ${hasSplitPanel ? "shell--split-panel" : ""} ${state.settings.fontSize === "large" ? "shell--large-text" : state.settings.fontSize === "xlarge" ? "shell--xlarge-text" : ""}">
       ${renderConnectionBanner(
         connectionState,
         () => appState.retryConnection?.(),
@@ -162,11 +165,12 @@ export function renderApp(state: AppViewState) {
           </div>
         </div>
         <div class="topbar-status">
+          ${renderFontSizeToggle(state)}
           ${renderThemeToggle(state)}
         </div>
       </header>
       <aside class="nav ${state.settings.navCollapsed ? "nav--collapsed" : ""}">
-        ${TAB_GROUPS.map((group, groupIndex) => {
+        ${getActiveTabGroups(state.theme).map((group, groupIndex) => {
           const isGroupCollapsed = state.settings.navGroupsCollapsed[group.label] ?? false;
           const hasActiveTab = group.tabs.some((tab) => tab === state.tab);
           const isFirstGroup = groupIndex === 0;
@@ -473,12 +477,12 @@ export function renderApp(state: AppViewState) {
                 attachments: state.chatAttachments,
                 onAttachmentsChange: (next) => (state.chatAttachments = next),
                 quickActions: [
-                  { id: 'build', label: 'Build app', icon: 'zap' as const, prompt: '/build' },
-                  { id: 'code', label: 'Write code', icon: 'code' as const, prompt: '' },
-                  { id: 'write', label: 'Write text', icon: 'penLine' as const, prompt: '' },
-                  { id: 'create', label: 'Create', icon: 'sparkles' as const, prompt: '' },
-                  { id: 'learn', label: 'Learn', icon: 'graduationCap' as const, prompt: '' },
-                  { id: 'analyze', label: 'Analyze', icon: 'brain' as const, prompt: '' },
+                  { id: 'build', label: t().chat.quickActions.build, icon: 'heartPulse' as const, prompt: 'kiểm tra tình trạng sức khoẻ ngay' },
+                  { id: 'code', label: t().chat.quickActions.code, icon: 'pill' as const, prompt: 'đã uống thuốc gì hôm nay chưa?' },
+                  { id: 'write', label: t().chat.quickActions.write, icon: 'phone' as const, prompt: 'gọi video' },
+                  { id: 'create', label: t().chat.quickActions.create, icon: 'fileBarChart' as const, prompt: 'báo cáo tình trạng hôm nay' },
+                  { id: 'learn', label: t().chat.quickActions.learn, icon: 'clock' as const, prompt: 'lịch sử cảnh báo 7 ngày gần nhất' },
+                  { id: 'analyze', label: t().chat.quickActions.analyze, icon: 'brain' as const, prompt: '' },
                 ],
                 onQuickAction: (action) => {
                   if (action.prompt?.startsWith('/')) {
@@ -797,6 +801,29 @@ export function renderApp(state: AppViewState) {
         }
 
         ${
+          state.tab === "eldercare-home"
+            ? renderEldercareHome({
+                connected: state.connected,
+                onNavigate: (tab: Tab, preset?: string) => {
+                  state.setTab(tab);
+                  if (preset && tab === "chat") {
+                    // Use preset to auto-create an agent tab with the right type
+                    const presetMap: Record<string, { label: string; agentId: string }> = {
+                      companion: { label: "Noi chuyen", agentId: "companion" },
+                      medication: { label: "Thuoc", agentId: "medication" },
+                      entertainment: { label: "Giai tri", agentId: "entertainment" },
+                    };
+                    const p = presetMap[preset];
+                    if (p) {
+                      state.chatMessage = "";
+                    }
+                  }
+                },
+              })
+            : nothing
+        }
+
+        ${
           state.tab === "eldercare"
             ? lazyView("eldercare", () => import("./views/eldercare-dashboard"), (m) => m.renderEldercareDashboard({
                 connected: state.connected,
@@ -808,6 +835,38 @@ export function renderApp(state: AppViewState) {
                 lastCheck: state.eldercareLastCheck,
                 sosActive: state.eldercareSosActive,
                 onRefresh: () => loadEldercare(state),
+                onCancelSos: () => void state.handleEldercareCancelSos(),
+                onExportHealth: () => state.handleEldercareExportHealth(),
+                elderProfiles: state.eldercareProfiles,
+                activeProfileId: state.eldercareActiveProfile,
+                onProfileChange: (id: string) => {
+                  state.eldercareActiveProfile = id;
+                  void loadEldercare(state);
+                },
+              }))
+            : nothing
+        }
+
+        ${
+          state.tab === "eldercare-history"
+            ? lazyView("eldercare-history", () => import("./views/eldercare-history"), (m) => m.renderEldercareHistory({
+                loading: state.eldercareHistoryLoading,
+                history: state.eldercareHistory,
+                onRefresh: () => void state.handleEldercareLoadHistory(),
+              }))
+            : nothing
+        }
+
+        ${
+          state.tab === "eldercare-family"
+            ? lazyView("eldercare-family", () => import("./views/eldercare-family"), (m) => m.renderEldercareFamily({
+                connected: state.connected,
+                room: state.eldercareRoom,
+                summary: state.eldercareSummary,
+                sosActive: state.eldercareSosActive,
+                lastCheck: state.eldercareLastCheck,
+                onRefresh: () => loadEldercare(state),
+                onCancelSos: () => void state.handleEldercareCancelSos(),
               }))
             : nothing
         }
@@ -841,6 +900,48 @@ export function renderApp(state: AppViewState) {
             : nothing
         }
       </main>
+      ${state.theme === "eldercare" && state.tab !== "eldercare-home"
+        ? renderSosFloating({
+            state: ((state as any).sosState as SosState) ?? "idle",
+            countdown: (state as any).sosCountdown ?? 10,
+            onTrigger: () => {
+              (state as any).sosState = "confirming";
+              (state as any).sosCountdown = 10;
+              const iv = setInterval(() => {
+                const c = ((state as any).sosCountdown ?? 0) - 1;
+                if (c <= 0) {
+                  clearInterval(iv);
+                  (state as any).sosState = "calling";
+                  (state as any).sosCountdown = 0;
+                  (state as any)._sosInterval = null;
+                } else {
+                  (state as any).sosCountdown = c;
+                }
+              }, 1000);
+              (state as any)._sosInterval = iv;
+            },
+            onConfirm: () => {
+              if ((state as any)._sosInterval) {
+                clearInterval((state as any)._sosInterval);
+                (state as any)._sosInterval = null;
+              }
+              (state as any).sosState = "calling";
+              (state as any).sosCountdown = 0;
+            },
+            onCancel: () => {
+              if ((state as any)._sosInterval) {
+                clearInterval((state as any)._sosInterval);
+                (state as any)._sosInterval = null;
+              }
+              (state as any).sosState = "idle";
+              (state as any).sosCountdown = 10;
+            },
+            onClose: () => {
+              (state as any).sosState = "idle";
+              (state as any).sosCountdown = 10;
+            },
+          })
+        : nothing}
       ${renderExecApprovalPrompt(state)}
       ${renderGatewayUrlConfirmation(state)}
       ${renderCommandPalette({

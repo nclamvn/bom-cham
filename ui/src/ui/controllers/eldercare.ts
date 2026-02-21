@@ -129,6 +129,9 @@ export type EldercareDailySummary = {
   remindersDelivered: number;
   storyActive: boolean;
   sosEvents: EldercareSosEvent[];
+  sosLevel: number;
+  sosContactsNotified: string[];
+  sosStartedAt: string | null;
   lastReport: string | null;
   lastReportDate: string | null;
   // Sprint 6-8 data
@@ -158,6 +161,7 @@ export type EldercareState = {
   eldercareSummary: EldercareDailySummary;
   eldercareLastCheck: EldercareCheck | null;
   eldercareSosActive: boolean;
+  eldercareHaEntities?: Record<string, string>;
 };
 
 const EMPTY_SLEEP: EldercareSleepData = {
@@ -196,6 +200,9 @@ const EMPTY_SUMMARY: EldercareDailySummary = {
   remindersDelivered: 0,
   storyActive: false,
   sosEvents: [],
+  sosLevel: 0,
+  sosContactsNotified: [],
+  sosStartedAt: null,
   lastReport: null,
   lastReportDate: null,
   healthEntries: [],
@@ -227,16 +234,27 @@ export async function loadEldercare(state: EldercareState) {
   state.eldercareLoading = true;
   state.eldercareError = null;
   try {
-    // Fetch eldercare memory entries
-    const memRes = (await state.client.request("memory.search", {
-      keyword: "eldercare_",
-      limit: 200,
-    })) as { facts?: Array<{ id: string; content: string }> } | Array<{ id: string; content: string }> | undefined;
+    // Fetch eldercare memory entries — gracefully handle missing method
+    let facts: Array<{ id: string; content: string }> = [];
+    try {
+      const memRes = (await state.client.request("memory.search", {
+        keyword: "eldercare_",
+        limit: 200,
+      })) as { facts?: Array<{ id: string; content: string }> } | Array<{ id: string; content: string }> | undefined;
 
-    const raw = memRes && typeof memRes === "object" && "facts" in memRes
-      ? (memRes as { facts: unknown[] }).facts
-      : memRes;
-    const facts = Array.isArray(raw) ? raw as Array<{ id: string; content: string }> : [];
+      const raw = memRes && typeof memRes === "object" && "facts" in memRes
+        ? (memRes as { facts: unknown[] }).facts
+        : memRes;
+      facts = Array.isArray(raw) ? raw as Array<{ id: string; content: string }> : [];
+    } catch (memErr) {
+      const msg = String(memErr);
+      if (msg.includes("unknown method")) {
+        // Gateway doesn't support memory.search yet — continue with sensor data only
+        console.warn("[eldercare] memory.search not available, loading sensor data only");
+      } else {
+        throw memErr;
+      }
+    }
     const today = new Date().toISOString().slice(0, 10);
 
     // Parse monitoring checks
@@ -251,6 +269,9 @@ export async function loadEldercare(state: EldercareState) {
     let remindersDelivered = 0;
     let storyActive = false;
     let sosActive = false;
+    let sosLevel = 0;
+    let sosContactsNotified: string[] = [];
+    let sosStartedAt: string | null = null;
     let lastReport: string | null = null;
     let lastReportDate: string | null = null;
 
@@ -279,6 +300,11 @@ export async function loadEldercare(state: EldercareState) {
         if (id === "eldercare_sos_active") {
           const data = JSON.parse(content);
           sosActive = data.resolved === false;
+          if (sosActive) {
+            sosLevel = data.escalation_level ?? data.level ?? 1;
+            sosContactsNotified = Array.isArray(data.contacts_notified) ? data.contacts_notified : [];
+            sosStartedAt = data.timestamp ?? null;
+          }
           if (content.includes(today)) {
             sosEvents.push({
               timestamp: data.timestamp ?? "", source: data.source ?? "unknown",
@@ -286,6 +312,13 @@ export async function loadEldercare(state: EldercareState) {
               resolvedBy: data.resolved_by, responseMinutes: data.response_minutes,
             });
           }
+        }
+        if (id === "eldercare_sos_level" && !id.includes("config")) {
+          try {
+            const data = JSON.parse(content);
+            if (typeof data.level === "number") sosLevel = data.level;
+            if (Array.isArray(data.contacts_notified)) sosContactsNotified = data.contacts_notified;
+          } catch { /* skip */ }
         }
         if (id.startsWith("eldercare_call_") && content.includes(today)) {
           const data = JSON.parse(content);
@@ -457,6 +490,9 @@ export async function loadEldercare(state: EldercareState) {
       remindersDelivered,
       storyActive,
       sosEvents,
+      sosLevel,
+      sosContactsNotified,
+      sosStartedAt,
       lastReport,
       lastReportDate,
       healthEntries,
@@ -477,35 +513,31 @@ export async function loadEldercare(state: EldercareState) {
 
     // Try to fetch room sensor data from HA via tool call
     try {
+      const ents = state.eldercareHaEntities ?? {};
+      const tempEntity = ents.temperature || "sensor.grandma_room_temperature";
+      const humidEntity = ents.humidity || "sensor.grandma_room_humidity";
+      const motionEntity = ents.motion || "sensor.grandma_room_motion_minutes";
+      const presenceEntity = ents.presence || "binary_sensor.grandma_room_presence";
+
       const haRes = (await state.client.request("tools.call", {
         tool: "home_assistant",
         input: {
           action: "get_states",
-          entity_ids: [
-            "sensor.grandma_room_temperature",
-            "sensor.grandma_room_humidity",
-            "sensor.grandma_room_motion_minutes",
-            "binary_sensor.grandma_room_presence",
-          ],
+          entity_ids: [tempEntity, humidEntity, motionEntity, presenceEntity],
         },
       })) as Array<{ entity_id: string; state: string }> | undefined;
 
       if (Array.isArray(haRes)) {
         const room: EldercareRoomData = { ...EMPTY_ROOM };
         for (const entity of haRes) {
-          switch (entity.entity_id) {
-            case "sensor.grandma_room_temperature":
-              room.temperature = parseFloat(entity.state) || null;
-              break;
-            case "sensor.grandma_room_humidity":
-              room.humidity = parseFloat(entity.state) || null;
-              break;
-            case "sensor.grandma_room_motion_minutes":
-              room.motionMinutes = parseFloat(entity.state) || null;
-              break;
-            case "binary_sensor.grandma_room_presence":
-              room.presence = entity.state === "on";
-              break;
+          if (entity.entity_id === tempEntity) {
+            room.temperature = parseFloat(entity.state) || null;
+          } else if (entity.entity_id === humidEntity) {
+            room.humidity = parseFloat(entity.state) || null;
+          } else if (entity.entity_id === motionEntity) {
+            room.motionMinutes = parseFloat(entity.state) || null;
+          } else if (entity.entity_id === presenceEntity) {
+            room.presence = entity.state === "on";
           }
         }
         state.eldercareRoom = room;
@@ -516,7 +548,14 @@ export async function loadEldercare(state: EldercareState) {
       state.eldercareRoom = { ...EMPTY_ROOM };
     }
   } catch (err) {
-    state.eldercareError = String(err);
+    const msg = String(err);
+    if (msg.includes("unknown method")) {
+      state.eldercareError = "Gateway chưa hỗ trợ. Vui lòng rebuild gateway.";
+    } else if (msg.includes("not connected") || msg.includes("disconnected")) {
+      state.eldercareError = "Mất kết nối. Đang thử lại...";
+    } else {
+      state.eldercareError = msg.replace(/^Error:\s*/, "");
+    }
     state.eldercareSummary = { ...EMPTY_SUMMARY };
     state.eldercareRoom = { ...EMPTY_ROOM };
   } finally {
@@ -531,6 +570,144 @@ function formatHealthValue(data: Record<string, unknown>): string {
   if (v && typeof Object.values(v)[0] === "number") return String(Object.values(v)[0]);
   if (typeof data.value === "number") return String(data.value);
   return String(data.value ?? "—");
+}
+
+// ── Cancel SOS ──────────────────────────────────────
+
+export async function cancelSos(state: EldercareState) {
+  if (!state.client || !state.connected) return;
+  try {
+    await state.client.request("memory.upsert", {
+      key: "eldercare_sos_active",
+      content: JSON.stringify({ resolved: true, resolved_by: "ui_cancel", timestamp: new Date().toISOString() }),
+    });
+    state.eldercareSosActive = false;
+  } catch (err) {
+    state.eldercareError = String(err);
+  }
+}
+
+// ── Health Data Export (CSV) ────────────────────────
+
+export function exportHealthCsv(entries: EldercareHealthEntry[]) {
+  const header = "Date,Type,Value,Unit,Status\n";
+  const rows = entries.map((e) =>
+    `${e.timestamp},${e.type},${e.value},${e.unit},${e.status}`
+  ).join("\n");
+  const csv = header + rows;
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `eldercare-health-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Alert History (7 days) ──────────────────────────
+
+export type EldercareHistoryDay = {
+  date: string;
+  checksCount: number;
+  maxLevel: AlertLevel;
+  sosEvents: EldercareSosEvent[];
+  healthEntries: EldercareHealthEntry[];
+};
+
+export async function loadEldercareHistory(state: EldercareState): Promise<EldercareHistoryDay[]> {
+  if (!state.client || !state.connected) return [];
+  try {
+    const memRes = (await state.client.request("memory.search", {
+      keyword: "eldercare_",
+      limit: 500,
+    })) as { facts?: Array<{ id: string; content: string }> } | Array<{ id: string; content: string }> | undefined;
+
+    const raw = memRes && typeof memRes === "object" && "facts" in memRes
+      ? (memRes as { facts: unknown[] }).facts
+      : memRes;
+    const facts = Array.isArray(raw) ? raw as Array<{ id: string; content: string }> : [];
+
+    const days = new Map<string, EldercareHistoryDay>();
+    const levelOrder: AlertLevel[] = ["normal", "attention", "warning", "emergency"];
+
+    // Generate last 7 dates
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().slice(0, 10);
+      days.set(dateStr, { date: dateStr, checksCount: 0, maxLevel: "normal", sosEvents: [], healthEntries: [] });
+    }
+
+    for (const fact of facts) {
+      const content = fact.content;
+      const id = fact.id ?? "";
+      try {
+        for (const [dateStr, day] of days) {
+          if (!content.includes(dateStr) && !id.includes(dateStr.replace(/-/g, ""))) continue;
+
+          if (id.startsWith("eldercare_check_")) {
+            const data = JSON.parse(content);
+            day.checksCount++;
+            const lvl = (data.level ?? "normal") as AlertLevel;
+            if (levelOrder.indexOf(lvl) > levelOrder.indexOf(day.maxLevel)) day.maxLevel = lvl;
+          }
+          if (id === "eldercare_sos_active" || id.startsWith("eldercare_sos_")) {
+            const data = JSON.parse(content);
+            day.sosEvents.push({
+              timestamp: data.timestamp ?? "", source: data.source ?? "unknown",
+              escalationLevel: data.escalation_level ?? 1, resolved: data.resolved ?? false,
+              resolvedBy: data.resolved_by, responseMinutes: data.response_minutes,
+            });
+          }
+          if (id.includes("_health_")) {
+            const data = JSON.parse(content);
+            day.healthEntries.push({
+              type: data.type ?? id.split("_health_")[1]?.split("_")[0] ?? "unknown",
+              timestamp: data.timestamp ?? "", value: formatHealthValue(data),
+              unit: data.unit ?? "", status: data.status ?? "normal",
+            });
+          }
+        }
+      } catch { /* skip */ }
+    }
+
+    return Array.from(days.values()).sort((a, b) => b.date.localeCompare(a.date));
+  } catch {
+    return [];
+  }
+}
+
+// ── Elder Profiles ──────────────────────────────────
+
+export type ElderProfile = {
+  id: string;
+  name: string;
+};
+
+export async function loadElderProfiles(state: EldercareState): Promise<ElderProfile[]> {
+  if (!state.client || !state.connected) return [{ id: "ba_noi", name: "Bà nội" }];
+  try {
+    const memRes = (await state.client.request("memory.search", {
+      keyword: "eldercare_profile_",
+      limit: 20,
+    })) as { facts?: Array<{ id: string; content: string }> } | Array<{ id: string; content: string }> | undefined;
+
+    const raw = memRes && typeof memRes === "object" && "facts" in memRes
+      ? (memRes as { facts: unknown[] }).facts
+      : memRes;
+    const facts = Array.isArray(raw) ? raw as Array<{ id: string; content: string }> : [];
+
+    const profiles: ElderProfile[] = [];
+    for (const fact of facts) {
+      try {
+        const data = JSON.parse(fact.content);
+        profiles.push({ id: data.id ?? fact.id.replace("eldercare_profile_", ""), name: data.name ?? data.id ?? "Unknown" });
+      } catch { /* skip */ }
+    }
+    return profiles.length > 0 ? profiles : [{ id: "ba_noi", name: "Bà nội" }];
+  } catch {
+    return [{ id: "ba_noi", name: "Bà nội" }];
+  }
 }
 
 export { EMPTY_SUMMARY, EMPTY_ROOM };

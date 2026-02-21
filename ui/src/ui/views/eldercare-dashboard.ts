@@ -32,6 +32,12 @@ export type EldercareDashboardProps = {
   lastCheck: EldercareCheck | null;
   sosActive: boolean;
   onRefresh: () => void;
+  onCancelSos?: () => void;
+  onExportHealth?: () => void;
+  // Elder profile switcher (P1-1)
+  elderProfiles?: Array<{ id: string; name: string }>;
+  activeProfileId?: string;
+  onProfileChange?: (id: string) => void;
 };
 
 function levelClass(level: AlertLevel): string {
@@ -69,8 +75,70 @@ function formatTime(iso: string): string {
   }
 }
 
+function formatSosElapsed(startIso: string): string {
+  try {
+    const diff = Date.now() - new Date(startIso).getTime();
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 1) return "< 1 phút";
+    return `${minutes} phút`;
+  } catch {
+    return "";
+  }
+}
+
+// ── SVG Sparkline ───────────────────────────────────
+function renderSparkline(values: number[], width = 60, height = 20) {
+  if (values.length < 2) return nothing;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  const points = values.map((v, i) => {
+    const x = (i / (values.length - 1)) * width;
+    const y = height - ((v - min) / range) * (height - 2) - 1;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  return html`
+    <svg class="ec-sparkline" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <polyline points="${points}" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `;
+}
+
+// ── Fall Detection Card (P2-6) ──────────────────────
+function renderFallCard(fallEvent: EldercareFallEvent | null) {
+  const tr = t().eldercare;
+  if (!fallEvent) return nothing;
+  const isToday = fallEvent.timestamp.includes(new Date().toISOString().slice(0, 10));
+  if (!isToday) return nothing;
+
+  return html`
+    <div class="ec-card ${fallEvent.escalated ? "ec-card--danger" : ""}">
+      <div class="ec-card__header">
+        <span class="ec-card__icon">${icons.shieldAlert}</span>
+        <span class="ec-card__title">${tr.fallDetected ?? "Phát hiện ngã"}</span>
+      </div>
+      <div class="ec-card__body">
+        <div class="ec-stat-row">
+          <span class="ec-stat-label">${tr.fallDetection}</span>
+          <span class="ec-stat-value ${fallEvent.escalated ? "ec-text--danger" : "ec-text--ok"}">
+            ${fallEvent.result === "confirmed_ok" ? tr.fallOk : tr.fallEscalated}
+          </span>
+        </div>
+        <div class="ec-stat-row">
+          <span class="ec-stat-label">${tr.sosTime ?? "Thời gian"}</span>
+          <span class="ec-stat-value">${formatTime(fallEvent.timestamp)}</span>
+        </div>
+        <div class="ec-stat-row">
+          <span class="ec-stat-label">Source</span>
+          <span class="ec-stat-value ec-text--muted">${fallEvent.source}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // ── Health Card ──────────────────────────────────────
-function renderHealthCard(entries: EldercareHealthEntry[]) {
+function renderHealthCard(entries: EldercareHealthEntry[], onExport?: () => void) {
   const tr = t().eldercare;
   const typeLabels: Record<string, string> = {
     blood_pressure: tr.healthBP, glucose: tr.healthGlucose,
@@ -87,6 +155,11 @@ function renderHealthCard(entries: EldercareHealthEntry[]) {
       <div class="ec-card__header">
         <span class="ec-card__icon">${icons.activity}</span>
         <span class="ec-card__title">${tr.healthLog}</span>
+        ${onExport && latest.size > 0 ? html`
+          <button class="btn btn--ghost btn--xs" @click=${onExport} title="${tr.exportData ?? "Xuất dữ liệu"}">
+            CSV
+          </button>
+        ` : nothing}
       </div>
       <div class="ec-card__body">
         ${latest.size > 0
@@ -386,18 +459,51 @@ export function renderEldercareDashboard(props: EldercareDashboardProps) {
 
   return html`
     <div class="ec-dashboard">
-      <!-- SOS Banner (if active) -->
+      <!-- SOS Banner (if active) with escalation progress -->
       ${props.sosActive
         ? html`
             <div class="ec-sos-banner">
               <div class="ec-sos-banner__icon">${icons.bellRing}</div>
-              <div class="ec-sos-banner__text">${tr.sosActive}</div>
+              <div class="ec-sos-banner__content">
+                <div class="ec-sos-banner__text">${tr.sosActive}</div>
+                ${s.sosLevel > 0 ? html`
+                  <div class="ec-sos-progress">
+                    <span class="ec-sos-progress__step ${s.sosLevel >= 1 ? "ec-sos-progress__step--done" : ""}">
+                      ${tr.sosLevel1 ?? "Level 1: Zalo"} ${s.sosLevel >= 1 ? "✓" : ""}
+                    </span>
+                    <span class="ec-sos-progress__arrow">→</span>
+                    <span class="ec-sos-progress__step ${s.sosLevel >= 2 ? "ec-sos-progress__step--done" : ""} ${s.sosLevel === 2 ? "ec-sos-progress__step--active" : ""}">
+                      ${tr.sosLevel2 ?? "Level 2: Gọi điện"} ${s.sosLevel >= 2 ? "✓" : s.sosLevel === 2 ? "..." : ""}
+                    </span>
+                    <span class="ec-sos-progress__arrow">→</span>
+                    <span class="ec-sos-progress__step ${s.sosLevel >= 3 ? "ec-sos-progress__step--done" : ""}">
+                      ${tr.sosLevel3 ?? "Level 3: Tất cả"} ${s.sosLevel >= 3 ? "✓" : ""}
+                    </span>
+                  </div>
+                ` : nothing}
+                ${s.sosContactsNotified.length > 0 ? html`
+                  <div class="ec-sos-banner__contacts">${tr.sosNotified ?? "Đã thông báo"}: ${s.sosContactsNotified.join(", ")}</div>
+                ` : nothing}
+                ${s.sosStartedAt ? html`
+                  <div class="ec-sos-banner__time">${tr.sosTime ?? "Thời gian"}: ${formatSosElapsed(s.sosStartedAt)}</div>
+                ` : nothing}
+              </div>
+              <button class="btn btn--danger btn--sm ec-sos-cancel"
+                @click=${() => { if (confirm(tr.cancelSosConfirm ?? "Xác nhận hủy SOS?")) props.onCancelSos?.(); }}>
+                ${tr.cancelSos ?? "Hủy SOS"}
+              </button>
             </div>
           `
         : nothing}
 
       <!-- Header actions -->
       <div class="ec-actions">
+        ${(props.elderProfiles?.length ?? 0) > 1 ? html`
+          <select class="ec-profile-select" .value=${props.activeProfileId ?? "ba_noi"}
+            @change=${(e: Event) => props.onProfileChange?.((e.target as HTMLSelectElement).value)}>
+            ${(props.elderProfiles ?? []).map(p => html`<option value=${p.id}>${p.name}</option>`)}
+          </select>
+        ` : nothing}
         <button
           class="btn btn--ghost btn--sm"
           @click=${props.onRefresh}
@@ -415,11 +521,11 @@ export function renderEldercareDashboard(props: EldercareDashboardProps) {
 
       <!-- Status cards grid -->
       <div class="ec-grid">
-        <!-- Grandma Status Card -->
+        <!-- Health Status Card -->
         <div class="ec-card ${props.sosActive ? "ec-card--danger" : ""}">
           <div class="ec-card__header">
             <span class="ec-card__icon">${icons.heartPulse}</span>
-            <span class="ec-card__title">${tr.grandmaStatus}</span>
+            <span class="ec-card__title">${tr.careStatus}</span>
           </div>
           <div class="ec-card__body">
             <div class="ec-stat-row">
@@ -486,8 +592,11 @@ export function renderEldercareDashboard(props: EldercareDashboardProps) {
           </div>
         </div>
 
+        <!-- Fall Detection Card (P2-6) -->
+        ${renderFallCard(s.lastFallEvent ?? null)}
+
         <!-- Health Log Card -->
-        ${renderHealthCard(s.healthEntries ?? [])}
+        ${renderHealthCard(s.healthEntries ?? [], props.onExportHealth)}
 
         <!-- Medication Card -->
         ${renderMedicationCard(s.medications ?? [], s.medDoses ?? [])}

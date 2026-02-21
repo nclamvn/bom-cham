@@ -194,9 +194,18 @@ export type AppViewState = {
   eldercareSafetyConfig: Record<string, unknown> | null;
   eldercareEmergencyConfig: Record<string, unknown> | null;
   eldercareHaEntities: Record<string, string>;
+  // Eldercare profiles (P1-1)
+  eldercareProfiles: Array<{ id: string; name: string }>;
+  eldercareActiveProfile: string;
+  // Eldercare history (P1-2)
+  eldercareHistoryLoading: boolean;
+  eldercareHistory: Array<{ date: string; checksCount: number; maxLevel: string; sosEvents: Array<{ source: string; escalationLevel: number; resolved: boolean }>; healthEntries: Array<{ type: string; value: string; unit: string; timestamp: string }> }>;
   handleEldercareSaveConfig: () => Promise<void>;
   handleEldercareLoadConfig: () => Promise<void>;
   handleEldercareConfigChange: (section: string, path: string[], value: unknown) => void;
+  handleEldercareCancelSos: () => Promise<void>;
+  handleEldercareLoadHistory: () => Promise<void>;
+  handleEldercareExportHealth: () => void;
   debugLoading: boolean;
   debugStatus: StatusSummary | null;
   debugHealth: HealthSnapshot | null;

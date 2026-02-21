@@ -15,8 +15,12 @@ export const vi = {
     logs: "Nhật ký",
     memory: "Trí nhớ",
     docs: "Tài liệu",
-    eldercare: "Bà nội care",
-    eldercareConfig: "Cài đặt eldercare",
+    eldercare: "Giám sát",
+    eldercareConfig: "Cài đặt chăm sóc",
+    eldercareHome: "Trang chính",
+    eldercareHistory: "Lịch sử",
+    eldercareFamily: "Gia đình",
+    care: "Chăm sóc",
 
     // Groups - Minimal 2-group structure
     core: "Chính",
@@ -39,12 +43,15 @@ export const vi = {
       channels: "Quản lý kênh và cài đặt.",
       cron: "Lên lịch đánh thức và chạy tác tử định kỳ.",
       skills: "Quản lý khả dụng kỹ năng và tiêm khóa API.",
-      chat: "Phiên trò chuyện gateway trực tiếp cho can thiệp nhanh.",
+      chat: "Trò chuyện trực tiếp — hỏi gì cũng được nhé.",
       config: "Chỉnh sửa ~/.openclaw/openclaw.json an toàn.",
       logs: "Theo dõi trực tiếp nhật ký tệp gateway.",
-      memory: "Duyệt và quản lý sự kiện người dùng trích xuất từ hội thoại.",
-      eldercare: "Giám sát sức khỏe bà, cảnh báo, cuộc gọi và hoạt động hàng ngày.",
+      memory: "Những gì Bờm nhớ về bạn — duyệt và chỉnh sửa.",
+      eldercare: "Giám sát sức khỏe, cảnh báo, cuộc gọi và hoạt động hàng ngày.",
       eldercareConfig: "Cấu hình ngưỡng giám sát, danh bạ SOS, nhạc và video call.",
+      eldercareHome: "Trang chính — xem nhanh tình hình chăm sóc.",
+      eldercareHistory: "Lượt kiểm tra và cảnh báo 7 ngày gần nhất.",
+      eldercareFamily: "Xem nhanh cho gia đình — tình trạng, thuốc, gọi video.",
     },
   },
 
@@ -52,10 +59,10 @@ export const vi = {
   // COMMON / SHARED
   // ============================================
   common: {
-    loading: "Đang tải…",
+    loading: "Chờ chút nhé…",
     refresh: "Làm mới",
     save: "Lưu",
-    saving: "Đang lưu…",
+    saving: "Đang lưu, chờ chút…",
     cancel: "Hủy",
     delete: "Xóa",
     edit: "Sửa",
@@ -82,17 +89,17 @@ export const vi = {
     connect: "Kết nối",
     disconnect: "Ngắt kết nối",
     connected: "Đã kết nối",
-    disconnected: "Mất kết nối",
-    offline: "Ngoại tuyến",
-    online: "Trực tuyến",
+    disconnected: "Mất kết nối rồi",
+    offline: "Đang ngoại tuyến",
+    online: "Đang trực tuyến",
     active: "Hoạt động",
     inactive: "Không hoạt động",
-    pending: "Đang chờ",
+    pending: "Đang chờ xử lý",
     running: "Đang chạy",
-    stopped: "Đã dừng",
-    error: "Lỗi",
-    success: "Thành công",
-    warning: "Cảnh báo",
+    stopped: "Đã dừng rồi",
+    error: "Có lỗi xảy ra",
+    success: "Xong rồi!",
+    warning: "Lưu ý nhé",
     info: "Thông tin",
     status: "Trạng thái",
     actions: "Thao tác",
@@ -118,9 +125,9 @@ export const vi = {
   // ============================================
   health: {
     title: "Sức khỏe",
-    ok: "Tốt",
-    offline: "Ngoại tuyến",
-    degraded: "Suy giảm",
+    ok: "Tốt lắm!",
+    offline: "Đang ngoại tuyến",
+    degraded: "Hơi chậm",
   },
 
   // ============================================
@@ -137,16 +144,16 @@ export const vi = {
   // ============================================
   chat: {
     title: "Trò chuyện",
-    placeholder: "Hôm nay tôi có thể giúp gì cho bạn?",
-    inputPlaceholder: "Nhập tin nhắn (↩ gửi, Shift+↩ xuống dòng, dán ảnh)",
-    inputPlaceholderWithImages: "Thêm tin nhắn hoặc dán thêm ảnh...",
-    connectPrompt: "Kết nối tới gateway để bắt đầu trò chuyện…",
-    loadingChat: "Đang tải cuộc trò chuyện…",
-    connectButton: "Kết nối gateway...",
+    placeholder: "Bờm có thể giúp gì cho bạn hôm nay?",
+    inputPlaceholder: "Nói hoặc gõ gì đó nhé… (↩ gửi, Shift+↩ xuống dòng)",
+    inputPlaceholderWithImages: "Thêm lời nhắn hoặc dán thêm ảnh nhé…",
+    connectPrompt: "Kết nối gateway để bắt đầu nói chuyện nhé…",
+    loadingChat: "Đang mở cuộc trò chuyện, chờ chút…",
+    connectButton: "Kết nối gateway nhé…",
 
     // Compaction
-    compacting: "Đang nén ngữ cảnh...",
-    compacted: "Đã nén ngữ cảnh",
+    compacting: "Đang gọn lại cuộc trò chuyện…",
+    compacted: "Đã gọn lại xong rồi",
 
     // Queue
     queued: "Đang chờ",
@@ -155,37 +162,37 @@ export const vi = {
 
     // Quick actions
     quickActions: {
-      build: "Build app",
-      code: "Viết mã",
-      write: "Soạn văn",
-      create: "Tạo mới",
-      learn: "Học hỏi",
-      analyze: "Phân tích",
+      build: "Kiểm tra sức khoẻ",
+      code: "Thuốc hôm nay",
+      write: "Gọi video",
+      create: "Báo cáo",
+      learn: "Lịch sử",
+      analyze: "Hỏi AI",
     },
 
-    // Vibecode Kit
+    // Quick start templates
     vibecode: {
-      quickStart: "Chọn loại dự án",
-      landing: "Landing Page",
-      saas: "Ứng dụng SaaS",
-      dashboard: "Dashboard",
-      blog: "Blog",
-      portfolio: "Portfolio",
+      quickStart: "Bạn muốn làm gì hôm nay?",
+      landing: "Sức khoẻ",
+      saas: "Thuốc",
+      dashboard: "Gọi video",
+      blog: "Báo cáo",
+      portfolio: "Hỏi AI",
       steps: { vision: "VISION", context: "CONTEXT", blueprint: "BLUEPRINT", contract: "CONTRACT", build: "BUILD", refine: "REFINE" },
-      viewBlueprint: "Xem Blueprint",
-      buildingWith: "Đang build với Vibecode",
+      viewBlueprint: "Xem chi tiết",
+      buildingWith: "Đang xử lý, chờ chút nhé",
     },
 
     // Model selector
     selectModel: "Chọn mô hình",
     apiKey: "Khóa API",
     enterApiKey: "Nhập khóa API...",
-    apiKeyNeeded: "Nhập khóa API để bắt đầu trò chuyện",
-    apiKeySaved: "Đã lưu khóa API!",
+    apiKeyNeeded: "Nhập khóa API để bắt đầu nói chuyện nhé",
+    apiKeySaved: "Đã lưu khóa API rồi!",
     configureApiKey: "Cài đặt khóa API",
     saveToGateway: "Lưu vào gateway (auth-profiles)",
-    apiKeySaveError: "Lưu thất bại — xem console",
-    apiKeySaving: "Đang lưu...",
+    apiKeySaveError: "Chưa lưu được — thử lại nhé",
+    apiKeySaving: "Đang lưu, chờ chút…",
 
     // Providers
     providers: {
@@ -205,10 +212,10 @@ export const vi = {
     // Voice
     stopRecording: "Dừng ghi âm",
     voiceInput: "Nhập giọng nói",
-    microphoneError: "Không thể truy cập microphone",
-    voiceError: "Lỗi nhận dạng giọng nói",
-    voiceListening: "Đang nghe...",
-    voiceSpeaking: "Đang nói...",
+    microphoneError: "Chưa mở được microphone — kiểm tra lại nhé",
+    voiceError: "Chưa nghe rõ — thử lại nhé",
+    voiceListening: "Đang lắng nghe…",
+    voiceSpeaking: "Đang nói…",
     ttsOn: "Bật đọc phản hồi",
     ttsOff: "Tắt đọc phản hồi",
 
@@ -221,19 +228,19 @@ export const vi = {
     toggleThinking: "Bật/tắt hiển thị suy nghĩ/hoạt động của trợ lý",
     toggleFocus: "Bật/tắt chế độ tập trung (ẩn thanh bên + đầu trang)",
     disabledDuringSetup: "Vô hiệu trong quá trình thiết lập",
-    gatewayDisconnected: "Mất kết nối gateway.",
+    gatewayDisconnected: "Mất kết nối gateway rồi — đang thử lại…",
 
     // Copy
     copyAsMarkdown: "Sao chép dạng markdown",
-    copied: "Đã sao chép",
-    copyFailed: "Sao chép thất bại",
+    copied: "Đã sao chép rồi!",
+    copyFailed: "Chưa sao chép được — thử lại nhé",
 
     // User label
     you: "Bạn",
 
     // Avatar initials
     userInitial: "B",
-    assistantDefault: "Trợ lý",
+    assistantDefault: "Bờm",
   },
 
   // ============================================
@@ -736,14 +743,15 @@ export const vi = {
     system: "Chủ đề hệ thống",
     light: "Chủ đề sáng",
     dark: "Chủ đề tối",
+    eldercare: "Giao diện chăm sóc",
   },
 
   // ============================================
   // ASSISTANT
   // ============================================
   assistant: {
-    defaultName: "Trợ lý",
-    reasoning: "_Suy luận:_",
+    defaultName: "Bờm",
+    reasoning: "_Bờm đang suy nghĩ:_",
     tool: "Công cụ",
   },
 
@@ -752,9 +760,9 @@ export const vi = {
   // ============================================
   toolCards: {
     view: "Xem",
-    completed: "Hoàn thành",
+    completed: "Xong rồi!",
     command: "Lệnh:",
-    noOutputSuccess: "Không có đầu ra — công cụ hoàn thành thành công.",
+    noOutputSuccess: "Không có đầu ra — đã xong rồi nhé.",
   },
 
   // ============================================
@@ -840,9 +848,9 @@ export const vi = {
     unpaired: "chưa ghép",
     connected: "kết nối",
     offline: "ngoại tuyến",
-    unknown: "không rõ",
-    ok: "ok",
-    failed: "thất bại",
+    unknown: "chưa rõ",
+    ok: "tốt",
+    failed: "chưa được",
     probeOk: "ok",
     probeFailed: "thất bại",
   },
@@ -912,13 +920,13 @@ export const vi = {
   // ERROR MESSAGES
   // ============================================
   errors: {
-    failedToChangeModel: "Không thể thay đổi mô hình:",
-    disconnectedFromGateway: "Đã ngắt kết nối khỏi gateway.",
-    connectionFailed: "Kết nối thất bại",
-    authFailed: "Xác thực thất bại",
-    loadFailed: "Tải thất bại",
-    saveFailed: "Lưu thất bại",
-    unknownError: "Lỗi không xác định",
+    failedToChangeModel: "Chưa đổi được mô hình — thử lại nhé:",
+    disconnectedFromGateway: "Mất kết nối gateway rồi — đang thử kết nối lại…",
+    connectionFailed: "Chưa kết nối được — thử lại nhé",
+    authFailed: "Xác thực chưa đúng — kiểm tra lại nhé",
+    loadFailed: "Chưa tải được — thử lại nhé",
+    saveFailed: "Chưa lưu được — thử lại nhé",
+    unknownError: "Có lỗi xảy ra — thử lại nhé",
   },
 
   // ============================================
@@ -956,22 +964,22 @@ export const vi = {
   // ============================================
   memory: {
     title: "Trí nhớ",
-    search: "Tìm kiếm trí nhớ...",
-    extractButton: "Trích xuất",
-    extracting: "Đang trích xuất...",
-    extracted: "Đã trích xuất!",
-    empty: "Chưa có trí nhớ nào.",
-    privacy: "Trí nhớ được lưu cục bộ và không bao giờ chia sẻ.",
-    deleteConfirm: "Xóa trí nhớ này?",
+    search: "Tìm trong trí nhớ…",
+    extractButton: "Ghi nhớ thêm",
+    extracting: "Đang ghi nhớ…",
+    extracted: "Đã ghi nhớ rồi!",
+    empty: "Bờm chưa nhớ gì — hãy nói chuyện thêm nhé.",
+    privacy: "Trí nhớ được lưu riêng tư trên máy, không chia sẻ với ai.",
+    deleteConfirm: "Xóa trí nhớ này nhé?",
     save: "Lưu",
     cancel: "Hủy",
     verified: "Đã xác minh",
     unverified: "Chưa xác minh",
     // Indicator (chat header)
-    indicatorActive: "trí nhớ đang hoạt động",
-    indicatorOff: "Trí nhớ tắt",
+    indicatorActive: "Bờm đang nhớ",
+    indicatorOff: "Trí nhớ đang tắt",
     indicatorToggle: "Bật/tắt trí nhớ",
-    indicatorNone: "Không có trí nhớ",
+    indicatorNone: "Chưa có trí nhớ nào",
     categories: {
       all: "Tất cả",
       identity: "Danh tính",
@@ -1034,10 +1042,10 @@ export const vi = {
     rename: "Đổi tên",
     presets: {
       title: "Chọn loại tác tử",
-      code: "Lập trình",
-      writer: "Soạn văn",
-      research: "Nghiên cứu",
-      translator: "Phiên dịch",
+      medication: "Thuốc",
+      health: "Sức khỏe",
+      entertainment: "Giải trí",
+      companion: "Tâm lý",
       custom: "Tùy chỉnh",
     },
     unread: "chưa đọc",
@@ -1052,8 +1060,34 @@ export const vi = {
   // ELDERCARE — BÀ NỘI CARE
   // ============================================
   eldercare: {
+    // Home grid
+    greeting: {
+      morning: "Chào buổi sáng! Hôm nay khỏe không?",
+      noon: "Chào buổi trưa! Đã ăn cơm chưa?",
+      afternoon: "Chào buổi chiều!",
+      evening: "Chào buổi tối! Hôm nay có vui không?",
+      night: "Khuya rồi, nghỉ ngơi nhé!",
+    },
+    home: {
+      chat: "Nói chuyện",
+      medication: "Thuốc",
+      music: "Nghe nhạc",
+      family: "Gọi gia đình",
+      sos: "Cấp cứu",
+    },
+    sos: {
+      button: "SOS",
+      confirmTitle: "Gọi cấp cứu?",
+      confirmMessage: "Nhấn xác nhận hoặc đợi hết giờ để gọi.",
+      confirm: "XÁC NHẬN — GỌI CẤP CỨU",
+      cancel: "HỦY — Tôi ổn",
+      autoCall: "Tự động gọi sau",
+      calling: "Đang liên lạc...",
+      placeholder: "Tính năng sẽ hoạt động trong phiên bản tiếp theo.",
+      close: "Đóng",
+    },
     // Dashboard
-    grandmaStatus: "Tình trạng bà",
+    careStatus: "Tình trạng sức khoẻ",
     roomEnvironment: "Môi trường phòng",
     familyCalls: "Cuộc gọi gia đình",
     companionActivity: "Hoạt động giải trí",
@@ -1073,7 +1107,7 @@ export const vi = {
     storyActive: "Đang nghe truyện",
     yes: "Có",
     no: "Không",
-    noCalls: "Chưa ai gọi bà hôm nay",
+    noCalls: "Chưa có cuộc gọi hôm nay",
     sosActive: "SOS ĐANG HOẠT ĐỘNG — Cần xử lý ngay!",
     sosActiveShort: "Đang xử lý",
     resolved: "Đã xử lý",
@@ -1145,6 +1179,28 @@ export const vi = {
     emergencyBloodType: "Nhóm máu",
     emergencyAllergies: "Dị ứng",
     emergencyConditions: "Bệnh nền",
+    // SOS escalation (P0-1, P0-5)
+    cancelSos: "Hủy SOS",
+    cancelSosConfirm: "Xác nhận hủy SOS?",
+    sosLevel1: "Level 1: Zalo",
+    sosLevel2: "Level 2: Gọi điện",
+    sosLevel3: "Level 3: Tất cả",
+    sosNotified: "Đã thông báo",
+    sosTime: "Thời gian",
+    // Fall detection (P2-6)
+    fallDetected: "Phát hiện ngã",
+    // Export (P2-1)
+    exportData: "Xuất dữ liệu",
+    // Family view (P1-3)
+    familyVideoCall: "Gọi video",
+    familyMedToday: "Thuốc hôm nay",
+    familyMedTaken: "Đã uống",
+    familyMedNotYet: "Chưa uống",
+    // History view (P1-2)
+    historyNoData: "Không có dữ liệu",
+    historyChecks: "kiểm tra",
+    historySosEvents: "sự kiện SOS",
+    historyHealthEntries: "dữ liệu sức khoẻ",
     configSections: {
       monitor: "Giám sát",
       sos: "SOS",
@@ -1154,6 +1210,7 @@ export const vi = {
       exercise: "Bài tập",
       safety: "An toàn",
       emergency: "Khẩn cấp",
+      report: "Báo cáo",
     } as Record<string, string>,
     config: {
       monitorThresholds: "Ngưỡng giám sát",
@@ -1165,6 +1222,12 @@ export const vi = {
       tempLow: "Nhiệt độ thấp (°C)",
       tempHigh: "Nhiệt độ cao (°C)",
       haEntities: "Entity IDs (Home Assistant)",
+      haEntitiesTitle: "Kết nối thiết bị",
+      haEntitiesHint: "Tên thiết bị trong Home Assistant. Chỉ đổi khi bạn biết rõ.",
+      haEntity_presence: "Cảm biến có mặt",
+      haEntity_temperature: "Cảm biến nhiệt độ",
+      haEntity_humidity: "Cảm biến độ ẩm",
+      haEntity_motion: "Cảm biến chuyển động",
       sosContacts: "Danh bạ SOS",
       noContacts: "Chưa có liên hệ SOS",
       contactsHint: "Chỉnh sửa trong memory key eldercare_contacts",
@@ -1178,7 +1241,7 @@ export const vi = {
       volume: "Âm lượng (0-1)",
       ttsSettings: "Cài đặt giọng đọc (TTS)",
       ttsRate: "Tốc độ đọc",
-      ttsRateHint: "0.8 = chậm hơn bình thường (tốt cho bà)",
+      ttsRateHint: "0.8 = chậm hơn bình thường (tốt cho người lớn tuổi)",
       ttsVoice: "Giọng TTS",
       tabletSettings: "Cài đặt tablet",
       tabletIp: "IP tablet",
@@ -1222,6 +1285,32 @@ export const vi = {
       emergencyAllergiesHint: "VD: Penicillin, Aspirin",
       emergencyConditions: "Bệnh nền (phân cách bằng dấu phẩy)",
       emergencyConditionsHint: "VD: Tăng huyết áp, Tiểu đường",
+      // Contact CRUD (P0-3)
+      contactName: "Tên",
+      contactPhone: "Số điện thoại",
+      contactRole: "Vai trò",
+      addContact: "Thêm liên hệ",
+      removeContact: "Xóa",
+      // Medication CRUD (P0-4, P1-5)
+      medName: "Tên thuốc",
+      medDosage: "Liều lượng",
+      medTimes: "Thời điểm",
+      medNote: "Ghi chú",
+      medMorning: "Sáng",
+      medNoon: "Trưa",
+      medAfternoon: "Chiều",
+      medEvening: "Tối",
+      medSchedule: "Giờ nhắc thuốc",
+      addMed: "Thêm thuốc",
+      removeMed: "Xóa",
+      // Report config (P2-3)
+      reportSettings: "Cài đặt báo cáo",
+      reportTime: "Giờ gửi báo cáo",
+      reportChannel: "Kênh gửi",
+      reportAll: "Tất cả",
+      reportRecipients: "Người nhận",
+      pushEnabled: "Thông báo push",
+      pushHint: "Nhận thông báo qua trình duyệt",
     },
   },
 } as const;

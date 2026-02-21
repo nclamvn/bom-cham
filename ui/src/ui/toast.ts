@@ -3,6 +3,11 @@ import { icons } from "./icons";
 
 export type ToastLevel = "error" | "warning" | "success" | "info";
 
+export type ToastAction = {
+  label: string;
+  callback: () => void;
+};
+
 export type ToastItem = {
   id: number;
   level: ToastLevel;
@@ -10,6 +15,7 @@ export type ToastItem = {
   dismissMs: number;
   createdAt: number;
   exiting?: boolean;
+  action?: ToastAction;
 };
 
 let nextId = 1;
@@ -21,11 +27,11 @@ function notify() {
   for (const fn of listeners) fn(snapshot);
 }
 
-export function addToast(level: ToastLevel, message: string, dismissMs = 8000) {
+export function addToast(level: ToastLevel, message: string, dismissMs = 8000, action?: ToastAction) {
   // Deduplicate: if same message already showing, skip
   if (items.some((t) => t.message === message && !t.exiting)) return;
   const id = nextId++;
-  const item: ToastItem = { id, level, message, dismissMs, createdAt: Date.now() };
+  const item: ToastItem = { id, level, message, dismissMs, createdAt: Date.now(), action };
   items = [...items, item];
   notify();
   if (dismissMs > 0) {
@@ -73,6 +79,11 @@ export function renderToasts(toasts: ToastItem[]): TemplateResult | typeof nothi
             <span class="toast-icon">${LEVEL_ICON[t.level]}</span>
             <span class="toast-content">
               <span class="toast-message">${t.message}</span>
+              ${t.action ? html`
+                <button class="toast-action" type="button" @click=${() => { t.action!.callback(); dismissToast(t.id); }}>
+                  ${t.action.label}
+                </button>
+              ` : nothing}
             </span>
             <button
               class="toast-close"

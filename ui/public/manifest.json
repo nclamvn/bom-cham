@@ -1,0 +1,23 @@
+{
+  "name": "Bờm Chăm — AI Chăm Sóc Người Thân",
+  "short_name": "Bờm Chăm",
+  "description": "AI chăm sóc người cao tuổi tại nhà",
+  "start_url": "/eldercare",
+  "display": "standalone",
+  "background_color": "#0e1117",
+  "theme_color": "#f25f4c",
+  "orientation": "portrait-primary",
+  "lang": "vi",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

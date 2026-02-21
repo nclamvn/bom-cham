@@ -5,7 +5,7 @@ import { t } from "../i18n";
 
 export type EldercareConfigSection =
   | "monitor" | "sos" | "companion" | "videocall"
-  | "medication" | "exercise" | "safety" | "emergency";
+  | "medication" | "exercise" | "safety" | "emergency" | "report";
 
 export type EldercareContact = {
   name: string;
@@ -37,7 +37,7 @@ export type EldercareConfigProps = {
 
 const SECTIONS: EldercareConfigSection[] = [
   "monitor", "sos", "companion", "videocall",
-  "medication", "exercise", "safety", "emergency",
+  "medication", "exercise", "safety", "emergency", "report",
 ];
 
 function sectionIcon(section: EldercareConfigSection): TemplateResult {
@@ -50,8 +50,25 @@ function sectionIcon(section: EldercareConfigSection): TemplateResult {
     case "exercise": return html`<span class="ec-config-tab__icon">${icons.dumbbell}</span>`;
     case "safety": return html`<span class="ec-config-tab__icon">${icons.shieldAlert}</span>`;
     case "emergency": return html`<span class="ec-config-tab__icon">${icons.siren}</span>`;
+    case "report": return html`<span class="ec-config-tab__icon">${icons.fileBarChart}</span>`;
   }
 }
+
+// ── Friendly labels for HA entity fields ────────────
+
+const HA_ENTITY_LABELS: Record<string, string> = {
+  presence: "Cảm biến có mặt",
+  temperature: "Cảm biến nhiệt độ",
+  humidity: "Cảm biến độ ẩm",
+  motion: "Cảm biến chuyển động",
+};
+
+const HA_ENTITY_HINTS: Record<string, string> = {
+  presence: "Phát hiện có người trong phòng hay không",
+  temperature: "Đo nhiệt độ phòng",
+  humidity: "Đo độ ẩm phòng",
+  motion: "Đếm số phút có chuyển động",
+};
 
 // ── Existing sections ────────────────────────────────
 
@@ -96,15 +113,23 @@ function renderMonitorSection(props: EldercareConfigProps) {
       </div>
     </div>
     <div class="ec-config-section">
-      <h4 class="ec-config-section__title">${tr.haEntities}</h4>
+      <h4 class="ec-config-section__title">${tr.haEntitiesTitle ?? "Kết nối thiết bị"}</h4>
+      <p class="ec-config-field__hint" style="margin-bottom: 12px">${tr.haEntitiesHint ?? "Tên thiết bị trong Home Assistant. Chỉ đổi khi bạn biết rõ."}</p>
       ${Object.entries(props.haEntities).map(
-        ([key, value]) => html`
-          <div class="ec-config-field">
-            <label class="ec-config-field__label">${key}</label>
-            <input class="ec-config-field__input" type="text" .value=${value}
-              @change=${(e: Event) => props.onConfigChange("monitor", ["entities", key], (e.target as HTMLInputElement).value)} />
-          </div>
-        `,
+        ([key, value]) => {
+          const friendlyLabel = (tr as Record<string, string>)[`haEntity_${key}`]
+            ?? HA_ENTITY_LABELS[key]
+            ?? key;
+          const friendlyHint = HA_ENTITY_HINTS[key] ?? "";
+          return html`
+            <div class="ec-config-field">
+              <label class="ec-config-field__label">${friendlyLabel}</label>
+              <input class="ec-config-field__input" type="text" .value=${value}
+                @change=${(e: Event) => props.onConfigChange("monitor", ["entities", key], (e.target as HTMLInputElement).value)} />
+              ${friendlyHint ? html`<span class="ec-config-field__hint">${friendlyHint}</span>` : nothing}
+            </div>
+          `;
+        },
       )}
     </div>
   `;
@@ -112,24 +137,50 @@ function renderMonitorSection(props: EldercareConfigProps) {
 
 function renderSosSection(props: EldercareConfigProps) {
   const tr = t().eldercare.config;
+  const contacts = [...props.sosContacts];
+
+  const updateContact = (index: number, field: keyof EldercareContact, value: string) => {
+    const updated = contacts.map((c, i) => i === index ? { ...c, [field]: value } : c);
+    props.onConfigChange("sos", ["contacts"], updated);
+  };
+
+  const addContact = () => {
+    props.onConfigChange("sos", ["contacts"], [...contacts, { name: "", phone: "", role: "", zaloId: "" }]);
+  };
+
+  const removeContact = (index: number) => {
+    props.onConfigChange("sos", ["contacts"], contacts.filter((_, i) => i !== index));
+  };
+
   return html`
     <div class="ec-config-section">
       <h4 class="ec-config-section__title">${tr.sosContacts}</h4>
-      <div class="ec-contact-list">
-        ${props.sosContacts.map(
-          (contact) => html`
-            <div class="ec-contact-item">
-              <span class="ec-contact-item__name">${contact.name}</span>
-              <span class="ec-contact-item__phone">${contact.phone}</span>
-              <span class="ec-contact-item__role">${contact.role}</span>
+      <div class="ec-contact-edit-list">
+        ${contacts.map((contact, i) => html`
+          <div class="ec-contact-edit">
+            <div class="ec-config-field">
+              <label class="ec-config-field__label">${tr.contactName ?? "Tên"}</label>
+              <input class="ec-config-field__input" type="text" .value=${contact.name}
+                @change=${(e: Event) => updateContact(i, "name", (e.target as HTMLInputElement).value)} />
             </div>
-          `,
-        )}
-        ${props.sosContacts.length === 0
+            <div class="ec-config-field">
+              <label class="ec-config-field__label">${tr.contactPhone ?? "Số điện thoại"}</label>
+              <input class="ec-config-field__input" type="tel" .value=${contact.phone}
+                @change=${(e: Event) => updateContact(i, "phone", (e.target as HTMLInputElement).value)} />
+            </div>
+            <div class="ec-config-field">
+              <label class="ec-config-field__label">${tr.contactRole ?? "Vai trò"}</label>
+              <input class="ec-config-field__input" type="text" .value=${contact.role}
+                @change=${(e: Event) => updateContact(i, "role", (e.target as HTMLInputElement).value)} />
+            </div>
+            <button class="btn btn--ghost btn--xs ec-contact-remove" @click=${() => removeContact(i)} title="${tr.removeContact ?? "Xóa"}">✕</button>
+          </div>
+        `)}
+        ${contacts.length === 0
           ? html`<div class="ec-empty-state"><div class="ec-empty-state__text">${tr.noContacts}</div></div>`
           : nothing}
       </div>
-      <p class="ec-config-field__hint" style="margin-top: 8px">${tr.contactsHint}</p>
+      <button class="btn btn--ghost btn--sm" style="margin-top: 8px" @click=${addContact}>+ ${tr.addContact ?? "Thêm liên hệ"}</button>
     </div>
     <div class="ec-config-section">
       <h4 class="ec-config-section__title">${tr.escalationLevels}</h4>
@@ -223,31 +274,92 @@ function renderMedicationSection(props: EldercareConfigProps) {
   const cfg = (props.medicationConfig ?? {}) as Record<string, unknown>;
   const enabled = cfg.enabled !== false;
   const meds = (Array.isArray(cfg.medications) ? cfg.medications : []) as Array<Record<string, unknown>>;
+  const schedule = (cfg.schedule ?? {}) as Record<string, string>;
+  const TIME_LABELS = ["morning", "noon", "afternoon", "evening"];
+  const TIME_DEFAULTS: Record<string, string> = { morning: "07:00", noon: "12:00", afternoon: "18:00", evening: "21:00" };
+  const TIME_LABEL_VI: Record<string, string> = { morning: tr.medMorning ?? "Sáng", noon: tr.medNoon ?? "Trưa", afternoon: tr.medAfternoon ?? "Chiều", evening: tr.medEvening ?? "Tối" };
+
+  const updateMed = (index: number, field: string, value: unknown) => {
+    const updated = meds.map((m, i) => i === index ? { ...m, [field]: value } : m);
+    props.onConfigChange("medication", ["medications"], updated);
+  };
+
+  const addMed = () => {
+    props.onConfigChange("medication", ["medications"], [...meds, { name: "", dosage: "", times: ["morning"], note: "", with_food: false }]);
+  };
+
+  const removeMed = (index: number) => {
+    props.onConfigChange("medication", ["medications"], meds.filter((_, i) => i !== index));
+  };
+
+  const toggleTime = (index: number, time: string) => {
+    const current = Array.isArray(meds[index].times) ? [...(meds[index].times as string[])] : [];
+    const idx = current.indexOf(time);
+    if (idx >= 0) current.splice(idx, 1);
+    else current.push(time);
+    updateMed(index, "times", current);
+  };
 
   return html`
     <div class="ec-config-section">
       <h4 class="ec-config-section__title">${tr.medSettings}</h4>
-      <div class="ec-config-field">
-        <label class="ec-config-field__label">${tr.medEnabled}</label>
-        <input class="ec-config-field__input" type="checkbox" ?checked=${enabled} style="width: auto"
+      <label class="ec-toggle">
+        <input type="checkbox" ?checked=${enabled}
           @change=${(e: Event) => props.onConfigChange("medication", ["enabled"], (e.target as HTMLInputElement).checked)} />
+        <span class="ec-toggle__switch"></span>
+        <span class="ec-toggle__label">${tr.medEnabled}</span>
+      </label>
+    </div>
+    <div class="ec-config-section">
+      <h4 class="ec-config-section__title">${tr.medSchedule ?? "Giờ nhắc thuốc"}</h4>
+      <div class="ec-med-schedule">
+        ${TIME_LABELS.map(t => html`
+          <div class="ec-config-field" style="display: inline-flex; gap: 8px; align-items: center; margin-right: 16px;">
+            <label class="ec-config-field__label" style="min-width: 40px">${TIME_LABEL_VI[t]}</label>
+            <input class="ec-config-field__input" type="time" .value=${schedule[t] ?? TIME_DEFAULTS[t]}
+              style="width: 120px"
+              @change=${(e: Event) => props.onConfigChange("medication", ["schedule", t], (e.target as HTMLInputElement).value)} />
+          </div>
+        `)}
       </div>
     </div>
     <div class="ec-config-section">
       <h4 class="ec-config-section__title">${tr.medList}</h4>
-      <div class="ec-contact-list">
+      <div class="ec-contact-edit-list">
         ${meds.map((med, i) => html`
-          <div class="ec-contact-item">
-            <span class="ec-contact-item__name">${med.name ?? ""}</span>
-            <span class="ec-contact-item__phone">${Array.isArray(med.times) ? (med.times as string[]).join(", ") : ""}</span>
-            <span class="ec-contact-item__role">${med.with_food ? tr.medWithFood : ""}</span>
+          <div class="ec-contact-edit ec-med-edit">
+            <div class="ec-config-field">
+              <label class="ec-config-field__label">${tr.medName ?? "Tên thuốc"}</label>
+              <input class="ec-config-field__input" type="text" .value=${String(med.name ?? "")}
+                @change=${(e: Event) => updateMed(i, "name", (e.target as HTMLInputElement).value)} />
+            </div>
+            <div class="ec-config-field">
+              <label class="ec-config-field__label">${tr.medDosage ?? "Liều lượng"}</label>
+              <input class="ec-config-field__input" type="text" .value=${String(med.dosage ?? "")}
+                @change=${(e: Event) => updateMed(i, "dosage", (e.target as HTMLInputElement).value)} />
+            </div>
+            <div class="ec-config-field">
+              <label class="ec-config-field__label">${tr.medTimes ?? "Lần uống"}</label>
+              <div class="ec-med-time-chips">
+                ${TIME_LABELS.map(t => {
+                  const active = Array.isArray(med.times) && (med.times as string[]).includes(t);
+                  return html`<button class="ec-chip ${active ? "ec-chip--active" : ""}" @click=${() => toggleTime(i, t)}>${TIME_LABEL_VI[t]}</button>`;
+                })}
+              </div>
+            </div>
+            <div class="ec-config-field">
+              <label class="ec-config-field__label">${tr.medNote ?? "Ghi chú"}</label>
+              <input class="ec-config-field__input" type="text" .value=${String(med.note ?? "")}
+                @change=${(e: Event) => updateMed(i, "note", (e.target as HTMLInputElement).value)} />
+            </div>
+            <button class="btn btn--ghost btn--xs ec-contact-remove" @click=${() => removeMed(i)} title="${tr.removeMed ?? "Xóa"}">✕</button>
           </div>
         `)}
         ${meds.length === 0
           ? html`<div class="ec-empty-state"><div class="ec-empty-state__text">${tr.medNone}</div></div>`
           : nothing}
       </div>
-      <p class="ec-config-field__hint" style="margin-top: 8px">${tr.medHint}</p>
+      <button class="btn btn--ghost btn--sm" style="margin-top: 8px" @click=${addMed}>+ ${tr.addMed ?? "Thêm thuốc"}</button>
     </div>
   `;
 }
@@ -262,11 +374,12 @@ function renderExerciseSection(props: EldercareConfigProps) {
   return html`
     <div class="ec-config-section">
       <h4 class="ec-config-section__title">${tr.exerciseSettings}</h4>
-      <div class="ec-config-field">
-        <label class="ec-config-field__label">${tr.exerciseEnabled}</label>
-        <input class="ec-config-field__input" type="checkbox" ?checked=${enabled} style="width: auto"
+      <label class="ec-toggle">
+        <input type="checkbox" ?checked=${enabled}
           @change=${(e: Event) => props.onConfigChange("exercise", ["enabled"], (e.target as HTMLInputElement).checked)} />
-      </div>
+        <span class="ec-toggle__switch"></span>
+        <span class="ec-toggle__label">${tr.exerciseEnabled}</span>
+      </label>
       <div class="ec-config-field">
         <label class="ec-config-field__label">${tr.exerciseLevelSetting}</label>
         <input class="ec-config-field__input" type="number" min="1" max="3" .value=${String(level)}
@@ -381,6 +494,47 @@ function renderEmergencySection(props: EldercareConfigProps) {
   `;
 }
 
+// ── Report Config (P2-3) ─────────────────────────────
+function renderReportSection(props: EldercareConfigProps) {
+  const tr = t().eldercare.config;
+  const cfg = (props.monitorConfig ?? {}) as Record<string, unknown>;
+  const report = (cfg.report ?? {}) as Record<string, unknown>;
+
+  return html`
+    <div class="ec-config-section">
+      <h4 class="ec-config-section__title">${tr.reportSettings ?? "Cài đặt báo cáo"}</h4>
+      <div class="ec-config-field">
+        <label class="ec-config-field__label">${tr.reportTime ?? "Giờ gửi báo cáo"}</label>
+        <input class="ec-config-field__input" type="time" .value=${String(report.time ?? "21:00")}
+          @change=${(e: Event) => props.onConfigChange("monitor", ["report", "time"], (e.target as HTMLInputElement).value)} />
+      </div>
+      <div class="ec-config-field">
+        <label class="ec-config-field__label">${tr.reportChannel ?? "Kênh gửi"}</label>
+        <select class="ec-config-field__input" .value=${String(report.channel ?? "zalo")}
+          @change=${(e: Event) => props.onConfigChange("monitor", ["report", "channel"], (e.target as HTMLSelectElement).value)}>
+          <option value="zalo">Zalo</option>
+          <option value="telegram">Telegram</option>
+          <option value="all">${tr.reportAll ?? "Tất cả"}</option>
+        </select>
+      </div>
+      <div class="ec-config-field">
+        <label class="ec-config-field__label">${tr.reportRecipients ?? "Người nhận (phân cách dấu phẩy)"}</label>
+        <input class="ec-config-field__input" type="text" .value=${String(Array.isArray(report.recipients) ? (report.recipients as string[]).join(", ") : "")}
+          @change=${(e: Event) => props.onConfigChange("monitor", ["report", "recipients"], (e.target as HTMLInputElement).value.split(",").map((s: string) => s.trim()).filter(Boolean))} />
+      </div>
+      <label class="ec-toggle">
+        <input type="checkbox" ?checked=${Boolean(report.push_enabled)}
+          @change=${(e: Event) => props.onConfigChange("monitor", ["report", "push_enabled"], (e.target as HTMLInputElement).checked)} />
+        <span class="ec-toggle__switch"></span>
+        <span class="ec-toggle__text">
+          <span class="ec-toggle__label">${tr.pushEnabled ?? "Thông báo push"}</span>
+          <span class="ec-toggle__hint">${tr.pushHint ?? "Nhận thông báo qua trình duyệt"}</span>
+        </span>
+      </label>
+    </div>
+  `;
+}
+
 // ── Main Config ──────────────────────────────────────
 
 export function renderEldercareConfig(props: EldercareConfigProps) {
@@ -432,6 +586,7 @@ export function renderEldercareConfig(props: EldercareConfigProps) {
       ${props.activeSection === "exercise" ? renderExerciseSection(props) : nothing}
       ${props.activeSection === "safety" ? renderSafetySection(props) : nothing}
       ${props.activeSection === "emergency" ? renderEmergencySection(props) : nothing}
+      ${props.activeSection === "report" ? renderReportSection(props) : nothing}
     </div>
   `;
 }
